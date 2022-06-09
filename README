@@ -1,0 +1,31 @@
+# Simple Web Media Player
+
+**Major Browser Support:**
+- Webkit (Chrome, Opera, Vivaldi, Safari, Brave)
+- Gecko (Firefox, Tor, LibreWolf)
+
+It is likely there will be CSS bugs with other engines.
+Only tested with Firefox, Tor, Chrome and Safari, bug reports welcome.
+
+Create and place a video anywhere on any site by doing minor modifications to:
+```
+// Create a new element and define type (audio/video) and url (internal or external)
+var newembed = new swmp({
+	url: "example.mp3",
+});
+// Put new unspawned element inside defined element.
+document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
+```
+
+The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
+
+You can also override some defaults such as forcing autoplay with autoplay: true/false, loop: true/false, volume: [0-100]
+
+Applying windowed: upon generation will create an inline player that is neither movable nor fixed with scrolling.
+
+I find the default HTML5 media player to be obnoxiously ugly on legacy imageboards so this was written to be an easily modifiable script to run media files in browser while keeping a more oldschool look to fit with the rest of the site.
+
+Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).
+
+To open the configuration menu right click on the window titlebar or the controls.
+Video right click functionality is preserved.
