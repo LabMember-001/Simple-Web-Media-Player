@@ -1,31 +1,74 @@
 # Simple Web Media Player
 
-**Major Browser Support:**
+## About
+
+The default HTML5 media player is obnoxiously ugly on legacy imageboards so this was written to be an easily modifiable script to run media files in browser while keeping a more oldschool look to fit with the rest of the site.
+
+There is a basic media player class that can be installed on any website, but I've also written a userscript so that this can be easily implemented on any site running Wakaba/TinyIB/Vichan/LynxChan/jschan to inject the script and replace the default media player. It will also work on pretty much any site that has direct links to video or audio files though some sites for various design/event reasons may need custom implementations.
+
+
+#### Browser Support
+
 - Webkit (Chrome, Opera, Vivaldi, Safari, Brave)
 - Gecko (Firefox, Tor, LibreWolf)
 
 It is likely there will be CSS bugs with other engines.
-Only tested with Firefox, Tor, Chrome and Safari, bug reports welcome.
+Only tested with Firefox, Tor(?), Chrome and Safari, bug reports welcome.
+
+## Features
+
+#### Settings Menu
+
+To open the settings menu right click on the window titlebar or the controls. Video right click functionality is preserved.
+
+#### Themes
+
+Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.
+Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.
+
+#### Player Behavior
+
+You can also override some defaults such as disabling autoplay, disabling loop, or even allowing to run multiple players at once. By default if you open a media file while one is playing the old player will be replaced.
+
+#### Keybinds
+
+Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).
+In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.
+
+## Installation
+
+#### Website installation
+
+Repository: [Github](https://github.com/LabMember-001/Simple-Web-Media-Player)
+
+Full Download: -
+
+Add swmp.js to your page.
 
 Create and place a video anywhere on any site by doing minor modifications to:
-```
+
 // Create a new element and define type (audio/video) and url (internal or external)
 var newembed = new swmp({
 	url: "example.mp3",
 });
-// Put new unspawned element inside defined element.
+// Put new element inside defined element.
 document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
-```
+				
+
+If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The build in link click scanner will assign any video created with an ID of the href to that file.
 
 The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
 
-You can also override some defaults such as forcing autoplay with autoplay: true/false, loop: true/false, volume: [0-100]
+By setting 'windowed' to false on player creation the constructor will create an inline player. Otherwise you can drag and move the window wherever you want or close the player. You may also override some defaults.
 
-Applying windowed: upon generation will create an inline player that is neither movable nor fixed with scrolling.
+#### Userscript install:
 
-I find the default HTML5 media player to be obnoxiously ugly on legacy imageboards so this was written to be an easily modifiable script to run media files in browser while keeping a more oldschool look to fit with the rest of the site.
+If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may install This script. If you would like to read the full code there is a non-minified version here.
 
-Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).
+## Configuration
 
-To open the configuration menu right click on the window titlebar or the controls.
-Video right click functionality is preserved.
+Some sites may need additional changes done to the script. The script is configured to only activate on certain sites, but you may open the file and replace the existing site regex with a catch all regex found right below the script's website configuration.
+
+## Demo
+
+[Demo](https://okabe.moe/projects/simplewebmediaplayer/#demo) - Try before installing.

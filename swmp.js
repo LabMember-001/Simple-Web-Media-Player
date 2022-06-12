@@ -55,10 +55,7 @@ console.log('Loading IB Media Player.');
 /* 		== TO DO ==
 //
 // High priority
-// - Fix position + position toggle.
 // - Resizing
-
-// - Change to BEM CSS (or preface every class with swmp-) to not get fucked by CSS on archived.moe and warosu breaking design + move js.
 //
 // Medium Priority
 // - Loading poster for large files
@@ -70,7 +67,6 @@ console.log('Loading IB Media Player.');
 // - Fix support for archived.moe redirection urls.
 // - Fix the god damn & from player.php in vichan title.
 // - Youtube support
-// - Toggle to scan for full unclickable links that are media files
 // - Fix titles on some backends. (Mostly just vichan+4chan taking original filename right now).
 */
 
@@ -139,7 +135,8 @@ var swmpConfig = {
 	autoplay: 'true', // Autoplay media when launched by SWMP.
 	loop: 'true', // Loop media when launched by SWMP.
 	positionTop: '100',
-  positionRight: '600',
+  positionOffset: '100',
+  positionSide: 'right',
 	volume: 60,
 	theme: 'default', //Default theme
 	themes: //All themes
@@ -192,6 +189,23 @@ var swmpStyle = document.createElement('style');
 swmpStyle.innerHTML = `
 
 /* INJECTED BY SWMP / IB MEDIA PLAYER */
+.swmp * {
+	background: none;
+	border: 0;
+	outline: 0;
+	margin: 0;
+	padding: 0;
+	line-height: 1;
+	height: unset;
+	width: unset;
+	font-family: -apple-system,BlinkMacSystemFont,URW Gothic, MS PGothic, Helvetica, sans-serif;
+	font-size: 11pt;
+	text-indent: 4px;
+	letter-spacing: 1px;
+	color: var(--swmp-text-color);
+
+}
+
 div.swmp {
 	--swmp-background: #e6e6e6;
 	--swmp-container-border: #000;
@@ -229,7 +243,7 @@ div.swmp {
 
 }
 
-div.swmp.theme-dark, div.swmp.theme-dark * {
+div.swmp.swmp-theme-dark, div.swmp.swmp-theme-dark * {
 	--swmp-background: #333;
 	--swmp-container-border: #000;
 	--swmp-controls-background: var(--swmp-background);
@@ -263,13 +277,13 @@ div.swmp.theme-dark, div.swmp.theme-dark * {
 	--swmp-btn-border-bottom-active: #777;
 }
 
-div.swmp.theme-kurisu, div.swmp.theme-kurisu * {
+div.swmp.swmp-theme-kurisu, div.swmp.swmp-theme-kurisu * {
 	--swmp-background: #a44242;
 	--swmp-text-color: #fff;
 	--swmp-button-mask-color: #fff;
 }
 
-div.swmp.theme-bluemoon, div.swmp.theme-bluemoon * {
+div.swmp.swmp-theme-bluemoon, div.swmp.swmp-theme-bluemoon * {
 	--swmp-background: #272d37;
 	--swmp-text-color: #eee;
 	--swmp-button-mask-color: #d3d3d3;
@@ -280,7 +294,7 @@ div.swmp.theme-bluemoon, div.swmp.theme-bluemoon * {
 	--swmp-range-thumb-color: #272d37;
 }
 
-div.swmp.container {
+div.swmp.swmp-container {
 	position: relative;
 	display: inline-flex;
 	flex-direction: column;
@@ -300,25 +314,25 @@ div.swmp.container {
 	outline: none;
 }
 
-div.swmp.window.window-container {
+div.swmp.swmp-window.swmp-window-container {
 	display: flex;
 	justify-content: space-between;
 	padding-bottom: 2px;
 }
 
-div.swmp.fullscreen div.window.window-container, div.swmp.fullscreen div.settings.settings-container {
+div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container, div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container {
 	display: none;
 }
 
-div.swmp.minimized video {
+div.swmp.swmp-minimized video {
 	display: none;
 }
 
-div.swmp.fullscreen video {
+div.swmp.swmp-fullscreen video {
 	display: block;
 }
 
-span.swmp.window.window-titlebar {
+span.swmp.swmp-window.swmp-window-titlebar {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -332,15 +346,17 @@ span.swmp.window.window-titlebar {
 	display: block;
 }
 
-span.swmp.window.window-title {
+span.swmp.swmp-window.swmp-window-title {
 	display: block;
 	max-width: 260px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	margin: auto;
+	line-height: 1.5;
+	margin-bottom: -2px;
 }
 
-span.swmp.window.window-buttons-contain {
+span.swmp.swmp-window.swmp-window-buttons-contain {
 	display: flex;
 	flex: 0 1 auto;
 }
@@ -351,11 +367,11 @@ div.swmp .swmp-player-container {
 	background: var(--swmp-player-container-background);
 }
 
-div.swmp.container.audio {
+div.swmp.swmp-container.swmp-audio {
 	display: block;
 }
 
-div.swmp.container.fullscreen {
+div.swmp.swmp-container.swmp-fullscreen {
 	background: #000;
 	position: unset!important; /* more safari behavior junk */
 	width: 100%;
@@ -363,7 +379,7 @@ div.swmp.container.fullscreen {
 
 }
 
-div.swmp.container.fullscreen video {
+div.swmp.swmp-container.swmp-fullscreen video {
 	width: 100%;
 	height: auto;
 	max-width: 100%;
@@ -383,7 +399,7 @@ div.swmp audio {
 	min-height: 40px;
 }
 
-div.swmp.controls {
+div.swmp.swmp-controls {
 	bottom: 0;
 	left: 0;
 	background: var(--swmp-controls-background);
@@ -392,19 +408,19 @@ div.swmp.controls {
 	flex-direction: column;
 }
 
-div.swmp.fullscreen div.swmp.controls {
+div.swmp.swmp-fullscreen div.swmp.swmp-controls {
 	position: absolute;
 	opacity: 0;
-	transition: opacity 1s 1s ease-out;
+	transition: opacity 0.5s 1s ease-out;
 }
 
-div.swmp.fullscreen div.swmp.controls:hover {
+div.swmp.swmp-fullscreen div.swmp.swmp-controls:hover {
 	opacity: 1;
 	position: absolute;
 	transition: none;
 }
 
-div.swmp.controls span.seek-container {
+div.swmp.swmp-controls span.swmp-seek-container {
 	display: flex;
 	width: calc(100% - 6px);
 	height: var(--swmp-seek-height);
@@ -412,7 +428,7 @@ div.swmp.controls span.seek-container {
 	/*position: relative;*/
 }
 
-div.swmp.controls span.seek-container input.swmp.seeker {
+div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker {
 	width: calc(100% - var(--swmp-seek-offset));
 	left: calc(var(--swmp-seek-offset) / 2);
 	-webkit-appearance: none;
@@ -500,7 +516,13 @@ span.swmp input[type="range"]::-moz-range-progress {
 	background-color: #0000 
 }
 
-span.swmp progress.volume {
+span.swmp input[type="range"] {
+	background: none;
+	border: 0;
+	outline: 0;
+}
+
+span.swmp progress.swmp-volume {
 	width: 50px;
 	position: absolute;
 	height: 6px;
@@ -511,7 +533,7 @@ span.swmp progress.volume {
 	background: var(--swmp-seek-background);
 }
 
-span.swmp input.volume[type="range"] {
+span.swmp input.swmp-volume[type="range"] {
 	-webkit-appearance: none;
 	background: #0000;
 	padding: 0;
@@ -520,17 +542,17 @@ span.swmp input.volume[type="range"] {
 	position: relative;
 }
 
-span.swmp input.volume[type="range"]::-webkit-slider-thumb {
+span.swmp input.swmp-volume[type="range"]::-webkit-slider-thumb {
 	padding: 4px 2px;
 	width: 2px;
 }
 
-span.swmp input.volume[type="range"]::-moz-range-thumb {
+span.swmp input.swmp-volume[type="range"]::-moz-range-thumb {
 	padding: 0 1px;
 	width: 1px;
 }
 
-div.swmp.controls span.seek-container progress.swmp.progress {
+div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress {
 	width: 100%;
 	height: 6px;
 	z-index: 0;
@@ -541,22 +563,22 @@ div.swmp.controls span.seek-container progress.swmp.progress {
 	border: none;
 }
 
-span.swmp.row-bottom {
+span.swmp.swmp-row-bottom {
 	display: flex;
 	flex-direction: row;
 	height: 20px;
 	margin-bottom: 2px;
 }
 
-div.swmp.fullscreen span.swmp.row-bottom {
+div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom {
 	padding-bottom: 5px;
 }
 
-span.swmp.buttons-container {
+span.swmp.swmp-buttons-container {
 	height: 100%;
 }
 
-select.swmp.selector {
+select.swmp.swmp-selector {
 	-webkit-appearance: none;
 	appearance: none;
 	background: var(--swmp-button-background);
@@ -569,12 +591,12 @@ select.swmp.selector {
 	text-overflow: ellipsis;
 }
 
-label.swmp.settings {
+label.swmp.swmp-settings {
 	display: inline-flex;
 	flex-direction: row-reverse;
 }
 
-input.swmp.settings {
+input.swmp.swmp-settings {
 	margin: -2px 0 0 4px;
 	border: 1px solid var(--swmp-text-color);
 	appearance: none;
@@ -585,14 +607,15 @@ input.swmp.settings {
 	background: var(--swmp-controls-background);
 }
 
-input.swmp.settings:checked {
+input.swmp.swmp-settings:checked {
 	outline: 5px inset var(--swmp-text-color);
 	outline-offset: -8px;
 }
 
-button.swmp.button {
+button.swmp.swmp-button {
 	min-width: 26px;
 	height: 100%;
+	padding: 0 4px;
 	display: inline-block;
 	cursor: pointer;
 	margin-left: 2px;
@@ -607,7 +630,7 @@ button.swmp.button {
 	filter: unset; /* 4chan tomorrow theme buttons */
 }
 
-button.swmp.button span {
+button.swmp.swmp-button span {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -625,77 +648,76 @@ button.swmp.button span {
 
 }
 
-span.swmp.window button {
+span.swmp.swmp-window button {
 	height: 20px;
 	min-width: 22px;
 	width: 22px;
 }
 
-button.swmp.button.window-minimize span {
+button.swmp.swmp-button.swmp-window-minimize span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');
 	margin-top: 2px;
 	-webkit-mask-size: 12px;
 	mask-size: 12px;
 }
 
-button.swmp.button.window-close span {
+button.swmp.swmp-button.swmp-window-close span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');
 	margin-top: 2px;
 	-webkit-mask-size: 12px;
 	mask-size: 12px;
 }
 
-button.swmp.button.playbutton span {
+button.swmp.swmp-button.swmp-playbutton span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=');
 }
 
-button.swmp.button.playbutton.playing span {
+button.swmp.swmp-button.swmp-playbutton.swmp-playing span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==');
 }
 
-button.swmp.button.stopbutton span {
+button.swmp.swmp-button.swmp-stopbutton span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC');
 }
 
-button.swmp.button.fullscreen, .swmp.timer-container {
+button.swmp.swmp-button.swmp-fullscreen, .swmp.swmp-timer-container {
 	margin-left: auto;
-	cursor: default;
 }
 
-button.swmp.button.fullscreen span {
+button.swmp.swmp-button.swmp-fullscreen span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC');
 }
 
-button.swmp.button.volume span {
+button.swmp.swmp-button.swmp-volume span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')
 }
 
-button.swmp.button.volume.min span {
+button.swmp.swmp-button.swmp-volume.swmp-min span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')
 }
 
-button.swmp.button.volume.max span {
+button.swmp.swmp-button.swmp-volume.swmp-max span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')
 }
 
-button.swmp.button.volume.mute span {
+button.swmp.swmp-button.swmp-volume.swmp-mute span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')
 }
 
-span.swmp.volume-container {
+span.swmp.swmp-volume-container {
 	display: flex;
 	width: 60px;
 	height: 100%;
 	position: relative;
 }
 
-span.swmp.volume-container input.swmp.volume.range {
+span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range {
 	width: 50px;
 	vertical-align: top;
 	position: relative;
 }
 
-button.swmp.button:active {
+button.swmp.swmp-button:active {
 	/*background: #cacaca;*/
 	border-bottom-color: var(--swmp-btn-border-bottom-active);
 	border-right-color: var(--swmp-btn-border-right-active);
@@ -703,17 +725,18 @@ button.swmp.button:active {
 	border-left-color: var(--swmp-btn-border-left-active);
 }
 
-button.swmp.button:focus {
+button.swmp.swmp-button:focus {
 	/*outline: 1px dotted var(--swmp-text-color);
 	outline-offset: -3px;*/
 }
 
-span.swmp.timer-container {
+span.swmp.swmp-timer-container {
 	display: inline-table;
 	margin-right: 5px;
+	cursor: default;
 }
 
-span.swmp.timer-container span.swmp.time {
+span.swmp.swmp-timer-container span.swmp.swmp-time {
 	display: table-cell;
 	vertical-align: bottom;
 }`;
@@ -762,7 +785,7 @@ class swmp {
 
 		// Create Container
 		this.container = document.createElement('div');
-		this.container.setAttribute('class', 'swmp container');
+		this.container.setAttribute('class', 'swmp swmp-container');
 		this.container.setAttribute('id', this.id);
 		this.container.setAttribute('tabindex', '0');
 
@@ -770,14 +793,14 @@ class swmp {
 		if (this.type == 'video') {
 			this.container.classList.add('video');
 			this.player = document.createElement('video');
-			this.player.setAttribute('class', 'swmp video player');
+			this.player.setAttribute('class', 'swmp swmp-video swmp-player');
 			if (this.poster != false && this.poster != undefined) {
 				this.player.setAttribute('poster', this.poster);
 			}
 		} else if (this.type == 'audio') {
 			this.container.classList.add('audio');
 			this.player = document.createElement('audio');
-			this.player.setAttribute('class', 'swmp audio player');
+			this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
 		} else {
 			console.log(`SWMP Error: invalid type of ${this.type}.`);
 			return false;
@@ -793,22 +816,22 @@ class swmp {
 
 		// Add Theme
 		if (swmpConfig.theme != undefined) {
-			this.container.classList.add(`theme-${swmpConfig.theme}`)
+			this.container.classList.add(`swmp-theme-${swmpConfig.theme}`)
 		}
 
 		// Create Window Container
 		if (this.windowed != false) {
 			this.windowContainer = document.createElement('div');
-			this.windowContainer.setAttribute('class', 'swmp window window-container');
+			this.windowContainer.setAttribute('class', 'swmp swmp-window swmp-window-container');
 			this.container.appendChild(this.windowContainer);
 
 				// Create Title/WindowDragbar and put inside Window Container
 				this.windowTitlebar = document.createElement('span');
-				this.windowTitlebar.setAttribute('class', 'swmp window window-titlebar');
+				this.windowTitlebar.setAttribute('class', 'swmp swmp-window swmp-window-titlebar');
 				if (this.title != undefined) {
-					this.windowTitlebar.innerHTML = `<span class="swmp window window-title">${this.title}</span>`;
+					this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.title}</span>`;
 				} else {		 // Maybe add extract filename only from external sites later?
-					this.windowTitlebar.innerHTML = `<span class="swmp window window-title">${this.url}</span>`;
+					this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.url}</span>`;
 				}
 				/*this.windowTitlebar.addEventListener("click", (event) => {
 					alert('click');
@@ -817,20 +840,20 @@ class swmp {
 
 				// Create Window Buttons Container
 				this.windowButtonsContain = document.createElement('span');
-				this.windowButtonsContain.setAttribute('class', 'swmp window window-buttons-contain');
+				this.windowButtonsContain.setAttribute('class', 'swmp swmp-window swmp-window-buttons-contain');
 				this.windowContainer.appendChild(this.windowButtonsContain);
 
 				// Create Minimize Button (Video only)
 				if (this.type == 'video') {
 					this.windowMinimize = document.createElement('button');
-					this.windowMinimize.setAttribute('class', 'swmp button window-minimize');
+					this.windowMinimize.setAttribute('class', 'swmp swmp-button swmp-window-minimize');
 					this.windowMinimize.innerHTML = '<span></span>';
 					this.windowMinimize.addEventListener('click', (event) => {
 						event.preventDefault();
-						if (this.container.classList.contains('minimized') ) {
-							this.container.classList.remove('minimized');
+						if (this.container.classList.contains('swmp-minimized') ) {
+							this.container.classList.remove('swmp-minimized');
 						} else {
-							this.container.classList.add('minimized');
+							this.container.classList.add('swmp-minimized');
 						}
 					});
 					this.windowButtonsContain.appendChild(this.windowMinimize);
@@ -838,7 +861,7 @@ class swmp {
 
 				// Create Close Button
 				this.windowClose = document.createElement('button');
-				this.windowClose.setAttribute('class', 'swmp button window-close');
+				this.windowClose.setAttribute('class', 'swmp swmp-button swmp-window-close');
 				this.windowClose.innerHTML = '<span></span>';
 				this.windowClose.addEventListener('click', (event) => {
 					event.preventDefault();
@@ -900,7 +923,7 @@ class swmp {
 
 		// Create and put Controls inside Container
 		this.controls = document.createElement('div');
-		this.controls.setAttribute('class', 'swmp controls');
+		this.controls.setAttribute('class', 'swmp swmp-controls');
 		this.container.appendChild(this.controls);
 
 		// Disable Default Context Menu on Controls
@@ -918,7 +941,7 @@ class swmp {
 
 		// Create Progress/Seeker Container
 		this.seekContain = document.createElement('span');
-		this.seekContain.setAttribute('class', 'swmp seek-container');
+		this.seekContain.setAttribute('class', 'swmp swmp-seek-container');
 		//this.seekContain.textContent = 'seek-cntnr';
 		this.controls.appendChild(this.seekContain);
 
@@ -928,7 +951,7 @@ class swmp {
 		this.progress.setAttribute('min', '0');
 		this.progress.setAttribute('max', '1000');
 		this.progress.setAttribute('step', '1');
-		this.progress.setAttribute('class', 'swmp progress');
+		this.progress.setAttribute('class', 'swmp swmp-progress');
 		this.seekContain.appendChild(this.progress);
 
 		// Create Seeker Input
@@ -938,22 +961,22 @@ class swmp {
 		this.seeker.setAttribute('min', '0');
 		this.seeker.setAttribute('max', '1000');
 		this.seeker.setAttribute('step', '1');
-		this.seeker.setAttribute('class', 'swmp seeker');
+		this.seeker.setAttribute('class', 'swmp swmp-seeker');
 		this.seekContain.appendChild(this.seeker);
 
 		// Create a Row Bottom Container
 		this.bottomRow = document.createElement('span');
-		this.bottomRow.setAttribute('class', 'swmp row-bottom');
+		this.bottomRow.setAttribute('class', 'swmp swmp-row-bottom');
 		this.controls.appendChild(this.bottomRow);
 
 		// Create Buttons Container
 		this.buttonsContain = document.createElement('span');
-		this.buttonsContain.setAttribute('class', 'swmp buttons-container');
+		this.buttonsContain.setAttribute('class', 'swmp swmp-buttons-container');
 		this.bottomRow.appendChild(this.buttonsContain);
 
 		// Create Play/Pause Button and put inside Controls
 		this.playbutton = document.createElement('button');
-		this.playbutton.setAttribute('class', 'swmp button playbutton');
+		this.playbutton.setAttribute('class', 'swmp swmp-button swmp-playbutton');
 		this.playbutton.innerHTML = "<span></span>" // ◀
 		this.playbutton.addEventListener("click", event => {
 			event.preventDefault();
@@ -967,7 +990,7 @@ class swmp {
 
 		// Create a Stop/Reload Button and put inside Controls
 		this.stopbutton = document.createElement('button');
-		this.stopbutton.setAttribute('class', 'swmp button stopbutton');
+		this.stopbutton.setAttribute('class', 'swmp swmp-button swmp-stopbutton');
 		this.stopbutton.innerHTML = "<span></span>"; // ■
 		this.stopbutton.addEventListener("click", event => {
 			event.preventDefault();
@@ -983,12 +1006,12 @@ class swmp {
 
 		// Create a Volume Container
 		this.volumeContain = document.createElement('span');
-		this.volumeContain.setAttribute('class', 'swmp volume-container');
+		this.volumeContain.setAttribute('class', 'swmp swmp-volume-container');
 		this.bottomRow.appendChild(this.volumeContain);
 
 		// Create a Volume Button and put inside Buttons Container
 		this.volumeButton = document.createElement('button');
-		this.volumeButton.setAttribute('class', 'swmp button volume');
+		this.volumeButton.setAttribute('class', 'swmp swmp-button swmp-volume');
 		this.volumeButton.innerHTML = "<span></span>";
 		this.volumeButton.addEventListener("click", event => {
 			event.preventDefault();
@@ -1002,7 +1025,7 @@ class swmp {
 		this.volumeProgress.setAttribute('min', '0');
 		this.volumeProgress.setAttribute('max', '100');
 		this.volumeProgress.setAttribute('step', '1');
-		this.volumeProgress.setAttribute('class', 'swmp volume progress');
+		this.volumeProgress.setAttribute('class', 'swmp swmp-volume swmp-progress');
 		this.volumeContain.appendChild(this.volumeProgress);
 
 		// Create a Volume Input and put inside Volume Container
@@ -1012,36 +1035,36 @@ class swmp {
 		this.volumeRange.setAttribute('min', '0');
 		this.volumeRange.setAttribute('max', '100');
 		this.volumeRange.setAttribute('step', '1');
-		this.volumeRange.setAttribute('class', 'swmp volume range');
+		this.volumeRange.setAttribute('class', 'swmp swmp-volume swmp-range');
 		this.volumeContain.appendChild(this.volumeRange);
 
 		// Create a Timer Container and put inside Controls
 		this.timerContain = document.createElement('span');
-		this.timerContain.setAttribute('class', 'swmp timer-container');
+		this.timerContain.setAttribute('class', 'swmp swmp-timer-container');
 		this.bottomRow.appendChild(this.timerContain);
 
 		// Create a timerCurrent and put inside Timer Container
 		this.currentTimer = document.createElement('span');
-		this.currentTimer.setAttribute('class', 'swmp time current');
+		this.currentTimer.setAttribute('class', 'swmp swmp-time swmp-current');
 		this.currentTimer.textContent = '00:00';
 		this.timerContain.appendChild(this.currentTimer);
 
 		// Add a separator between timer
 		this.timerSeperator = document.createElement('span');
-		this.timerSeperator.setAttribute('class', 'swmp time separator');
+		this.timerSeperator.setAttribute('class', 'swmp swmp-time swmp-separator');
 		this.timerSeperator.textContent = '/';
 		this.timerContain.appendChild(this.timerSeperator);
 
 		// Create a totalTimer and put inside Timer Container
 		this.totalTimer = document.createElement('span');
-		this.totalTimer.setAttribute('class', 'swmp time total');
+		this.totalTimer.setAttribute('class', 'swmp swmp-time swmp-total');
 		this.totalTimer.textContent = '00:00';
 		this.timerContain.appendChild(this.totalTimer);
 
 		// Create a Fullscreen Button and put inside Bottom Row Container
 		if (this.type == 'video') {
 			this.fullscreenbutton = document.createElement('button');
-			this.fullscreenbutton.setAttribute('class', 'swmp button fullscreen');
+			this.fullscreenbutton.setAttribute('class', 'swmp swmp-button swmp-fullscreen');
 			this.fullscreenbutton.innerHTML = "<span></span>"; // ▣
 			this.fullscreenbutton.addEventListener("click", event => {
 				event.preventDefault();
@@ -1083,8 +1106,8 @@ class swmp {
 		}, true);
 
 		this.player.onended = (event) => {
-			this.player.classList.remove('playing');
-			this.playbutton.classList.remove('playing');
+			this.player.classList.remove('swmp-playing');
+			this.playbutton.classList.remove('swmp-playing');
 			this.seeker.value = 0;
 			this.progress.value = 0;
 			clearInterval(this.player.interval);
@@ -1097,8 +1120,8 @@ class swmp {
 
 
 		this.player.onplay = (event) => {
-			this.player.classList.add('playing');
-			this.playbutton.classList.add('playing');
+			this.player.classList.add('swmp-playing');
+			this.playbutton.classList.add('swmp-playing');
 			var self = this;
 			this.player.interval = window.setInterval(function(event) {
 				self.player.timeupdate()
@@ -1106,8 +1129,8 @@ class swmp {
 		};
 
 		this.player.onpause = (event) => {
-			this.player.classList.remove('playing');
-			this.playbutton.classList.remove('playing');
+			this.player.classList.remove('swmp-playing');
+			this.playbutton.classList.remove('swmp-playing');
 			clearInterval(this.player.interval);
 		};
 
@@ -1141,9 +1164,9 @@ class swmp {
 			document.msFullscreenElement;
 
 			if (!fullscreenElement) {
-				this.container.classList.remove('fullscreen');
+				this.container.classList.remove('swmp-fullscreen');
 			} else {
-				this.container.classList.add('fullscreen');
+				this.container.classList.add('swmp-fullscreen');
 			}
 		});
 
@@ -1181,7 +1204,7 @@ class swmp {
 				} else if (document.msExitFullscreen) {
 					document.msExitFullscreen();
 				}
-				this.container.classList.remove('fullscreen');
+				this.container.classList.remove('swmp-fullscreen');
 			} else {
 				if (element.requestFullscreen) {
 					element.requestFullscreen();
@@ -1192,13 +1215,13 @@ class swmp {
 				} else if (element.msRequestFullscreen) {
 					element.msRequestFullscreen();
 				}
-				this.container.classList.add('fullscreen');
+				this.container.classList.add('swmp-fullscreen');
 			}
 		}
 
 		this.toggleMute = () => {
 			if (this.player.muted) {
-				this.volumeButton.classList.remove('mute');
+				this.volumeButton.classList.remove('swmp-mute');
 				this.player.muted = false;
 				this._volume = Math.floor(this.player.volume * 100);
 				this.volumeRange.setAttribute('value', this._volume );
@@ -1206,7 +1229,7 @@ class swmp {
 				this.volumeProgress.setAttribute('value', this._volume );
 				this.volumeProgress.value = this._volume;
 			} else {
-				this.volumeButton.classList.add('mute');
+				this.volumeButton.classList.add('swmp-mute');
 				this.player.muted = true;
 				this.volumeRange.setAttribute('value', 0 );
 				this.volumeRange.value = 0;
@@ -1225,13 +1248,13 @@ class swmp {
 
 		this.updateVolume = (firstrun = false) => {
 
-			this.volumeButton.classList.remove('mute');
+			this.volumeButton.classList.remove('swmp-mute');
 
 			if (firstrun == true) {
 				this.volumeRange.setAttribute('value', this.defaultVolume);
 				this.volumeProgress.setAttribute('value', this.defaultVolume);
 				this.playerVolume = this.defaultVolume;
-				this.volumeButton.classList.add('min');
+				this.volumeButton.classList.add('swmp-min');
 			}
 
 			if (this.player.muted) {
@@ -1243,17 +1266,17 @@ class swmp {
 			this.player.volume = parseFloat(this.volumeRange.value / 100);
 
 			if (this.player.volume > 0.50) {
-				this.volumeButton.classList.add('max');
-				this.volumeButton.classList.remove('med');
-				this.volumeButton.classList.remove('min');
+				this.volumeButton.classList.add('swmp-max');
+				this.volumeButton.classList.remove('swmp-med');
+				this.volumeButton.classList.remove('swmp-min');
 			} else if (this.player.volume > 0.10) {
-				this.volumeButton.classList.add('med');
-				this.volumeButton.classList.remove('max');
-				this.volumeButton.classList.remove('min');
+				this.volumeButton.classList.add('swmp-med');
+				this.volumeButton.classList.remove('swmp-max');
+				this.volumeButton.classList.remove('swmp-min');
 			} else if (this.player.volume > 0.05) {
-				this.volumeButton.classList.add('min');
-				this.volumeButton.classList.remove('max');
-				this.volumeButton.classList.remove('med');
+				this.volumeButton.classList.add('swmp-min');
+				this.volumeButton.classList.remove('swmp-max');
+				this.volumeButton.classList.remove('swmp-med');
 			}
 
 			localStorage.swmpVolume = this.volumeRange.value;
@@ -1271,14 +1294,14 @@ class swmp {
 		this.openSettings = () => {
 			// Settings Menu
 
-			if (this.container.querySelector('.settings-container') != null) {
+			if (this.container.querySelector('.swmp-settings-container') != null) {
 				this.settingsContainer.remove();
 				return false; //Already open
 			}
 
 			this.settingsContainer = document.createElement('div');
-			this.settingsContainer.setAttribute('class', 'swmp settings settings-container');
-			this.settingsContainer.innerHTML = 'Configuration:';
+			this.settingsContainer.setAttribute('class', 'swmp swmp-settings swmp-settings-container');
+			this.settingsContainer.innerHTML = 'Settings:';
 			this.container.appendChild(this.settingsContainer); //maybe move this after buttons tbh
 
 			/*// Create Close Settings Button
@@ -1294,7 +1317,7 @@ class swmp {
 			this.settingsContainer.appendChild(this.br);
 
 			this.themeSelector = document.createElement('select');
-			this.themeSelector.setAttribute('class', 'swmp selector settings theme-selector');
+			this.themeSelector.setAttribute('class', 'swmp swmp-selector swmp-settings swmp-theme-selector');
 
 			this.themes = '';
 			swmpConfig.themes.forEach(theme => {
@@ -1311,8 +1334,8 @@ class swmp {
 				if (this.themeSelector.value == '') {
 					return false;
 				} else {
-					this.removeClassByPrefix(this.container, 'theme-') //regex remove [theme-*]
-					this.container.classList.add(`theme-${this.themeSelector.value}`);
+					this.removeClassByPrefix(this.container, 'swmp-theme-') //regex remove [theme-*]
+					this.container.classList.add(`swmp-theme-${this.themeSelector.value}`);
 					swmpConfig.theme = this.themeSelector.value;
 					localStorage.swmpTheme = this.themeSelector.value;
 				}
@@ -1322,10 +1345,10 @@ class swmp {
       
       	// Autoplay Settings
 			this.autoplayLabel = document.createElement('label');
-			this.autoplayLabel.setAttribute('class', 'swmp settings label autoplay-label');
+			this.autoplayLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-autoplay-label');
 			this.autoplayLabel.textContent = 'Autoplay';
 			this.autoplayCheck = document.createElement('input');
-			this.autoplayCheck.setAttribute('class', 'swmp settings input autoplay-input');
+			this.autoplayCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-autoplay-input');
 			this.autoplayCheck.setAttribute('type', 'checkbox');
 			if (localStorage.swmpAutoplay == 'true') {
 				this.autoplayCheck.setAttribute('checked', 'checked');
@@ -1346,10 +1369,10 @@ class swmp {
 
       	// Loop Settings
 			this.loopLabel = document.createElement('label');
-			this.loopLabel.setAttribute('class', 'swmp settings label loop-label');
+			this.loopLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-loop-label');
 			this.loopLabel.textContent = 'Loop';
 			this.loopCheck = document.createElement('input');
-			this.loopCheck.setAttribute('class', 'swmp settings input loop-input');
+			this.loopCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-loop-input');
 			this.loopCheck.setAttribute('type', 'checkbox');
 			if (localStorage.swmpLoop == 'true') {
 				this.loopCheck.setAttribute('checked', 'checked');
@@ -1372,10 +1395,10 @@ class swmp {
       
       	// Multiple Players Settings
 			this.multiLabel = document.createElement('label');
-			this.multiLabel.setAttribute('class', 'swmp settings label multi-label');
+			this.multiLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-multi-label');
 			this.multiLabel.textContent = 'Multi';
 			this.multiCheck = document.createElement('input');
-			this.multiCheck.setAttribute('class', 'swmp settings input multi-input');
+			this.multiCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-multi-input');
 			this.multiCheck.setAttribute('type', 'checkbox');
 			if (localStorage.swmpAllowMultiple == 'true') {
 				this.multiCheck.setAttribute('checked', 'checked');
@@ -1501,7 +1524,12 @@ class swmp {
 
        element.style.position = 'fixed';
        element.style.top = swmpConfig.positionTop + 'px';
-       element.style.left = window.innerWidth - swmpConfig.positionRight + 'px';
+       
+       if (swmpConfig.positionSide == 'right') {
+         element.style.right = swmpConfig.positionOffset + 'px';
+       } else {
+         element.style.left = swmpConfig.positionOffset + 'px';
+       }
 
     var isMouseDown = false,
         mouseX,
@@ -1515,10 +1543,14 @@ class swmp {
         rightBarrier,
         bottomBarrier;
 
-    var containerWidth = window.innerWidth,
-        containerHeight = window.innerHeight,
-        elmWidth = element.offsetWidth,
-        elmHeight = element.offsetHeight;
+    var containerWidth = window.innerWidth;
+    var containerHeight = window.innerHeight;
+    if (swmpConfig.positionSide == 'right') {
+      var elmWidth = 0;
+    } else {
+      var elmWidth = element.offsetWidth;
+    }
+    var elmHeight = element.offsetHeight;
 
 
     function mouseDown(e) {
@@ -1551,14 +1583,18 @@ class swmp {
       if (e.which != '1') {
         isMouseDown = false;
       }
-
-      var newMouseX = e.clientX;
+			
+      if (swmpConfig.positionSide == 'right') {
+        var newMouseX = window.innerWidth - e.clientX;
+      } else {
+        var newMouseX = e.clientX;
+      }
       var newMouseY = e.clientY;
 
       newElmTop = newMouseY - diffY;
       newElmLeft = newMouseX - diffX;
 
-      rightBarrier = window.innerWidth - element.offsetWidth,
+      rightBarrier = window.innerWidth - element.offsetWidth;
       bottomBarrier = window.innerHeight - element.offsetHeight;
 
       if( ( newElmLeft < 0 ) || ( newElmTop < 0) || ( newElmLeft > rightBarrier  ) || (newElmTop > bottomBarrier) ) {
@@ -1581,7 +1617,11 @@ class swmp {
       }
 
       element.style.top = newElmTop + "px";
-      element.style.left = newElmLeft + "px";
+      if (swmpConfig.positionSide == 'right') {
+        element.style.right = newElmLeft + "px";
+      } else {
+        element.style.left = newElmLeft + "px";
+      }
 
     }
 
@@ -1710,10 +1750,10 @@ document.querySelector('body').addEventListener('click', (event) => {
 
 
   // Okay, time to load the player.
-	if (swmpConfig.allowMultiple != 'false')  {
-    	var playerid = `play-ibmp-${clicked.getAttribute('href')}`;
+		if (swmpConfig.allowMultiple != 'false')  {
+    	var playerid = `play-swmp-${clicked.getAttribute('href')}`;
     } else {
-      var playerid = 'play-ibmp';
+      var playerid = 'play-swmp';
     }
     if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
       if (swmpConfig.allowMultiple != 'false')  {

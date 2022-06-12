@@ -1,3 +1,20 @@
+.swmp * {
+	background: none;
+	border: 0;
+	outline: 0;
+	margin: 0;
+	padding: 0;
+	line-height: 1;
+	height: unset;
+	width: unset;
+	font-family: -apple-system,BlinkMacSystemFont,URW Gothic, MS PGothic, Helvetica, sans-serif;
+	font-size: 11pt;
+	text-indent: 4px;
+	letter-spacing: 1px;
+	color: var(--swmp-text-color);
+
+}
+
 div.swmp {
 	--swmp-background: #e6e6e6;
 	--swmp-container-border: #000;
@@ -35,7 +52,7 @@ div.swmp {
 
 }
 
-div.swmp.theme-dark, div.swmp.theme-dark * {
+div.swmp.swmp-theme-dark, div.swmp.swmp-theme-dark * {
 	--swmp-background: #333;
 	--swmp-container-border: #000;
 	--swmp-controls-background: var(--swmp-background);
@@ -69,13 +86,13 @@ div.swmp.theme-dark, div.swmp.theme-dark * {
 	--swmp-btn-border-bottom-active: #777;
 }
 
-div.swmp.theme-kurisu, div.swmp.theme-kurisu * {
+div.swmp.swmp-theme-kurisu, div.swmp.swmp-theme-kurisu * {
 	--swmp-background: #a44242;
 	--swmp-text-color: #fff;
 	--swmp-button-mask-color: #fff;
 }
 
-div.swmp.theme-bluemoon, div.swmp.theme-bluemoon * {
+div.swmp.swmp-theme-bluemoon, div.swmp.swmp-theme-bluemoon * {
 	--swmp-background: #272d37;
 	--swmp-text-color: #eee;
 	--swmp-button-mask-color: #d3d3d3;
@@ -86,7 +103,7 @@ div.swmp.theme-bluemoon, div.swmp.theme-bluemoon * {
 	--swmp-range-thumb-color: #272d37;
 }
 
-div.swmp.container {
+div.swmp.swmp-container {
 	position: relative;
 	display: inline-flex;
 	flex-direction: column;
@@ -106,25 +123,25 @@ div.swmp.container {
 	outline: none;
 }
 
-div.swmp.window.window-container {
+div.swmp.swmp-window.swmp-window-container {
 	display: flex;
 	justify-content: space-between;
 	padding-bottom: 2px;
 }
 
-div.swmp.fullscreen div.window.window-container, div.swmp.fullscreen div.settings.settings-container {
+div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container, div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container {
 	display: none;
 }
 
-div.swmp.minimized video {
+div.swmp.swmp-minimized video {
 	display: none;
 }
 
-div.swmp.fullscreen video {
+div.swmp.swmp-fullscreen video {
 	display: block;
 }
 
-span.swmp.window.window-titlebar {
+span.swmp.swmp-window.swmp-window-titlebar {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -138,15 +155,17 @@ span.swmp.window.window-titlebar {
 	display: block;
 }
 
-span.swmp.window.window-title {
+span.swmp.swmp-window.swmp-window-title {
 	display: block;
 	max-width: 260px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	margin: auto;
+	line-height: 1.5;
+	margin-bottom: -2px;
 }
 
-span.swmp.window.window-buttons-contain {
+span.swmp.swmp-window.swmp-window-buttons-contain {
 	display: flex;
 	flex: 0 1 auto;
 }
@@ -157,11 +176,11 @@ div.swmp .swmp-player-container {
 	background: var(--swmp-player-container-background);
 }
 
-div.swmp.container.audio {
+div.swmp.swmp-container.swmp-audio {
 	display: block;
 }
 
-div.swmp.container.fullscreen {
+div.swmp.swmp-container.swmp-fullscreen {
 	background: #000;
 	position: unset!important; /* more safari behavior junk */
 	width: 100%;
@@ -169,7 +188,7 @@ div.swmp.container.fullscreen {
 
 }
 
-div.swmp.container.fullscreen video {
+div.swmp.swmp-container.swmp-fullscreen video {
 	width: 100%;
 	height: auto;
 	max-width: 100%;
@@ -189,7 +208,7 @@ div.swmp audio {
 	min-height: 40px;
 }
 
-div.swmp.controls {
+div.swmp.swmp-controls {
 	bottom: 0;
 	left: 0;
 	background: var(--swmp-controls-background);
@@ -198,19 +217,19 @@ div.swmp.controls {
 	flex-direction: column;
 }
 
-div.swmp.fullscreen div.swmp.controls {
+div.swmp.swmp-fullscreen div.swmp.swmp-controls {
 	position: absolute;
 	opacity: 0;
-	transition: opacity 1s 1s ease-out;
+	transition: opacity 0.5s 1s ease-out;
 }
 
-div.swmp.fullscreen div.swmp.controls:hover {
+div.swmp.swmp-fullscreen div.swmp.swmp-controls:hover {
 	opacity: 1;
 	position: absolute;
 	transition: none;
 }
 
-div.swmp.controls span.seek-container {
+div.swmp.swmp-controls span.swmp-seek-container {
 	display: flex;
 	width: calc(100% - 6px);
 	height: var(--swmp-seek-height);
@@ -218,7 +237,7 @@ div.swmp.controls span.seek-container {
 	/*position: relative;*/
 }
 
-div.swmp.controls span.seek-container input.swmp.seeker {
+div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker {
 	width: calc(100% - var(--swmp-seek-offset));
 	left: calc(var(--swmp-seek-offset) / 2);
 	-webkit-appearance: none;
@@ -306,7 +325,13 @@ span.swmp input[type="range"]::-moz-range-progress {
 	background-color: #0000 
 }
 
-span.swmp progress.volume {
+span.swmp input[type="range"] {
+	background: none;
+	border: 0;
+	outline: 0;
+}
+
+span.swmp progress.swmp-volume {
 	width: 50px;
 	position: absolute;
 	height: 6px;
@@ -317,7 +342,7 @@ span.swmp progress.volume {
 	background: var(--swmp-seek-background);
 }
 
-span.swmp input.volume[type="range"] {
+span.swmp input.swmp-volume[type="range"] {
 	-webkit-appearance: none;
 	background: #0000;
 	padding: 0;
@@ -326,17 +351,17 @@ span.swmp input.volume[type="range"] {
 	position: relative;
 }
 
-span.swmp input.volume[type="range"]::-webkit-slider-thumb {
+span.swmp input.swmp-volume[type="range"]::-webkit-slider-thumb {
 	padding: 4px 2px;
 	width: 2px;
 }
 
-span.swmp input.volume[type="range"]::-moz-range-thumb {
+span.swmp input.swmp-volume[type="range"]::-moz-range-thumb {
 	padding: 0 1px;
 	width: 1px;
 }
 
-div.swmp.controls span.seek-container progress.swmp.progress {
+div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress {
 	width: 100%;
 	height: 6px;
 	z-index: 0;
@@ -347,22 +372,22 @@ div.swmp.controls span.seek-container progress.swmp.progress {
 	border: none;
 }
 
-span.swmp.row-bottom {
+span.swmp.swmp-row-bottom {
 	display: flex;
 	flex-direction: row;
 	height: 20px;
 	margin-bottom: 2px;
 }
 
-div.swmp.fullscreen span.swmp.row-bottom {
+div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom {
 	padding-bottom: 5px;
 }
 
-span.swmp.buttons-container {
+span.swmp.swmp-buttons-container {
 	height: 100%;
 }
 
-select.swmp.selector {
+select.swmp.swmp-selector {
 	-webkit-appearance: none;
 	appearance: none;
 	background: var(--swmp-button-background);
@@ -375,12 +400,12 @@ select.swmp.selector {
 	text-overflow: ellipsis;
 }
 
-label.swmp.settings {
+label.swmp.swmp-settings {
 	display: inline-flex;
 	flex-direction: row-reverse;
 }
 
-input.swmp.settings {
+input.swmp.swmp-settings {
 	margin: -2px 0 0 4px;
 	border: 1px solid var(--swmp-text-color);
 	appearance: none;
@@ -391,14 +416,15 @@ input.swmp.settings {
 	background: var(--swmp-controls-background);
 }
 
-input.swmp.settings:checked {
+input.swmp.swmp-settings:checked {
 	outline: 5px inset var(--swmp-text-color);
 	outline-offset: -8px;
 }
 
-button.swmp.button {
+button.swmp.swmp-button {
 	min-width: 26px;
 	height: 100%;
+	padding: 0 4px;
 	display: inline-block;
 	cursor: pointer;
 	margin-left: 2px;
@@ -413,7 +439,7 @@ button.swmp.button {
 	filter: unset; /* 4chan tomorrow theme buttons */
 }
 
-button.swmp.button span {
+button.swmp.swmp-button span {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -431,77 +457,76 @@ button.swmp.button span {
 
 }
 
-span.swmp.window button {
+span.swmp.swmp-window button {
 	height: 20px;
 	min-width: 22px;
 	width: 22px;
 }
 
-button.swmp.button.window-minimize span {
+button.swmp.swmp-button.swmp-window-minimize span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');
 	margin-top: 2px;
 	-webkit-mask-size: 12px;
 	mask-size: 12px;
 }
 
-button.swmp.button.window-close span {
+button.swmp.swmp-button.swmp-window-close span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');
 	margin-top: 2px;
 	-webkit-mask-size: 12px;
 	mask-size: 12px;
 }
 
-button.swmp.button.playbutton span {
+button.swmp.swmp-button.swmp-playbutton span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=');
 }
 
-button.swmp.button.playbutton.playing span {
+button.swmp.swmp-button.swmp-playbutton.swmp-playing span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==');
 }
 
-button.swmp.button.stopbutton span {
+button.swmp.swmp-button.swmp-stopbutton span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC');
 }
 
-button.swmp.button.fullscreen, .swmp.timer-container {
+button.swmp.swmp-button.swmp-fullscreen, .swmp.swmp-timer-container {
 	margin-left: auto;
-	cursor: default;
 }
 
-button.swmp.button.fullscreen span {
+button.swmp.swmp-button.swmp-fullscreen span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC');
 }
 
-button.swmp.button.volume span {
+button.swmp.swmp-button.swmp-volume span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')
 }
 
-button.swmp.button.volume.min span {
+button.swmp.swmp-button.swmp-volume.swmp-min span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')
 }
 
-button.swmp.button.volume.max span {
+button.swmp.swmp-button.swmp-volume.swmp-max span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')
 }
 
-button.swmp.button.volume.mute span {
+button.swmp.swmp-button.swmp-volume.swmp-mute span {
 	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')
 }
 
-span.swmp.volume-container {
+span.swmp.swmp-volume-container {
 	display: flex;
 	width: 60px;
 	height: 100%;
 	position: relative;
 }
 
-span.swmp.volume-container input.swmp.volume.range {
+span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range {
 	width: 50px;
 	vertical-align: top;
 	position: relative;
 }
 
-button.swmp.button:active {
+button.swmp.swmp-button:active {
 	/*background: #cacaca;*/
 	border-bottom-color: var(--swmp-btn-border-bottom-active);
 	border-right-color: var(--swmp-btn-border-right-active);
@@ -509,17 +534,22 @@ button.swmp.button:active {
 	border-left-color: var(--swmp-btn-border-left-active);
 }
 
-button.swmp.button:focus {
+button.swmp.swmp-button:focus {
 	/*outline: 1px dotted var(--swmp-text-color);
 	outline-offset: -3px;*/
 }
 
-span.swmp.timer-container {
+span.swmp.swmp-timer-container {
 	display: inline-table;
 	margin-right: 5px;
+	cursor: default;
 }
 
-span.swmp.timer-container span.swmp.time {
+span.swmp.swmp-timer-container span.swmp.swmp-time {
 	display: table-cell;
 	vertical-align: bottom;
+}
+
+#quote-preview { /* Put 4chan post hovers above player. Won't put player on z0 because other sites. */
+	z-index: 1;
 }
