@@ -63,7 +63,7 @@ By setting 'windowed' to false on player creation the constructor will create an
 
 #### Userscript install:
 
-If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may install This script. If you would like to read the full code there is a non-minified version here.
+If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may install [this](https://github.com/LabMember-001/Simple-Web-Media-Player/raw/main/swmp.user.js) script. If you would like to read the full code there is a non-minified version here.
 
 ## Configuration
 
