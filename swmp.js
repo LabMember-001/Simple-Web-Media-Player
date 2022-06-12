@@ -1,9 +1,13 @@
 // ==UserScript==
-// @name     4chan \ IB Media Player
-// @description		Windowed and configurable media player for 4chan and other imageboards running vichan, tinyib, wakaba, lynxchan, and jschan.
-// @author https://github.com/LabMember-001
-// @version  1.0
+// @name     4chan \ IB Simple Web Media Player
+// @description   Windowed and configurable media player for 4chan and other imageboards running vichan, tinyib, wakaba, lynxchan, and jschan.
+// @namespace     LabMember-001
+// @author        https://github.com/LabMember-001
+// @license      GPLv3;
+// @version  1.1
 // @grant    none
+// @updateURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
+// @downloadURL https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
 
 // @run-at      document-end
 
@@ -19,27 +23,26 @@
 // @match https://*.anon.cafe/*
 
 // @match https://*.archived.moe/*
+// @match https://*.desuarchive.org/*
 // @match https://*.4plebs.org/*
 // @match https://*.warosu.org/*
-
-// @match https://*/*
 
 // ==/UserScript==
 
 
 // @match https://*/*
-// Most of the sites above are purely to test scripts.
+// Most of the sites above are to test scripts.
 
 console.log('Loading IB Media Player.');
 
-/* Repository:	 																						*/
+/* Repository:                                              */
 /* https://github.com/LabMember-001/Simple-Web-Media-Player */
-/* https://okabe.moe/projects/simplewebmediaplayer 					*/
-/*																													*/
-/*                                              						*/
-/* 																													*/
+/* https://okabe.moe/projects/simplewebmediaplayer          */
+/*                                                          */
+/*                                                          */
+/*                                                          */
 
-/* 		== BOARD SUPPORT == 
+/*    == BOARD SUPPORT == 
 // Script will alter behavior on different imageboard backends
 // When adding custom board scripts, alter board behavior on bottom of the script. You'll need some knowledge on JS.
 // In most cases, simply adding an @match to the top of this script to turn it on for that domain will work 
@@ -47,12 +50,12 @@ console.log('Loading IB Media Player.');
 // If you want more compatability, check the issue tracker for existing requests and if there are none, you may request help.
 */
 
-/* 		== SCRIPT CONFIGURATION ==
+/*    == SCRIPT CONFIGURATION ==
 // To define a board as a precoded backend type (vichan, tinyib, lynxchan, etc) simply
 // add a regex for that domain in the swmpBoards category below these comments.
 */
 
-/* 		== TO DO ==
+/*    == TO DO ==
 //
 // High priority
 // - Resizing
@@ -70,7 +73,7 @@ console.log('Loading IB Media Player.');
 // - Fix titles on some backends. (Mostly just vichan+4chan taking original filename right now).
 */
 
-/* 		== Current Script Support ==
+/*    == Current Script Support ==
 // Yotsuba (4chan)
 // Tinyboard/Vichan/Infinity
 // Fuuka
@@ -80,14 +83,14 @@ console.log('Loading IB Media Player.');
 // Kusaba
 */
 
-/* 	== Script Specific Bugs == 
+/*  == Script Specific Bugs == 
 // - Vichan shows original title when clicked on video thumb, but not link.
 // - Doesnt grab titles on Fuuka, TinyIB, Wakaba, FoolFuuka
 //
 */
 
 /*
-// 		== Missing Script Support ==
+//    == Missing Script Support ==
 // Some Kusaba sites have issues loading video when clicked on thumbnail. Links typically work. 7chan is fine.
 // Phutaba has a slight bug with videos which shows file information when hovering over player depending on which link you click.
 // Some of the bigger Lynxchan sites are very modified and have no thumbnail click support.
@@ -98,25 +101,25 @@ console.log('Loading IB Media Player.');
  // Get domain
 var currentUrl = window.location.href;
 
-	// Board Types - probably temporary.
+  // Board Types - probably temporary.
 var swmpBoards = {
- 	fourchan: // For title support, otherwise works well without adding here.
-  		['https:\/\/*..*(4chan|4channel).org\/*'], 
+  fourchan: // For title support, otherwise works well without adding here.
+      ['https:\/\/*..*(4chan|4channel).org\/*'], 
   vichan:  // For Title and thumbnail click support. Not great without due to thumbnails.
-  		['https:\/\/*..*(smuglo.li|smugloli.net)\/*', 
+      ['https:\/\/*..*(smuglo.li|smugloli.net)\/*', 
        'https:\/\/*..*2kind.moe\/*',
        'https:\/\/*..*kissu.moe\/*'], // Also works on new UI (lolnoty) as long as it's in here.
   tinyib: // Title support not written, otherwise works well without adding here.
-  		['https:\/\/*..*1chan.net\/*'], 
+      ['https:\/\/*..*1chan.net\/*'], 
   wakaba: // Title support not written, otherwise works well without adding here.
-  		['https:\/\/*..*otterchat.net\/*'], 
+      ['https:\/\/*..*otterchat.net\/*'], 
   lynxchan: // Title support not written, otherwise works well without adding here.
-  		['https:\/\/*..*anon.cafe\/*'], 
+      ['https:\/\/*..*anon.cafe\/*'], 
   jschan: // Title support not written. Jschan installations *must* be added here to work properly.
-  		['https:\/\/*..*fatchan.org\/*'] 
+      ['https:\/\/*..*fatchan.org\/*'] 
 };
 
-	// regex to check the backend script of current domain
+  // regex to check the backend script of current domain
 var backendScript = [];
 Object.keys(swmpBoards).forEach(script => {
   swmpBoards[script].forEach(regex => {
@@ -129,56 +132,63 @@ Object.keys(swmpBoards).forEach(script => {
 console.log(backendScript);
 
 
-	// This configuration variable can be overwritten wherever you want later 
-	// on as you wish or add your own site variables for user configuration.
+  // This configuration variable can be overwritten wherever you want later 
+  // on as you wish or add your own site variables for user configuration.
 var swmpConfig = {
-	autoplay: 'true', // Autoplay media when launched by SWMP.
-	loop: 'true', // Loop media when launched by SWMP.
-	positionTop: '100',
+  autoplay: 'true', // Autoplay media when launched by SWMP.
+  loop: 'true', // Loop media when launched by SWMP.
+  windowed: 'true',
+  positionTop: '100',
   positionOffset: '100',
   positionSide: 'right',
-	volume: 60,
-	theme: 'default', //Default theme
-	themes: //All themes
-		[
-			['default', 'MPC Light'],
-			['dark', 'MPC Dark'],
-			['kurisu', 'Kurisumasu'],
+  volume: 60,
+  theme: 'default', //Default theme
+  themes: //All themes
+    [
+      ['default', 'MPC Light'],
+      ['dark', 'MPC Dark'],
+      ['kurisu', 'Kurisumasu'],
       ['bluemoon', 'Blue Moon']
-		],
-	files: 'avi|mpeg|mpg|ogv|mp4|webm|flv|wav|mp3|m4a|mp2|ogg|flac',
+    ],
+  files: 'avi|mpeg|mpg|ogv|mp4|webm|flv|wav|mp3|m4a|mp2|ogg|flac',
   allowMultiple: 'false'
 };
 
-	// Initialize site configuration. As of now it's on a per site basis and not using GM values, I like different designs.
+  // Initialize site configuration. As of now it's on a per site basis and not using GM values, I like different designs.
 if (localStorage.swmpVolume == undefined) {
-	localStorage.swmpVolume = swmpConfig.volume;
+  localStorage.swmpVolume = swmpConfig.volume;
 } else {
-	swmpConfig.volume = localStorage.swmpVolume;
+  swmpConfig.volume = localStorage.swmpVolume;
 }
 
 if (localStorage.swmpTheme == undefined) {
-	localStorage.swmpTheme = 'default';
+  localStorage.swmpTheme = swmpConfig.theme;
 } else {
-	swmpConfig.theme = localStorage.swmpTheme;
+  swmpConfig.theme = localStorage.swmpTheme;
 }
 
 if (localStorage.swmpAutoplay == undefined) {
-	localStorage.swmpAutoplay = 'true';
+  localStorage.swmpAutoplay = swmpConfig.autoplay;
 } else {
-	swmpConfig.autoplay = localStorage.swmpAutoplay;
+  swmpConfig.autoplay = localStorage.swmpAutoplay;
 }
 
 if (localStorage.swmpLoop == undefined) {
-	localStorage.swmpLoop = 'true';
+  localStorage.swmpLoop = swmpConfig.loop;
 } else {
-	swmpConfig.loop = localStorage.swmpLoop;
+  swmpConfig.loop = localStorage.swmpLoop;
 }
 
 if (localStorage.swmpAllowMultiple == undefined) {
-	localStorage.swmpAllowMultiple = 'false';
+  localStorage.swmpAllowMultiple = swmpConfig.allowMultiple;
 } else {
-	swmpConfig.allowMultiple = localStorage.swmpAllowMultiple;
+  swmpConfig.allowMultiple = localStorage.swmpAllowMultiple;
+}
+
+if (localStorage.swmpWindowed == undefined) {
+  localStorage.swmpWindowed = swmpConfig.windowed;
+} else {
+  swmpConfig.windowed = localStorage.swmpWindowed;
 }
 
 
@@ -195,156 +205,160 @@ document.querySelector("head").appendChild(swmpStyle);
 
 class swmp {
 
-	constructor(obj) {
-		this.name = 'Simple Web Media Player';
-		
-		if (obj.id == undefined) {
-		this.id = this.uuid();
-		} else {
-			this.id = obj.id;
-		}
+  constructor(obj) {
+    this.name = 'Simple Web Media Player';
+    
+    if (obj.id == undefined) {
+    this.id = this.uuid();
+    } else {
+      this.id = obj.id;
+    }
 
-		this.type = obj.type; // "video" or "audio" player.
-		this.mime = obj.mime; // MIME type for source, Example: "video/webm". Feed to enable checking for file support (webm not supported by iOS)
-		this.url = obj.url; // File Location
-		this.poster = obj.poster; // Optional Video Preview for when autoplay is off.
-		this.autoplay = obj.autoplay; // Optional Autoplay
-		this.loop = obj.loop; // Optional Loop
-		this.windowed = obj.windowed; // Optional set false to disable windowed mode and place inline
-		
-		this.defaultVolume = parseInt(swmpConfig.volume);
+    this.type = obj.type; // "video" or "audio" player.
+    this.mime = obj.mime; // MIME type for source, Example: "video/webm". Feed to enable checking for file support (webm not supported by iOS)
+    this.url = obj.url; // File Location
+    this.poster = obj.poster; // Optional Video Preview for when autoplay is off.
+    this.autoplay = obj.autoplay; // Optional Autoplay
+    this.loop = obj.loop; // Optional Loop
+    this.windowed = obj.windowed; // Optional set false to disable windowed mode and place inline
+    
+    this.defaultVolume = parseInt(swmpConfig.volume);
 
-		if (this.url == undefined) {
-			console.log('No media given');
-			return false;
-		}
+    if (obj.url == undefined) {
+      console.log('No media given');
+      return false;
+    }
 
-		if (obj.title == undefined) {
-			this.title = this.getFileName(obj.url);
-		} else {
-			this.title = obj.title; // If Applicable, assign from existing parameters on IB.
-		}
+    if (obj.windowed == undefined) {
+      this.windowed = swmpConfig.windowed;
+    }
 
-		// Check URL for Type and Mime, also sets mime+type based on fileextension in url
-		if (this.checkURL(this.url) == false) {
-			return false;
-		}
+    if (obj.title == undefined) {
+      this.title = this.getFileName(obj.url);
+    } else {
+      this.title = obj.title; // If Applicable, assign from existing parameters on IB.
+    }
 
-		// Create Container
-		this.container = document.createElement('div');
-		this.container.setAttribute('class', 'swmp swmp-container');
-		this.container.setAttribute('id', this.id);
-		this.container.setAttribute('tabindex', '0');
+    // Check URL for Type and Mime, also sets mime+type based on fileextension in url
+    if (this.checkURL(this.url) == false) {
+      return false;
+    }
 
-		// Create Player HTML5 Video or Audio format.
-		if (this.type == 'video') {
-			this.container.classList.add('video');
-			this.player = document.createElement('video');
-			this.player.setAttribute('class', 'swmp swmp-video swmp-player');
-			if (this.poster != false && this.poster != undefined) {
-				this.player.setAttribute('poster', this.poster);
-			}
-		} else if (this.type == 'audio') {
-			this.container.classList.add('audio');
-			this.player = document.createElement('audio');
-			this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
-		} else {
-			console.log(`SWMP Error: invalid type of ${this.type}.`);
-			return false;
-		}
+    // Create Container
+    this.container = document.createElement('div');
+    this.container.setAttribute('class', 'swmp swmp-container');
+    this.container.setAttribute('id', this.id);
+    this.container.setAttribute('tabindex', '0');
 
-		// Check Format Support
-		if (this.mime != undefined) {
-			if (this.player.canPlayType(this.mime) == '') {
-				this.closeError = document.createElement('span');
+    // Create Player HTML5 Video or Audio format.
+    if (this.type == 'video') {
+      this.container.classList.add('video');
+      this.player = document.createElement('video');
+      this.player.setAttribute('class', 'swmp swmp-video swmp-player');
+      if (this.poster != false && this.poster != undefined) {
+        this.player.setAttribute('poster', this.poster);
+      }
+    } else if (this.type == 'audio') {
+      this.container.classList.add('audio');
+      this.player = document.createElement('audio');
+      this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
+    } else {
+      console.log(`SWMP Error: invalid type of ${this.type}.`);
+      return false;
+    }
+
+    // Check Format Support
+    if (this.mime != undefined) {
+      if (this.player.canPlayType(this.mime) == '') {
+        this.closeError = document.createElement('span');
         this.closeError.innerHTML = `Your browser can't play this format: ${this.mime}`;
         this.container.addEventListener('click', (event) => {
           this.container.remove();
         });
         this.container.appendChild(this.closeError);
-				return false;
-			}
-		}
+        return false;
+      }
+    }
 
-		// Add Theme
-		if (swmpConfig.theme != undefined) {
-			this.container.classList.add(`swmp-theme-${swmpConfig.theme}`);
-		}
+    // Add Theme
+    if (swmpConfig.theme != undefined) {
+      this.container.classList.add(`swmp-theme-${swmpConfig.theme}`);
+    }
 
-		// Create Window Container
-		if (this.windowed != false) {
-			this.windowContainer = document.createElement('div');
-			this.windowContainer.setAttribute('class', 'swmp swmp-window swmp-window-container');
-			this.container.appendChild(this.windowContainer);
+    // Create Window Container
+    if (this.windowed != 'false') {
+      this.windowContainer = document.createElement('div');
+      this.windowContainer.setAttribute('class', 'swmp swmp-window swmp-window-container');
+      this.container.appendChild(this.windowContainer);
 
-				// Create Title/WindowDragbar and put inside Window Container
-				this.windowTitlebar = document.createElement('span');
-				this.windowTitlebar.setAttribute('class', 'swmp swmp-window swmp-window-titlebar');
-				if (this.title != undefined) {
-					this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.title}</span>`;
-				} else {		 // Maybe add extract filename only from external sites later?
-					this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.url}</span>`;
-				}
-				/*this.windowTitlebar.addEventListener("click", (event) => {
-					alert('click');
-				});*/
-				this.windowContainer.appendChild(this.windowTitlebar);
+        // Create Title/WindowDragbar and put inside Window Container
+        this.windowTitlebar = document.createElement('span');
+        this.windowTitlebar.setAttribute('class', 'swmp swmp-window swmp-window-titlebar');
+        if (this.title != undefined) {
+          this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.title}</span>`;
+        } else {     // Maybe add extract filename only from external sites later?
+          this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.url}</span>`;
+        }
+        /*this.windowTitlebar.addEventListener("click", (event) => {
+          alert('click');
+        });*/
+        this.windowContainer.appendChild(this.windowTitlebar);
 
-				// Create Window Buttons Container
-				this.windowButtonsContain = document.createElement('span');
-				this.windowButtonsContain.setAttribute('class', 'swmp swmp-window swmp-window-buttons-contain');
-				this.windowContainer.appendChild(this.windowButtonsContain);
+        // Create Window Buttons Container
+        this.windowButtonsContain = document.createElement('span');
+        this.windowButtonsContain.setAttribute('class', 'swmp swmp-window swmp-window-buttons-contain');
+        this.windowContainer.appendChild(this.windowButtonsContain);
 
-				// Create Minimize Button (Video only)
-				if (this.type == 'video') {
-					this.windowMinimize = document.createElement('button');
-					this.windowMinimize.setAttribute('class', 'swmp swmp-button swmp-window-minimize');
-					this.windowMinimize.innerHTML = '<span></span>';
-					this.windowMinimize.addEventListener('click', (event) => {
-						event.preventDefault();
-						if (this.container.classList.contains('swmp-minimized') ) {
-							this.container.classList.remove('swmp-minimized');
-						} else {
-							this.container.classList.add('swmp-minimized');
-						}
-					});
-					this.windowButtonsContain.appendChild(this.windowMinimize);
-				}
+        // Create Minimize Button (Video only)
+        if (this.type == 'video') {
+          this.windowMinimize = document.createElement('button');
+          this.windowMinimize.setAttribute('class', 'swmp swmp-button swmp-window-minimize');
+          this.windowMinimize.innerHTML = '<span></span>';
+          this.windowMinimize.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (this.container.classList.contains('swmp-minimized') ) {
+              this.container.classList.remove('swmp-minimized');
+            } else {
+              this.container.classList.add('swmp-minimized');
+            }
+          });
+          this.windowButtonsContain.appendChild(this.windowMinimize);
+        }
 
-				// Create Close Button
-				this.windowClose = document.createElement('button');
-				this.windowClose.setAttribute('class', 'swmp swmp-button swmp-window-close');
-				this.windowClose.innerHTML = '<span></span>';
-				this.windowClose.addEventListener('click', (event) => {
-					event.preventDefault();
-					this.container.remove();
-				});
-				this.windowButtonsContain.appendChild(this.windowClose);
+        // Create Close Button
+        this.windowClose = document.createElement('button');
+        this.windowClose.setAttribute('class', 'swmp swmp-button swmp-window-close');
+        this.windowClose.innerHTML = '<span></span>';
+        this.windowClose.addEventListener('click', (event) => {
+          event.preventDefault();
+          this.container.remove();
+        });
+        this.windowButtonsContain.appendChild(this.windowClose);
 
-				// Window Event
-				this.makeDraggable(this.container);
-
-
-				// Disable Default Context Menu on Titlebar
-				this.windowTitlebar.addEventListener('contextmenu', function(evt) { 
-				  evt.preventDefault();
-				}, false);
-				// Right Click Event
-				this.windowTitlebar.addEventListener('mousedown', (event) => {
-					event.preventDefault();
-					switch (event.which) {
-						case 3: //rightclick
-						this.openSettings();
-							break;	
-					}
-				});
+        // Window Event
+        this.makeDraggable(this.container);
 
 
-		}
+        // Disable Default Context Menu on Titlebar
+        this.windowTitlebar.addEventListener('contextmenu', function(evt) { 
+          evt.preventDefault();
+        }, false);
+        // Right Click Event
+        this.windowTitlebar.addEventListener('mousedown', (event) => {
+          event.preventDefault();
+          switch (event.which) {
+            case 3: //rightclick
+            this.openSettings();
+              break;  
+          }
+        });
 
 
-		// Preload metadata
-		this.player.setAttribute('preload', 'metadata');
+    }
+
+
+    // Preload metadata
+    this.player.setAttribute('preload', 'metadata');
 
     
     // Create Player Container and Put inside Container
@@ -352,631 +366,631 @@ class swmp {
     this.playerContainer.setAttribute('class', 'swmp-player-container');
     this.container.appendChild(this.playerContainer);
     
-		// Put Player inside Video Container
-		this.playerContainer.appendChild(this.player);
+    // Put Player inside Video Container
+    this.playerContainer.appendChild(this.player);
 
-		// Create and put Source inside Player
-		this.source = document.createElement('source');
-		this.source.setAttribute('src', this.url);
-		if (this.mime != undefined) {
-			this.source.setAttribute('type', this.mime);
-		}
-		this.player.appendChild(this.source);
+    // Create and put Source inside Player
+    this.source = document.createElement('source');
+    this.source.setAttribute('src', this.url);
+    if (this.mime != undefined) {
+      this.source.setAttribute('type', this.mime);
+    }
+    this.player.appendChild(this.source);
 
-		// Is Autoplay?
-		if ( (swmpConfig.autoplay == true || swmpConfig.autoplay == 'true') && this.autoplay != false) {
-			this.player.setAttribute('autoplay', true);
-		}
+    // Is Autoplay?
+    if ( (swmpConfig.autoplay == true || swmpConfig.autoplay == 'true') && this.autoplay != false) {
+      this.player.setAttribute('autoplay', true);
+    }
 
-		// Is Loop?
-		if ( (swmpConfig.loop == true || swmpConfig.loop == 'true') && this.loop != false) {
-			this.player.setAttribute('loop', true);
-		}
+    // Is Loop?
+    if ( (swmpConfig.loop == true || swmpConfig.loop == 'true') && this.loop != false) {
+      this.player.setAttribute('loop', true);
+    }
 
-		// Create and put Controls inside Container
-		this.controls = document.createElement('div');
-		this.controls.setAttribute('class', 'swmp swmp-controls');
-		this.container.appendChild(this.controls);
+    // Create and put Controls inside Container
+    this.controls = document.createElement('div');
+    this.controls.setAttribute('class', 'swmp swmp-controls');
+    this.container.appendChild(this.controls);
 
-		// Disable Default Context Menu on Controls
-		this.controls.addEventListener('contextmenu', function(evt) { 
-		  evt.preventDefault();
-		}, false);
-		// Right Click Event
-		this.controls.addEventListener('mousedown', (event) => {
-			switch (event.which) {
-				case 3: //rightclick
-				this.openSettings();
-					break;	
-			}
-		});
+    // Disable Default Context Menu on Controls
+    this.controls.addEventListener('contextmenu', function(evt) { 
+      evt.preventDefault();
+    }, false);
+    // Right Click Event
+    this.controls.addEventListener('mousedown', (event) => {
+      switch (event.which) {
+        case 3: //rightclick
+        this.openSettings();
+          break;  
+      }
+    });
 
-		// Create Progress/Seeker Container
-		this.seekContain = document.createElement('span');
-		this.seekContain.setAttribute('class', 'swmp swmp-seek-container');
-		//this.seekContain.textContent = 'seek-cntnr';
-		this.controls.appendChild(this.seekContain);
+    // Create Progress/Seeker Container
+    this.seekContain = document.createElement('span');
+    this.seekContain.setAttribute('class', 'swmp swmp-seek-container');
+    //this.seekContain.textContent = 'seek-cntnr';
+    this.controls.appendChild(this.seekContain);
 
-		// Create Progress Bar
-		this.progress = document.createElement('progress');
-		this.progress.setAttribute('value', '0');
-		this.progress.setAttribute('min', '0');
-		this.progress.setAttribute('max', '1000');
-		this.progress.setAttribute('step', '1');
-		this.progress.setAttribute('class', 'swmp swmp-progress');
-		this.seekContain.appendChild(this.progress);
+    // Create Progress Bar
+    this.progress = document.createElement('progress');
+    this.progress.setAttribute('value', '0');
+    this.progress.setAttribute('min', '0');
+    this.progress.setAttribute('max', '1000');
+    this.progress.setAttribute('step', '1');
+    this.progress.setAttribute('class', 'swmp swmp-progress');
+    this.seekContain.appendChild(this.progress);
 
-		// Create Seeker Input
-		this.seeker = document.createElement('input');
-		this.seeker.setAttribute('type', 'range');
-		this.seeker.setAttribute('value', '0');
-		this.seeker.setAttribute('min', '0');
-		this.seeker.setAttribute('max', '1000');
-		this.seeker.setAttribute('step', '1');
-		this.seeker.setAttribute('class', 'swmp swmp-seeker');
-		this.seekContain.appendChild(this.seeker);
+    // Create Seeker Input
+    this.seeker = document.createElement('input');
+    this.seeker.setAttribute('type', 'range');
+    this.seeker.setAttribute('value', '0');
+    this.seeker.setAttribute('min', '0');
+    this.seeker.setAttribute('max', '1000');
+    this.seeker.setAttribute('step', '1');
+    this.seeker.setAttribute('class', 'swmp swmp-seeker');
+    this.seekContain.appendChild(this.seeker);
 
-		// Create a Row Bottom Container
-		this.bottomRow = document.createElement('span');
-		this.bottomRow.setAttribute('class', 'swmp swmp-row-bottom');
-		this.controls.appendChild(this.bottomRow);
+    // Create a Row Bottom Container
+    this.bottomRow = document.createElement('span');
+    this.bottomRow.setAttribute('class', 'swmp swmp-row-bottom');
+    this.controls.appendChild(this.bottomRow);
 
-		// Create Buttons Container
-		this.buttonsContain = document.createElement('span');
-		this.buttonsContain.setAttribute('class', 'swmp swmp-buttons-container');
-		this.bottomRow.appendChild(this.buttonsContain);
+    // Create Buttons Container
+    this.buttonsContain = document.createElement('span');
+    this.buttonsContain.setAttribute('class', 'swmp swmp-buttons-container');
+    this.bottomRow.appendChild(this.buttonsContain);
 
-		// Create Play/Pause Button and put inside Controls
-		this.playbutton = document.createElement('button');
-		this.playbutton.setAttribute('class', 'swmp swmp-button swmp-playbutton');
-		this.playbutton.innerHTML = "<span></span>"; // ◀
-		this.playbutton.addEventListener("click", event => {
-			event.preventDefault();
-			if (this.player.paused ) {
-				this.player.play();
-			} else {
-				this.player.pause();
-			}
-		});
-		this.buttonsContain.appendChild(this.playbutton);
+    // Create Play/Pause Button and put inside Controls
+    this.playbutton = document.createElement('button');
+    this.playbutton.setAttribute('class', 'swmp swmp-button swmp-playbutton');
+    this.playbutton.innerHTML = "<span></span>"; // ◀
+    this.playbutton.addEventListener("click", event => {
+      event.preventDefault();
+      if (this.player.paused ) {
+        this.player.play();
+      } else {
+        this.player.pause();
+      }
+    });
+    this.buttonsContain.appendChild(this.playbutton);
 
-		// Create a Stop/Reload Button and put inside Controls
-		this.stopbutton = document.createElement('button');
-		this.stopbutton.setAttribute('class', 'swmp swmp-button swmp-stopbutton');
-		this.stopbutton.innerHTML = "<span></span>"; // ■
-		this.stopbutton.addEventListener("click", event => {
-			event.preventDefault();
-			this.player.pause();
-			this.seeker.value = 0;
-			this.seeker.setAttribute("value", 0);
-			this.progress.value = 0;
-			this.progress.setAttribute("value", 0);
-			this.player.currentTime = 0;
-			this.currentTimer.textContent = '00:00';
-		});
-		this.buttonsContain.appendChild(this.stopbutton);
+    // Create a Stop/Reload Button and put inside Controls
+    this.stopbutton = document.createElement('button');
+    this.stopbutton.setAttribute('class', 'swmp swmp-button swmp-stopbutton');
+    this.stopbutton.innerHTML = "<span></span>"; // ■
+    this.stopbutton.addEventListener("click", event => {
+      event.preventDefault();
+      this.player.pause();
+      this.seeker.value = 0;
+      this.seeker.setAttribute("value", 0);
+      this.progress.value = 0;
+      this.progress.setAttribute("value", 0);
+      this.player.currentTime = 0;
+      this.currentTimer.textContent = '00:00';
+    });
+    this.buttonsContain.appendChild(this.stopbutton);
 
-		// Create a Volume Container
-		this.volumeContain = document.createElement('span');
-		this.volumeContain.setAttribute('class', 'swmp swmp-volume-container');
-		this.bottomRow.appendChild(this.volumeContain);
+    // Create a Volume Container
+    this.volumeContain = document.createElement('span');
+    this.volumeContain.setAttribute('class', 'swmp swmp-volume-container');
+    this.bottomRow.appendChild(this.volumeContain);
 
-		// Create a Volume Button and put inside Buttons Container
-		this.volumeButton = document.createElement('button');
-		this.volumeButton.setAttribute('class', 'swmp swmp-button swmp-volume');
-		this.volumeButton.innerHTML = "<span></span>";
-		this.volumeButton.addEventListener("click", event => {
-			event.preventDefault();
-			this.toggleMute();
-		});
-		this.buttonsContain.appendChild(this.volumeButton);
+    // Create a Volume Button and put inside Buttons Container
+    this.volumeButton = document.createElement('button');
+    this.volumeButton.setAttribute('class', 'swmp swmp-button swmp-volume');
+    this.volumeButton.innerHTML = "<span></span>";
+    this.volumeButton.addEventListener("click", event => {
+      event.preventDefault();
+      this.toggleMute();
+    });
+    this.buttonsContain.appendChild(this.volumeButton);
 
-		// Create a Volume Progress and put inside Volume Container
-		this.volumeProgress = document.createElement('progress');
-		this.volumeProgress.setAttribute('value', this.defaultVolume);
-		this.volumeProgress.setAttribute('min', '0');
-		this.volumeProgress.setAttribute('max', '100');
-		this.volumeProgress.setAttribute('step', '1');
-		this.volumeProgress.setAttribute('class', 'swmp swmp-volume swmp-progress');
-		this.volumeContain.appendChild(this.volumeProgress);
+    // Create a Volume Progress and put inside Volume Container
+    this.volumeProgress = document.createElement('progress');
+    this.volumeProgress.setAttribute('value', this.defaultVolume);
+    this.volumeProgress.setAttribute('min', '0');
+    this.volumeProgress.setAttribute('max', '100');
+    this.volumeProgress.setAttribute('step', '1');
+    this.volumeProgress.setAttribute('class', 'swmp swmp-volume swmp-progress');
+    this.volumeContain.appendChild(this.volumeProgress);
 
-		// Create a Volume Input and put inside Volume Container
-		this.volumeRange = document.createElement('input');
-		this.volumeRange.setAttribute('type', 'range');
-		this.volumeRange.setAttribute('value', this.defaultVolume);
-		this.volumeRange.setAttribute('min', '0');
-		this.volumeRange.setAttribute('max', '100');
-		this.volumeRange.setAttribute('step', '1');
-		this.volumeRange.setAttribute('class', 'swmp swmp-volume swmp-range');
-		this.volumeContain.appendChild(this.volumeRange);
+    // Create a Volume Input and put inside Volume Container
+    this.volumeRange = document.createElement('input');
+    this.volumeRange.setAttribute('type', 'range');
+    this.volumeRange.setAttribute('value', this.defaultVolume);
+    this.volumeRange.setAttribute('min', '0');
+    this.volumeRange.setAttribute('max', '100');
+    this.volumeRange.setAttribute('step', '1');
+    this.volumeRange.setAttribute('class', 'swmp swmp-volume swmp-range');
+    this.volumeContain.appendChild(this.volumeRange);
 
-		// Create a Timer Container and put inside Controls
-		this.timerContain = document.createElement('span');
-		this.timerContain.setAttribute('class', 'swmp swmp-timer-container');
-		this.bottomRow.appendChild(this.timerContain);
+    // Create a Timer Container and put inside Controls
+    this.timerContain = document.createElement('span');
+    this.timerContain.setAttribute('class', 'swmp swmp-timer-container');
+    this.bottomRow.appendChild(this.timerContain);
 
-		// Create a timerCurrent and put inside Timer Container
-		this.currentTimer = document.createElement('span');
-		this.currentTimer.setAttribute('class', 'swmp swmp-time swmp-current');
-		this.currentTimer.textContent = '00:00';
-		this.timerContain.appendChild(this.currentTimer);
+    // Create a timerCurrent and put inside Timer Container
+    this.currentTimer = document.createElement('span');
+    this.currentTimer.setAttribute('class', 'swmp swmp-time swmp-current');
+    this.currentTimer.textContent = '00:00';
+    this.timerContain.appendChild(this.currentTimer);
 
-		// Add a separator between timer
-		this.timerSeperator = document.createElement('span');
-		this.timerSeperator.setAttribute('class', 'swmp swmp-time swmp-separator');
-		this.timerSeperator.textContent = '/';
-		this.timerContain.appendChild(this.timerSeperator);
+    // Add a separator between timer
+    this.timerSeperator = document.createElement('span');
+    this.timerSeperator.setAttribute('class', 'swmp swmp-time swmp-separator');
+    this.timerSeperator.textContent = '/';
+    this.timerContain.appendChild(this.timerSeperator);
 
-		// Create a totalTimer and put inside Timer Container
-		this.totalTimer = document.createElement('span');
-		this.totalTimer.setAttribute('class', 'swmp swmp-time swmp-total');
-		this.totalTimer.textContent = '00:00';
-		this.timerContain.appendChild(this.totalTimer);
+    // Create a totalTimer and put inside Timer Container
+    this.totalTimer = document.createElement('span');
+    this.totalTimer.setAttribute('class', 'swmp swmp-time swmp-total');
+    this.totalTimer.textContent = '00:00';
+    this.timerContain.appendChild(this.totalTimer);
 
-		// Create a Fullscreen Button and put inside Bottom Row Container
-		if (this.type == 'video') {
-			this.fullscreenbutton = document.createElement('button');
-			this.fullscreenbutton.setAttribute('class', 'swmp swmp-button swmp-fullscreen');
-			this.fullscreenbutton.innerHTML = "<span></span>"; // ▣
-			this.fullscreenbutton.addEventListener("click", event => {
-				event.preventDefault();
-				this.fullscreen(this.container);
-			});
-			this.bottomRow.appendChild(this.fullscreenbutton);
-		}
+    // Create a Fullscreen Button and put inside Bottom Row Container
+    if (this.type == 'video') {
+      this.fullscreenbutton = document.createElement('button');
+      this.fullscreenbutton.setAttribute('class', 'swmp swmp-button swmp-fullscreen');
+      this.fullscreenbutton.innerHTML = "<span></span>"; // ▣
+      this.fullscreenbutton.addEventListener("click", event => {
+        event.preventDefault();
+        this.fullscreen(this.container);
+      });
+      this.bottomRow.appendChild(this.fullscreenbutton);
+    }
 
-		this.playerContainer.addEventListener('click', event => {
-			this.togglePlay();
-		});
+    this.playerContainer.addEventListener('click', event => {
+      this.togglePlay();
+    });
 
-		this.playerContainer.addEventListener('dblclick', event => {
-			this.fullscreen(this.container);
-		});
+    this.playerContainer.addEventListener('dblclick', event => {
+      this.fullscreen(this.container);
+    });
 
-		this.container.addEventListener('keydown', event => {
-			if (event.repeat) { return; } // Don't spam
+    this.container.addEventListener('keydown', event => {
+      if (event.repeat) { return; } // Don't spam
 
-			switch(event.key) { 
-				case ' ': //Space
-					this.togglePlay();
-					break;
-				case 'f':
-					this.fullscreen(this.container);
-					break;
-				case 'm':
-					this.toggleMute();
-					break;
-				case 'x':
-					this.container.remove();
-					break;
-				default:
-					return;
-			}
+      switch(event.key) { 
+        case ' ': //Space
+          this.togglePlay();
+          break;
+        case 'f':
+          this.fullscreen(this.container);
+          break;
+        case 'm':
+          this.toggleMute();
+          break;
+        case 'x':
+          this.container.remove();
+          break;
+        default:
+          return;
+      }
 
-			event.preventDefault();
+      event.preventDefault();
 
-		}, true);
+    }, true);
 
-		this.player.onended = (event) => {
-			this.player.classList.remove('swmp-playing');
-			this.playbutton.classList.remove('swmp-playing');
-			this.seeker.value = 0;
-			this.progress.value = 0;
-			clearInterval(this.player.interval);
-			this.currentTimer.textContent = '00:00';
-		};
+    this.player.onended = (event) => {
+      this.player.classList.remove('swmp-playing');
+      this.playbutton.classList.remove('swmp-playing');
+      this.seeker.value = 0;
+      this.progress.value = 0;
+      clearInterval(this.player.interval);
+      this.currentTimer.textContent = '00:00';
+    };
 
-		this.player.addEventListener('loadedmetadata', (event) => {
-			this.totalTimer.textContent = this.formatSeconds(this.player.duration);
-		});
+    this.player.addEventListener('loadedmetadata', (event) => {
+      this.totalTimer.textContent = this.formatSeconds(this.player.duration);
+    });
 
 
-		this.player.onplay = (event) => {
-			this.player.classList.add('swmp-playing');
-			this.playbutton.classList.add('swmp-playing');
-			var self = this;
-			this.player.interval = window.setInterval(function(event) {
-				self.player.timeupdate();
-			}, 40);
-		};
+    this.player.onplay = (event) => {
+      this.player.classList.add('swmp-playing');
+      this.playbutton.classList.add('swmp-playing');
+      var self = this;
+      this.player.interval = window.setInterval(function(event) {
+        self.player.timeupdate();
+      }, 40);
+    };
 
-		this.player.onpause = (event) => {
-			this.player.classList.remove('swmp-playing');
-			this.playbutton.classList.remove('swmp-playing');
-			clearInterval(this.player.interval);
-		};
+    this.player.onpause = (event) => {
+      this.player.classList.remove('swmp-playing');
+      this.playbutton.classList.remove('swmp-playing');
+      clearInterval(this.player.interval);
+    };
 
-		this.player.onerror = (event) => {
-			clearInterval(this.player.interval);
-			var _error = this.player.error.message;
-			this.container.innerHTMl = _error;
-		};
+    this.player.onerror = (event) => {
+      clearInterval(this.player.interval);
+      var _error = this.player.error.message;
+      this.container.innerHTMl = _error;
+    };
 
-		this.player.timeupdate = (event) => {
-			this.seeker.value = Math.floor(this.player.currentTime / this.player.duration * this.seeker.max);
-			this.seeker.setAttribute("value", this.seeker.value);
-			this.progress.value = this.seeker.value;
-			this.progress.setAttribute("value", this.seeker.value);
-			this.updateTimer();
-		};
+    this.player.timeupdate = (event) => {
+      this.seeker.value = Math.floor(this.player.currentTime / this.player.duration * this.seeker.max);
+      this.seeker.setAttribute("value", this.seeker.value);
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute("value", this.seeker.value);
+      this.updateTimer();
+    };
 
-		this.seeker.oninput = (event) => {
-			//on mousedown temporary add a mute to avoid annoying seeking sounds?
-			this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
-			this.progress.value = this.seeker.value;
-			this.progress.setAttribute("value", this.seeker.value);
-			this.updateTimer();
-		};
+    this.seeker.oninput = (event) => {
+      //on mousedown temporary add a mute to avoid annoying seeking sounds?
+      this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute("value", this.seeker.value);
+      this.updateTimer();
+    };
 
-		this.container.addEventListener('fullscreenchange', event => {
-			const fullscreenElement =
-			document.fullscreenElement ||
-			document.mozFullScreenElement ||
-			document.webkitFullscreenElement ||
-			document.msFullscreenElement;
+    this.container.addEventListener('fullscreenchange', event => {
+      const fullscreenElement =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement ||
+      document.msFullscreenElement;
 
-			if (!fullscreenElement) {
-				this.container.classList.remove('swmp-fullscreen');
-			} else {
-				this.container.classList.add('swmp-fullscreen');
-			}
-		});
+      if (!fullscreenElement) {
+        this.container.classList.remove('swmp-fullscreen');
+      } else {
+        this.container.classList.add('swmp-fullscreen');
+      }
+    });
 
-		this.formatSeconds = (seconds) => {
-			this._sec_num = parseInt(seconds, 10);
-			this._hours   = Math.floor(this._sec_num / 3600);
-			this._minutes = Math.floor(this._sec_num / 60) % 60;
-			this._seconds = this._sec_num % 60;
+    this.formatSeconds = (seconds) => {
+      this._sec_num = parseInt(seconds, 10);
+      this._hours   = Math.floor(this._sec_num / 3600);
+      this._minutes = Math.floor(this._sec_num / 60) % 60;
+      this._seconds = this._sec_num % 60;
 
-		    return [this._hours,this._minutes,this._seconds]
-		    	.map(v => v < 10 ? "0" + v : v)
-		    	.filter((v,i) => v !== "00" || i > 0)
-		    	.join(":");
-		};
+        return [this._hours,this._minutes,this._seconds]
+          .map(v => v < 10 ? "0" + v : v)
+          .filter((v,i) => v !== "00" || i > 0)
+          .join(":");
+    };
 
-		this.updateTimer = () => {
-			this.currentTimer.textContent = this.formatSeconds(this.player.currentTime);
-			//this.totalTimer.textContent = this.formatSeconds(this.player.duration);
-		};
+    this.updateTimer = () => {
+      this.currentTimer.textContent = this.formatSeconds(this.player.currentTime);
+      //this.totalTimer.textContent = this.formatSeconds(this.player.duration);
+    };
 
-		this.fullscreen = (element) => {
-			const fullscreenElement =
-			document.fullscreenElement ||
-			document.mozFullScreenElement ||
-			document.webkitFullscreenElement ||
-			document.msFullscreenElement;
+    this.fullscreen = (element) => {
+      const fullscreenElement =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement ||
+      document.msFullscreenElement;
 
-			if (fullscreenElement) {
-				if (document.exitFullscreen) {
-					document.exitFullscreen();
-				} else if (document.mozCancelFullScreen) {
-					document.mozCancelFullScreen();
-				} else if (document.webkitExitFullscreen) {
-					document.webkitExitFullscreen(); //Safari sucks
-				} else if (document.msExitFullscreen) {
-					document.msExitFullscreen();
-				}
-				this.container.classList.remove('swmp-fullscreen');
-			} else {
-				if (element.requestFullscreen) {
-					element.requestFullscreen();
-				} else if (element.mozRequestFullScreen) {
-					element.mozRequestFullScreen();
-				} else if (element.webkitRequestFullscreen) {
-					element.webkitRequestFullscreen();
-				} else if (element.msRequestFullscreen) {
-					element.msRequestFullscreen();
-				}
-				this.container.classList.add('swmp-fullscreen');
-			}
-		};
+      if (fullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen(); //Safari sucks
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        this.container.classList.remove('swmp-fullscreen');
+      } else {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+        this.container.classList.add('swmp-fullscreen');
+      }
+    };
 
-		this.toggleMute = () => {
-			if (this.player.muted) {
-				this.volumeButton.classList.remove('swmp-mute');
-				this.player.muted = false;
-				this._volume = Math.floor(this.player.volume * 100);
-				this.volumeRange.setAttribute('value', this._volume );
-				this.volumeRange.value = this._volume;
-				this.volumeProgress.setAttribute('value', this._volume );
-				this.volumeProgress.value = this._volume;
-			} else {
-				this.volumeButton.classList.add('swmp-mute');
-				this.player.muted = true;
-				this.volumeRange.setAttribute('value', 0 );
-				this.volumeRange.value = 0;
-				this.volumeProgress.setAttribute('value', 0 );
-				this.volumeProgress.value = 0;
-			}
-		};
+    this.toggleMute = () => {
+      if (this.player.muted) {
+        this.volumeButton.classList.remove('swmp-mute');
+        this.player.muted = false;
+        this._volume = Math.floor(this.player.volume * 100);
+        this.volumeRange.setAttribute('value', this._volume );
+        this.volumeRange.value = this._volume;
+        this.volumeProgress.setAttribute('value', this._volume );
+        this.volumeProgress.value = this._volume;
+      } else {
+        this.volumeButton.classList.add('swmp-mute');
+        this.player.muted = true;
+        this.volumeRange.setAttribute('value', 0 );
+        this.volumeRange.value = 0;
+        this.volumeProgress.setAttribute('value', 0 );
+        this.volumeProgress.value = 0;
+      }
+    };
 
-		this.togglePlay = () => {
-			if (this.player.paused ) {
-				this.player.play();
-			} else {
-				this.player.pause();
-			}			
-		};
+    this.togglePlay = () => {
+      if (this.player.paused ) {
+        this.player.play();
+      } else {
+        this.player.pause();
+      }     
+    };
 
-		this.updateVolume = (firstrun = false) => {
+    this.updateVolume = (firstrun = false) => {
 
-			this.volumeButton.classList.remove('swmp-mute');
+      this.volumeButton.classList.remove('swmp-mute');
 
-			if (firstrun == true) {
-				this.volumeRange.setAttribute('value', this.defaultVolume);
-				this.volumeProgress.setAttribute('value', this.defaultVolume);
-				this.playerVolume = this.defaultVolume;
-				this.volumeButton.classList.add('swmp-min');
-			}
+      if (firstrun == true) {
+        this.volumeRange.setAttribute('value', this.defaultVolume);
+        this.volumeProgress.setAttribute('value', this.defaultVolume);
+        this.playerVolume = this.defaultVolume;
+        this.volumeButton.classList.add('swmp-min');
+      }
 
-			if (this.player.muted) {
-				this.player.muted = false;
-			}
+      if (this.player.muted) {
+        this.player.muted = false;
+      }
 
-			this.volumeRange.setAttribute('value', this.volumeRange.value );
-			this.volumeProgress.setAttribute('value', this.volumeRange.value );
-			this.player.volume = parseFloat(this.volumeRange.value / 100);
+      this.volumeRange.setAttribute('value', this.volumeRange.value );
+      this.volumeProgress.setAttribute('value', this.volumeRange.value );
+      this.player.volume = parseFloat(this.volumeRange.value / 100);
 
-			if (this.player.volume > 0.50) {
-				this.volumeButton.classList.add('swmp-max');
-				this.volumeButton.classList.remove('swmp-med');
-				this.volumeButton.classList.remove('swmp-min');
-			} else if (this.player.volume > 0.10) {
-				this.volumeButton.classList.add('swmp-med');
-				this.volumeButton.classList.remove('swmp-max');
-				this.volumeButton.classList.remove('swmp-min');
-			} else if (this.player.volume > 0.05) {
-				this.volumeButton.classList.add('swmp-min');
-				this.volumeButton.classList.remove('swmp-max');
-				this.volumeButton.classList.remove('swmp-med');
-			}
+      if (this.player.volume > 0.50) {
+        this.volumeButton.classList.add('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this.player.volume > 0.10) {
+        this.volumeButton.classList.add('swmp-med');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this.player.volume > 0.05) {
+        this.volumeButton.classList.add('swmp-min');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+      }
 
-			localStorage.swmpVolume = this.volumeRange.value;
-			swmpConfig.volume = this.volumeRange.value;
-		};
+      localStorage.swmpVolume = this.volumeRange.value;
+      swmpConfig.volume = this.volumeRange.value;
+    };
 
-		this.volumeRange.oninput = (event) => {
-			this.updateVolume();
-		};
+    this.volumeRange.oninput = (event) => {
+      this.updateVolume();
+    };
 
-		this.player.addEventListener('volumechange', this.updateVolume() );
+    this.player.addEventListener('volumechange', this.updateVolume() );
 
-		this.updateVolume(true); // First time Run
+    this.updateVolume(true); // First time Run
 
-		this.openSettings = () => {
-			// Settings Menu
+    this.openSettings = () => {
+      // Settings Menu
 
-			if (this.container.querySelector('.swmp-settings-container') != null) {
-				this.settingsContainer.remove();
-				return false; //Already open
-			}
+      if (this.container.querySelector('.swmp-settings-container') != null) {
+        this.settingsContainer.remove();
+        return false; //Already open
+      }
 
-			this.settingsContainer = document.createElement('div');
-			this.settingsContainer.setAttribute('class', 'swmp swmp-settings swmp-settings-container');
-			this.settingsContainer.innerHTML = 'Settings:';
-			this.container.appendChild(this.settingsContainer); //maybe move this after buttons tbh
+      this.settingsContainer = document.createElement('div');
+      this.settingsContainer.setAttribute('class', 'swmp swmp-settings swmp-settings-container');
+      this.settingsContainer.innerHTML = 'Settings:';
+      this.container.appendChild(this.settingsContainer); //maybe move this after buttons tbh
 
-			/*// Create Close Settings Button
-			this.settingsClose = document.createElement('button');
-			this.settingsClose.setAttribute('class', 'swmp button settings settings-close');
-			this.settingsClose.innerHTML = 'Close Settings';
-			this.settingsClose.addEventListener('click', (event) => {
-				this.settingsContainer.remove();
-			});
-			this.settingsContainer.appendChild(this.settingsClose);*/
+      /*// Create Close Settings Button
+      this.settingsClose = document.createElement('button');
+      this.settingsClose.setAttribute('class', 'swmp button settings settings-close');
+      this.settingsClose.innerHTML = 'Close Settings';
+      this.settingsClose.addEventListener('click', (event) => {
+        this.settingsContainer.remove();
+      });
+      this.settingsContainer.appendChild(this.settingsClose);*/
 
-			this.br = document.createElement('br');
-			this.settingsContainer.appendChild(this.br);
+      this.br = document.createElement('br');
+      this.settingsContainer.appendChild(this.br);
 
-			this.themeSelector = document.createElement('select');
-			this.themeSelector.setAttribute('class', 'swmp swmp-selector swmp-settings swmp-theme-selector');
+      this.themeSelector = document.createElement('select');
+      this.themeSelector.setAttribute('class', 'swmp swmp-selector swmp-settings swmp-theme-selector');
 
-			this.themes = '';
-			swmpConfig.themes.forEach(theme => {
-				if (localStorage.swmpTheme == theme[0]) {
-					this.themeSelector.value = theme[0];
-					this.themes += `<option value="${theme[0]}" selected>${theme[1]}</option>`;
-				} else {
-					this.themes += `<option value="${theme[0]}">${theme[1]}</option>`;
-				}
-			});
-			this.themeSelector.innerHTML = this.themes;
+      this.themes = '';
+      swmpConfig.themes.forEach(theme => {
+        if (localStorage.swmpTheme == theme[0]) {
+          this.themeSelector.value = theme[0];
+          this.themes += `<option value="${theme[0]}" selected>${theme[1]}</option>`;
+        } else {
+          this.themes += `<option value="${theme[0]}">${theme[1]}</option>`;
+        }
+      });
+      this.themeSelector.innerHTML = this.themes;
 
-			this.themeSelector.onchange = (event) => {
-				if (this.themeSelector.value == '') {
-					return false;
-				} else {
-					this.removeClassByPrefix(this.container, 'swmp-theme-'); //regex remove [theme-*]
-					this.container.classList.add(`swmp-theme-${this.themeSelector.value}`);
-					swmpConfig.theme = this.themeSelector.value;
-					localStorage.swmpTheme = this.themeSelector.value;
-				}
-			};
+      this.themeSelector.onchange = (event) => {
+        if (this.themeSelector.value == '') {
+          return false;
+        } else {
+          this.removeClassByPrefix(this.container, 'swmp-theme-'); //regex remove [theme-*]
+          this.container.classList.add(`swmp-theme-${this.themeSelector.value}`);
+          swmpConfig.theme = this.themeSelector.value;
+          localStorage.swmpTheme = this.themeSelector.value;
+        }
+      };
 
-			this.settingsContainer.appendChild(this.themeSelector);
+      this.settingsContainer.appendChild(this.themeSelector);
 
       
-      	// Autoplay Settings
-			this.autoplayLabel = document.createElement('label');
-			this.autoplayLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-autoplay-label');
-			this.autoplayLabel.textContent = 'Autoplay';
-			this.autoplayCheck = document.createElement('input');
-			this.autoplayCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-autoplay-input');
-			this.autoplayCheck.setAttribute('type', 'checkbox');
-			if (localStorage.swmpAutoplay == 'true') {
-				this.autoplayCheck.setAttribute('checked', 'checked');
-			}
-			this.autoplayCheck.addEventListener('change', (event) => {
-				if (this.autoplayCheck.checked == true) {
-					this.autoplayCheck.setAttribute('checked', 'checked');
-					localStorage.swmpAutoplay = 'true';
+        // Autoplay Settings
+      this.autoplayLabel = document.createElement('label');
+      this.autoplayLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-autoplay-label');
+      this.autoplayLabel.textContent = 'Autoplay';
+      this.autoplayCheck = document.createElement('input');
+      this.autoplayCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-autoplay-input');
+      this.autoplayCheck.setAttribute('type', 'checkbox');
+      if (localStorage.swmpAutoplay == 'true') {
+        this.autoplayCheck.setAttribute('checked', 'checked');
+      }
+      this.autoplayCheck.addEventListener('change', (event) => {
+        if (this.autoplayCheck.checked == true) {
+          this.autoplayCheck.setAttribute('checked', 'checked');
+          localStorage.swmpAutoplay = 'true';
           swmpConfig.autoplay = 'true';
-				} else {
-					this.autoplayCheck.removeAttribute('checked');
-					localStorage.swmpAutoplay = 'false';
+        } else {
+          this.autoplayCheck.removeAttribute('checked');
+          localStorage.swmpAutoplay = 'false';
           swmpConfig.autoplay = 'false';
-				}
-			});
-			this.autoplayLabel.appendChild(this.autoplayCheck);
-			this.settingsContainer.appendChild(this.autoplayLabel);
+        }
+      });
+      this.autoplayLabel.appendChild(this.autoplayCheck);
+      this.settingsContainer.appendChild(this.autoplayLabel);
 
-      	// Loop Settings
-			this.loopLabel = document.createElement('label');
-			this.loopLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-loop-label');
-			this.loopLabel.textContent = 'Loop';
-			this.loopCheck = document.createElement('input');
-			this.loopCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-loop-input');
-			this.loopCheck.setAttribute('type', 'checkbox');
-			if (localStorage.swmpLoop == 'true') {
-				this.loopCheck.setAttribute('checked', 'checked');
-			}
-			this.loopCheck.addEventListener('change', (event) => {
-				if (this.loopCheck.checked == true) {
-					this.loopCheck.setAttribute('checked', 'checked');
-					this.player.setAttribute('loop', 'true');
-					localStorage.swmpLoop = 'true';
+        // Loop Settings
+      this.loopLabel = document.createElement('label');
+      this.loopLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-loop-label');
+      this.loopLabel.textContent = 'Loop';
+      this.loopCheck = document.createElement('input');
+      this.loopCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-loop-input');
+      this.loopCheck.setAttribute('type', 'checkbox');
+      if (localStorage.swmpLoop == 'true') {
+        this.loopCheck.setAttribute('checked', 'checked');
+      }
+      this.loopCheck.addEventListener('change', (event) => {
+        if (this.loopCheck.checked == true) {
+          this.loopCheck.setAttribute('checked', 'checked');
+          this.player.setAttribute('loop', 'true');
+          localStorage.swmpLoop = 'true';
           swmpConfig.loop = 'true';
-				} else {
-					this.loopCheck.removeAttribute('checked');
-					this.player.removeAttribute('loop');
+        } else {
+          this.loopCheck.removeAttribute('checked');
+          this.player.removeAttribute('loop');
           localStorage.swmpLoop = 'false';
-					swmpConfig.loop = 'false';
-				}
-			});
-			this.loopLabel.appendChild(this.loopCheck);
-			this.settingsContainer.appendChild(this.loopLabel);
+          swmpConfig.loop = 'false';
+        }
+      });
+      this.loopLabel.appendChild(this.loopCheck);
+      this.settingsContainer.appendChild(this.loopLabel);
       
-      	// Multiple Players Settings
-			this.multiLabel = document.createElement('label');
-			this.multiLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-multi-label');
-			this.multiLabel.textContent = 'Multi';
-			this.multiCheck = document.createElement('input');
-			this.multiCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-multi-input');
-			this.multiCheck.setAttribute('type', 'checkbox');
-			if (localStorage.swmpAllowMultiple == 'true') {
-				this.multiCheck.setAttribute('checked', 'checked');
-			}
-			this.multiCheck.addEventListener('change', (event) => {
-				if (this.multiCheck.checked == true) {
-					this.multiCheck.setAttribute('checked', 'checked');
-					localStorage.swmpAllowMultiple = 'true';
+        // Multiple Players Settings
+      this.multiLabel = document.createElement('label');
+      this.multiLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-multi-label');
+      this.multiLabel.textContent = 'Multi';
+      this.multiCheck = document.createElement('input');
+      this.multiCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-multi-input');
+      this.multiCheck.setAttribute('type', 'checkbox');
+      if (localStorage.swmpAllowMultiple == 'true') {
+        this.multiCheck.setAttribute('checked', 'checked');
+      }
+      this.multiCheck.addEventListener('change', (event) => {
+        if (this.multiCheck.checked == true) {
+          this.multiCheck.setAttribute('checked', 'checked');
+          localStorage.swmpAllowMultiple = 'true';
           swmpConfig.allowMultiple = 'true';
-				} else {
-					this.multiCheck.removeAttribute('checked');
-					localStorage.swmpAllowMultiple = 'false';
+        } else {
+          this.multiCheck.removeAttribute('checked');
+          localStorage.swmpAllowMultiple = 'false';
           swmpConfig.allowMultiple = 'false';
-				}
-			});
-			this.multiLabel.appendChild(this.multiCheck);
-			this.settingsContainer.appendChild(this.multiLabel);
-		};
-	}
+        }
+      });
+      this.multiLabel.appendChild(this.multiCheck);
+      this.settingsContainer.appendChild(this.multiLabel);
+    };
+  }
 
-	removeClassByPrefix(el, prefix) {
-		let pattern = '(' + prefix + '(\\s|(-)?(\\w*)(\\s)?)).*?';
-		var regEx = new RegExp(pattern, 'g');
-		el.className = el.className.replace(regEx, '');
-	}
+  removeClassByPrefix(el, prefix) {
+    let pattern = '(' + prefix + '(\\s|(-)?(\\w*)(\\s)?)).*?';
+    var regEx = new RegExp(pattern, 'g');
+    el.className = el.className.replace(regEx, '');
+  }
 
-	// Probably gonna use imagenumber(multifile)+postnumber for ID to check if existing window is open
-	uuid() {
-		// Source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
-		var dt = new Date().getTime();
-	    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-	        var r = (dt + Math.random()*16)%16 | 0;
-	        dt = Math.floor(dt/16);
-	        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-	    });		
-	    return uuid;
-	}
+  // Probably gonna use imagenumber(multifile)+postnumber for ID to check if existing window is open
+  uuid() {
+    // Source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
+    var dt = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (dt + Math.random()*16)%16 | 0;
+          dt = Math.floor(dt/16);
+          return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+      });   
+      return uuid;
+  }
 
-		// Nice as this would be to use for some things since it's simpler...
-		// I need to check fileext manually on most imageboards anyways to not waste requests.
-		// Not needed for this script.
-	/*getContentType(url) {
-		var response = fetch(url, {
-			method: 'HEAD',
-			//mode: 'cors',
-			cache: 'default',
-			referrerPolicy: 'no-referrer'
-		}).then( data => )
-	}*/
+    // Nice as this would be to use for some things since it's simpler...
+    // I need to check fileext manually on most imageboards anyways to not waste requests.
+    // Not needed for this script.
+  /*getContentType(url) {
+    var response = fetch(url, {
+      method: 'HEAD',
+      //mode: 'cors',
+      cache: 'default',
+      referrerPolicy: 'no-referrer'
+    }).then( data => )
+  }*/
 
-	getFileName(url) {
-		return url.split('/').pop().split('#')[0].split('?')[0];
-	}
+  getFileName(url) {
+    return url.split('/').pop().split('#')[0].split('?')[0];
+  }
 
-	checkURL(url) {
-		// Check filename in URL for Type / MIME.
- 		this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
+  checkURL(url) {
+    // Check filename in URL for Type / MIME.
+    this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
     this.fileExt = url.split(/[#?&]/).slice(-2)[0].split('.').pop().trim();
     
     
     console.log(this.fileExt);
- 		this.fileExt = this.fileExt.toLowerCase();
+    this.fileExt = this.fileExt.toLowerCase();
 
- 		switch (this.fileExt) {
- 				//VIDEO
- 			case 'avi':
- 				this.type = 'video';
- 				this.mime = 'video/x-msvideo';
- 				break;
- 			case 'mpeg':
- 				this.type = 'video';
- 				this.mime = 'video/mpeg';
- 				break;
- 			case 'mpg':
- 				this.type = 'video';
- 				this.mime = 'video/mpeg';
- 				break;
- 			case 'ogv':
- 				this.type = 'video';
- 				this.mime = 'video/ogg';
- 				break;
- 			case 'mp4':
- 				this.type = 'video';
- 				this.mime = 'video/mp4';
- 				break;
- 			case 'webm':
- 				this.type = 'video';
- 				this.mime = 'video/webm';
- 				break;
- 			case 'flv':
- 				this.type = 'video';
- 				this.mime = 'video/x-flv';
- 				break;
- 				//AUDIO
- 			case 'wav':
- 				this.type = 'audio';
- 				this.mime = 'audio/x-wav';
- 				break;
- 			case 'mp3':
- 				this.type = 'audio';
- 				this.mime = 'audio/mpeg';
- 				break;
- 			case 'm4a':
- 				this.type = 'audio';
- 				this.mime = 'audio/mp4';
- 				break;
- 			case 'mp2':
- 				this.type = 'audio';
- 				this.mime = 'audio/mpeg';
- 				break;
- 			case 'ogg':
- 				this.type = 'audio';
- 				this.mime = 'audio/ogg';
- 				break;
- 			case 'flac':
- 				this.type = 'audio';
- 				this.mime = 'audio/flac';
- 				break;
- 			default:
- 				console.log('No matching ext/mime');
+    switch (this.fileExt) {
+        //VIDEO
+      case 'avi':
+        this.type = 'video';
+        this.mime = 'video/x-msvideo';
+        break;
+      case 'mpeg':
+        this.type = 'video';
+        this.mime = 'video/mpeg';
+        break;
+      case 'mpg':
+        this.type = 'video';
+        this.mime = 'video/mpeg';
+        break;
+      case 'ogv':
+        this.type = 'video';
+        this.mime = 'video/ogg';
+        break;
+      case 'mp4':
+        this.type = 'video';
+        this.mime = 'video/mp4';
+        break;
+      case 'webm':
+        this.type = 'video';
+        this.mime = 'video/webm';
+        break;
+      case 'flv':
+        this.type = 'video';
+        this.mime = 'video/x-flv';
+        break;
+        //AUDIO
+      case 'wav':
+        this.type = 'audio';
+        this.mime = 'audio/x-wav';
+        break;
+      case 'mp3':
+        this.type = 'audio';
+        this.mime = 'audio/mpeg';
+        break;
+      case 'm4a':
+        this.type = 'audio';
+        this.mime = 'audio/mp4';
+        break;
+      case 'mp2':
+        this.type = 'audio';
+        this.mime = 'audio/mpeg';
+        break;
+      case 'ogg':
+        this.type = 'audio';
+        this.mime = 'audio/ogg';
+        break;
+      case 'flac':
+        this.type = 'audio';
+        this.mime = 'audio/flac';
+        break;
+      default:
+        console.log('No matching ext/mime');
         console.log(this.fileExt);
- 				return false;
- 		}
- 		return true; //If valid
-	}
+        return false;
+    }
+    return true; //If valid
+  }
 
   makeDraggable (element){
    var elm = this.windowTitlebar;
@@ -1040,7 +1054,7 @@ class swmp {
       if (e.which != '1') {
         isMouseDown = false;
       }
-			
+      
       var newMouseX = e.clientX;
       var newMouseY = e.clientY;
 
@@ -1087,32 +1101,32 @@ class swmp {
 
 }
 
-	// Above this is SWMP class.
+  // Above this is SWMP class.
 
 
-	// Below this is the event listener that checks if what you are clicking on is a video or audio that should be put into SWMP.
-	// If you want to make site specific changes, either expand on it or just make a completely separate event listener below it.
+  // Below this is the event listener that checks if what you are clicking on is a video or audio that should be put into SWMP.
+  // If you want to make site specific changes, either expand on it or just make a completely separate event listener below it.
 
 document.querySelector('body').addEventListener('click', (event) => {
-  	//console.log(event.target.tagName);
+    //console.log(event.target.tagName);
 
-  	// If there are no links in sight, do nothing.
+    // If there are no links in sight, do nothing.
   if (event.target.tagName != 'A' && event.target.parentNode.tagName != 'A') {
     return; 
   }
-  	// Lets figure out which one is the link. Wont normally chain As inside As so... Sometimes image may be inside span inside A so lets do 3x.
+    // Lets figure out which one is the link. Wont normally chain As inside As so... Sometimes image may be inside span inside A so lets do 3x.
   var clicked = false;
   if (event.target.tagName == 'A') {
-   	clicked = event.target;
+    clicked = event.target;
   } else if (event.target.parentNode.tagName == 'A') {
-  	clicked = event.target.parentNode;
+    clicked = event.target.parentNode;
   } else if (event.target.parentNode.parentNode.tagName == 'A') {
-  	clicked = event.target.parentNode.parentNode;
+    clicked = event.target.parentNode.parentNode;
   }
   
   function getVideo() {
     if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
-    	return clicked.getAttribute('href');
+      return clicked.getAttribute('href');
     } else if (backendScript == 'vichan') {
       //console.log(clicked.parentNode.querySelectorAll('p.fileinfo a') );
       
@@ -1139,27 +1153,27 @@ document.querySelector('body').addEventListener('click', (event) => {
   }
  
   function getFileNameFromUrl(link) { 
-   	if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
-    	return link;
+    if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
+      return link;
     } else if (backendScript == 'vichan') {
       return link;
     } else {
-     	return link; 
+      return link; 
     }
  
   }
   
   function getTitle(link) {
-    	if (backendScript == 'fourchan') {
-       	if (link.parentNode.querySelector('div.fileText a').getAttribute('title') ) {
+      if (backendScript == 'fourchan') {
+        if (link.parentNode.querySelector('div.fileText a').getAttribute('title') ) {
           return link.parentNode.querySelector('div.fileText a').getAttribute('title');
         } else {
-        	return link.parentNode.querySelector('div.fileText a').innerText;
+          return link.parentNode.querySelector('div.fileText a').innerText;
         }
 
       }
     
- 			if (backendScript == 'vichan') { // https://regex101.com/r/HivDYB/2
+      if (backendScript == 'vichan') { // https://regex101.com/r/HivDYB/2
         let regex = new RegExp(`([^\/|^\=|^\n|^\&])+\.(${swmpConfig.files})([^\w]|$)`, 'gi'); // Tests for www.webmaster.com/test.webm domain too.
         var newlink = link.match(regex); // Remove query behind *final filename* &title for old filename on vichan will stay.
         newlink.forEach(string => function(string) {
@@ -1174,11 +1188,11 @@ document.querySelector('body').addEventListener('click', (event) => {
   var clickedFileName = getFileNameFromUrl(clicked.getAttribute('href') );
   var clickedTitle = false;
   if (backendScript == '' || backendScript == null || backendScript == undefined) {
-  	clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
   } else if (backendScript == 'fourchan') {
-		clickedTitle = decodeURI(getTitle(clicked) );
+    clickedTitle = decodeURI(getTitle(clicked) );
   } else if (backendScript == 'vichan') {
-   	clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
+    clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
   } else {
     clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
   }
@@ -1193,7 +1207,7 @@ document.querySelector('body').addEventListener('click', (event) => {
   
   if (!clickedHref.match(regex) ) {
     //console.log("not a video or audio");
-  	return false;
+    return false;
   }
   
   console.log(clickedHref+": matched video or audio");
@@ -1207,14 +1221,14 @@ document.querySelector('body').addEventListener('click', (event) => {
 
   // Okay, time to load the player.
   var playerid = false;
-		if (swmpConfig.allowMultiple != 'false')  {
-    	playerid = `play-swmp-${clicked.getAttribute('href')}`;
+    if (swmpConfig.allowMultiple != 'false')  {
+      playerid = `play-swmp-${clicked.getAttribute('href')}`;
     } else {
       playerid = 'play-swmp';
     }
     if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
       if (swmpConfig.allowMultiple != 'false')  {
-      	return false; //already exists, lets do nothing.
+        return false; //already exists, lets do nothing.
       } else {
         document.getElementById(playerid).remove();
         //already exists, lets get rid of it. 
@@ -1222,7 +1236,7 @@ document.querySelector('body').addEventListener('click', (event) => {
       
     }
   
-  	console.log(playerid+clickedHref+clickedTitle);
+    console.log(playerid+clickedHref+clickedTitle);
       
       let newembed = new swmp({
         id: playerid,
@@ -1231,11 +1245,11 @@ document.querySelector('body').addEventListener('click', (event) => {
       });
   
   console.log(backendScript);
-  		
-  		if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
+      
+      if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
         clicked.parentNode.parentNode.appendChild(newembed.container);
       } else {
-      	clicked.parentNode.appendChild(newembed.container);
+        clicked.parentNode.appendChild(newembed.container);
       }
   
 
