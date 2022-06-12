@@ -146,7 +146,7 @@ var swmpConfig = {
 			['kurisu', 'Kurisumasu'],
       ['bluemoon', 'Blue Moon']
 		],
-	files: 'avi|mpeg|mpg|ogv|mp4|webm|wav|mp3|m4a|mp2|ogg',
+	files: 'avi|mpeg|mpg|ogv|mp4|webm|flv|wav|mp3|m4a|mp2|ogg|flac',
   allowMultiple: 'false'
 }
 
@@ -809,7 +809,12 @@ class swmp {
 		// Check Format Support
 		if (this.mime != undefined) {
 			if (this.player.canPlayType(this.mime) == '') {
-				this.container.innerHTML = `Your browser can't play this format: ${this.mime}`;
+				this.closeError = document.createElement('span')
+        this.closeError.innerHTML = `Your browser can't play this format: ${this.mime}`;
+        this.container.addEventListener('click', (event) => {
+          this.container.remove();
+        });
+        this.container.appendChild(this.closeError);
 				return false;
 			}
 		}
@@ -1490,6 +1495,10 @@ class swmp {
  				this.type = 'video';
  				this.mime = 'video/webm'
  				break;
+ 			case 'flv':
+ 				this.type = 'video';
+ 				this.mime = 'video/x-flv'
+ 				break;
  				//AUDIO
  			case 'wav':
  				this.type = 'audio';
@@ -1510,6 +1519,10 @@ class swmp {
  			case 'ogg':
  				this.type = 'audio';
  				this.mime = 'audio/ogg'
+ 				break;
+ 			case 'flac':
+ 				this.type = 'audio';
+ 				this.mime = 'audio/flac'
  				break;
  			default:
  				console.log('No matching ext/mime');
