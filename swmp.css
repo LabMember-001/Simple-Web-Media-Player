@@ -1,6 +1,7 @@
 div.swmp {
 	--swmp-background: #e6e6e6;
 	--swmp-container-border: #000;
+	--swmp-player-container-background: #000;
 	--swmp-controls-background: var(--swmp-background);
 	--swmp-text-color: #000;
 	--swmp-button-background: var(--swmp-background);
@@ -74,10 +75,15 @@ div.swmp.theme-kurisu, div.swmp.theme-kurisu * {
 	--swmp-button-mask-color: #fff;
 }
 
-div.swmp.demo-container {
-	max-width:320px;
-	height: auto;
-	margin: auto;	
+div.swmp.theme-bluemoon, div.swmp.theme-bluemoon * {
+	--swmp-background: #272d37;
+	--swmp-text-color: #eee;
+	--swmp-button-mask-color: #d3d3d3;
+	--swmp-controls-background: #49525D;
+	--swmp-btn-border-left: #DDDDDD;
+	--swmp-btn-border-top: #DDDDDD;
+	--swmp-range-thumb-border-top: #ddd;
+	--swmp-range-thumb-color: #272d37;
 }
 
 div.swmp.container {
@@ -95,9 +101,8 @@ div.swmp.container {
 	line-height: 1; /* futaba/buri themes */
 	z-index: 1;
 	overflow: hidden;
-	resize: horizontal;
 	min-width: 320px;
-	width: 320px;
+	width: auto;
 	outline: none;
 }
 
@@ -125,11 +130,20 @@ span.swmp.window.window-titlebar {
 	text-overflow: ellipsis;
 	-webkit-user-select: none;
 	user-select: none;
-	flex: 1 0 auto;
-	max-width: 260px;
 	position: relative;
 	margin: auto;
 	cursor: move;
+	width: 100%;
+	text-align: center;
+	display: block;
+}
+
+span.swmp.window.window-title {
+	display: block;
+	max-width: 260px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin: auto;
 }
 
 span.swmp.window.window-buttons-contain {
@@ -137,13 +151,14 @@ span.swmp.window.window-buttons-contain {
 	flex: 0 1 auto;
 }
 
-div.swmp.container.audio {
-	display: block;
+div.swmp .swmp-player-container {
+	display: flex;
+	height: 100%;
+	background: var(--swmp-player-container-background);
 }
 
-div.swmp.video-container {
-	max-width:320px;
-	height: auto;	
+div.swmp.container.audio {
+	display: block;
 }
 
 div.swmp.container.fullscreen {
@@ -155,13 +170,18 @@ div.swmp.container.fullscreen {
 }
 
 div.swmp.container.fullscreen video {
-	width: auto;
+	width: 100%;
 	height: auto;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 div.swmp video {
-	width: 100%;
+	max-width: 500px;
+	max-height: 500px;
+	width: auto;
 	height: auto;
+	margin: auto;
 }
 
 div.swmp audio {
@@ -432,11 +452,11 @@ button.swmp.button.window-close span {
 }
 
 button.swmp.button.playbutton span {
-	--image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=);
+	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=');
 }
 
 button.swmp.button.playbutton.playing span {
-	--image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==);
+	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==');
 }
 
 button.swmp.button.stopbutton span {
@@ -449,7 +469,7 @@ button.swmp.button.fullscreen, .swmp.timer-container {
 }
 
 button.swmp.button.fullscreen span {
-	--image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC');
+	--image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC');
 }
 
 button.swmp.button.volume span {

@@ -1710,7 +1710,7 @@ document.querySelector('body').addEventListener('click', (event) => {
 
 
   // Okay, time to load the player.
-	if (swmpConfig.allowMultiple != 'false')  {
+		if (swmpConfig.allowMultiple != 'false')  {
     	var playerid = `play-ibmp-${clicked.getAttribute('href')}`;
     } else {
       var playerid = 'play-ibmp';
