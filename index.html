@@ -1,63 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Simple Web Media Player</title>
+    <meta charset="UTF-8">
+    <title>Simple Web Media Player</title>
 
-	<style>
+    <style>
 
-		body {
-			background:#ffe;
-			display:flex;
-			flex-direction:row;
-		}
+        body {
+            background:#ffe;
+            display:flex;
+            flex-direction:row;
+        }
 
-		nav {
-			width:200px;
-			flex:1 0 200px;
-		}
+        nav {
+            width:200px;
+            flex:1 0 200px;
+        }
 
-		nav ul {
-			position:fixed;
-			top:50px;
-			list-style-type:hiragana;
-		}
+        nav ul {
+            position:fixed;
+            top:50px;
+            list-style-type:hiragana;
+        }
 
-		main {
-			margin-top: 50px;
-			flex:0 1 100%;
-		}
+        main {
+            margin-top: 50px;
+            flex:0 1 100%;
+        }
 
-		main div.content {
-			width: 800px;
-		}
+        main div.content {
+            width: 800px;
+        }
 
-		footer {
-			height: 500px;
-		}
+        footer {
+            height: 500px;
+        }
 
-		h1,h2,h3,h4,h5 {
-			color:#800;
-			padding: 0;
-			margin: 0;
-		}
+        h1,h2,h3,h4,h5 {
+            color:#800;
+            padding: 0;
+            margin: 0;
+        }
 
-		h4 {
-			color: #000;
-		}
+        h4 {
+            color: #000;
+        }
 
-		code {
-			display:block;
-			text-align:left;
-			white-space:pre-wrap;
-			background:#fff
-		}
+        code {
+            display:block;
+            text-align:left;
+            white-space:pre-wrap;
+            background:#fff
+        }
 
-		.help {
-			cursor:help;
-		}
+        .help {
+            cursor:help;
+        }
 
-	</style>
+        div:target {
+            border: 1px dashed #000;
+        }
+
+    </style>
 
 
 </head>
@@ -65,90 +69,102 @@
 
 
 <nav>
-	<ul>
-		<li><a href="#about">About</a></li>
-		<li><a href="#features">Features</a></li>
-		<li><a href="#installation">Installation</a></li>
-		<li><a href="#configuration">Configuration</a></li>
-		<li><a href="#demo">Demo Instance</a></li>
-	</ul>
+    <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#demo">Demo Instance</a></li>
+    </ul>
 </nav>
 
 <main>
 
-	<div class="content">
+    <div class="content">
 
 <a name="about"></a>
 
-		<h1>Simple Web Media Player</h1>
+        <h1>Simple Web Media Player</h1>
 
-			<h2>About</h2>
+            <div id="about">
+                <h2>About</h2>
 
-			<p>The default HTML5 media player is obnoxiously ugly on legacy imageboards so this was written to be an easily modifiable script to run media files in browser while keeping a more oldschool look to fit with the rest of the site.</p>
-			<p>There is a basic media player class that can be installed on any website, but I've also written a userscript so that this can be easily implemented on any site running Wakaba/TinyIB/Vichan/LynxChan/jschan to inject the script and replace the default media player. It will also work on pretty much any site that has direct links to video or audio files though some sites for various design/event reasons may need custom implementations.</p>
+            <p>The default HTML5 media player is obnoxiously ugly on legacy imageboards so this was written to be an easily modifiable script to run media files in browser while keeping a more oldschool look to fit with the rest of the site.</p>
+            <p>There is a basic media player class that can be installed on any website, but I've also written a userscript so that this can be easily implemented on any site running Wakaba/TinyIB/Vichan/LynxChan/jschan to inject the script and replace the default media player. It will also work on pretty much any site that has direct links to video or audio files though some sites for various design/event reasons may need custom implementations.</p>
 
-			<h4>Browser Support</h4>
-			<p> - Webkit (Chrome, Opera, Vivaldi, Safari, Brave)<br/>
-			 - Gecko (Firefox, Tor, LibreWolf)</p>
+            <h4>Browser Support</h4>
+            <p> - Webkit (Chrome, Opera, Vivaldi, Safari, Brave)<br/>
+             - Gecko (Firefox, Tor, LibreWolf)</p>
 
-			<p>It is likely there will be CSS bugs with other engines.<br/>Only tested with Firefox, Tor<b class="help" title="Only for Site installation scripts, Don't use third party scripts in Tor.">(?)</b>, Chrome and Safari, bug reports welcome.</p>
+            <p>It is likely there will be CSS bugs with other engines.<br/>Only tested with Firefox, Tor<b class="help" title="Only for Site installation scripts, Don't use third party scripts in Tor.">(?)</b>, Chrome and Safari, bug reports welcome.</p>
 <a name="features"></a>
+            </div>
 
-			<h2>Features</h2>
-			
-			<h4>Settings Menu</h4>
-			<p>To open the settings menu right click on the window titlebar or the controls. Video right click functionality is preserved.</p>
+            <div id="features">
+                <h2>Features</h2>
+            
+                <h4>Settings Menu</h4>
+                <p>To open the settings menu right click on the window titlebar or the controls. Video right click functionality is preserved.</p>
 
-			<h4>Themes</h4>
-			<p>Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.<br/>
-			Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.</p>
+                <h4>Themes</h4>
+                <p>Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.<br/>
+                Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.</p>
 
-			<h4>Player Behavior</h4>
-			<p>You can also override some defaults such as disabling autoplay, disabling loop, or even allowing to run multiple players at once. By default if you open a media file while one is playing the old player will be replaced.</p>
+                <h4>Player Behavior</h4>
+                <p>You can also override some defaults such as disabling autoplay, disabling loop, or even allowing to run multiple players at once. By default if you open a media file while one is playing the old player will be replaced.</p>
 
-			<h4>Keybinds</h4>
-			<p>Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).<br/>
-			In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.</p>
-			
+                <h4>Keybinds</h4>
+                <p>Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).<br/>
+                In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.</p>
+            </div>
 
 <a name="installation"></a>
-			<h2>Installation</h2>
+            <div id="installation">
+                <h2>Installation</h2>
 
-			<h4>Website installation</h4>
-			<p>Repository: <a href="https://github.com/LabMember-001/Simple-Web-Media-Player" target="_blank">Github</a><br/>Full Download: </p>
-			<p>Add swmp.js to your page.</p>
-			<p>Create and place a video anywhere on any site by doing minor modifications to:<br/>
-				<code>
-// Create a new element and define type (audio/video) and url (internal or external)
-var newembed = new swmp({
-	url: "example.mp3",
-});
-// Put new element inside defined element.
-document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
-				</code>
+                <h4>Userscript install:</h4>
+                <p>If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may <b><a href="swmp.user.js">install</a></b> script. <b><a a href="swmp.js">Source</a></b>.</p>
 
-			<p>If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The build in link click scanner will assign any video created with an ID of the href to that file.</p>
+                <h4>Website installation</h4>
+                <p>Repository: <a href="https://github.com/LabMember-001/Simple-Web-Media-Player" target="_blank">Github</a><br/>Full Download: </p>
+                <p>Add swmp.js to your page.</p>
+                <p>Create and place a video anywhere on any site by doing minor modifications to:<br/>
+                    <code>
+    // Create a new element and define type (audio/video) and url (internal or external)
+    var newembed = new swmp({
+        url: "example.mp3",
+    });
+    // Put new element inside defined element.
+    document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
+                    </code>
+                </p>
 
-			<p>The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
-			</p>
+                <p>If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The build in link click scanner will assign any video created with an ID of the href to that file.</p>
 
-			<p>By setting 'windowed' to false on player creation the constructor will create an inline player. Otherwise you can drag and move the window wherever you want or close the player. You may also override some defaults.</p>
+                <p>The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
+                </p>
 
-			<h4>Userscript install:</h4>
-			<p>If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may install <b><a href="#">This</a></b> script. If you would like to read the full code there is a non-minified version <b><a a href="">here</a></b>.</p>
+                <p>By setting 'windowed' to false on player creation the constructor will create an inline player. Otherwise you can drag and move the window wherever you want or close the player. You may also override some defaults.</p>
+        </div>
 
 <a name="configuration"></a>
-			<h3>Configuration</h3>
-			<p>Some sites may need additional changes done to the script. The script is configured to only activate on certain sites, but you may open the file and replace the existing site regex with a catch all regex found right below the script's website configuration.</p>
+            <div id="configuration">
+                <h3>Configuration</h3>
+                <p>Some sites may need additional changes done to the script. The script is configured to only activate on certain sites, but you may open the file and replace the existing site regex with a catch all regex found right below the script's website configuration.</p>
+            </div>
 
 
-	</div>
+    
 
 <a name="demo"></a>
-	<h3>Demo</h3>
-	<div class="swmp demo-container" id="demo">
-		<!-- This is where demo will spawn a video after class is defined -->
-	</div>
+            <div id="demo">
+                <h3>Demo</h3>
+                <div class="demo-container" id="demo">
+                    <!-- This is where demo will spawn a video after class is defined -->
+                </div>
+            </div>
+
+    </div>
 
 </main>
 
@@ -160,75 +176,110 @@ document.getElementById("example").appendChild(newembed.container); // Define wh
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	// Demo spawn
+    // Demo spawn
 
-	var container = document.getElementById("demo");
-
-
+    var container = document.getElementById("demo");
 
 
 
 
-	
-	var createVideo = document.createElement('button');
-	createVideo.innerHTML = 'Create Video';
-	createVideo.setAttribute('style', 'margin-right:5px;');
-	createVideo.addEventListener("click", (event) => {
-
-		if (swmpConfig.allowMultiple != 'false')  {
-	      var playerid = `play-ibmp-example1`;
-	    } else {
-	      var playerid = 'play-ibmp';
-	    }
-	    if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
-	      if (swmpConfig.allowMultiple != 'false')  {
-	      	return false; //already exists, lets do nothing.
-	      } else {
-	        document.getElementById(playerid).remove();
-	        //already exists, lets get rid of it. 
-	      }
-	    }
-
-		var newembed = new swmp({
-			url: "example.webm",
-			id: playerid
-		});
-		container.appendChild(newembed.container);
-	});
-	container.appendChild(createVideo);
-
-	var createAudio = document.createElement('button');
-	createAudio.innerHTML = 'Create Audio';
-	createAudio.addEventListener("click", (event) => {
-
-		if (swmpConfig.allowMultiple != 'false')  {
-	      var playerid = `play-ibmp-example2`;
-	    } else {
-	      var playerid = 'play-ibmp';
-	    }
-	    if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
-	      if (swmpConfig.allowMultiple != 'false')  {
-	      	return false; //already exists, lets do nothing.
-	      } else {
-	        document.getElementById(playerid).remove();
-	        //already exists, lets get rid of it. 
-	      }
-	    }
 
 
-		var newembed = new swmp({
-			url: "example.mp3",
-			id: playerid
-		});
-		container.appendChild(newembed.container);
-	});
-	container.appendChild(createAudio);
+    
+    var createVideo = document.createElement('button');
+    createVideo.innerHTML = 'Create Video';
+    createVideo.setAttribute('style', 'margin-right:5px;');
+    createVideo.addEventListener("click", (event) => {
 
-	for (const [key, value] of Object.entries(swmpConfig)) {
-		var swmpdemoconfig = document.createElement('div');
-		swmpdemoconfig.innerHTML = `${key}:${value}`;
-		container.appendChild(swmpdemoconfig);
-	}
+        if (swmpConfig.allowMultiple != 'false')  {
+          var playerid = `play-ibmp-example1`;
+        } else {
+          var playerid = 'play-ibmp';
+        }
+        if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
+          if (swmpConfig.allowMultiple != 'false')  {
+            return false; //already exists, lets do nothing.
+          } else {
+            document.getElementById(playerid).remove();
+            //already exists, lets get rid of it. 
+          }
+        }
+
+        var newembed = new swmp({
+            url: "example.webm",
+            id: playerid
+        });
+        container.appendChild(newembed.container);
+    });
+    container.appendChild(createVideo);
+
+    var createAudio = document.createElement('button');
+    createAudio.innerHTML = 'Create Audio';
+    createAudio.setAttribute('style', 'margin-right:5px;');
+    createAudio.addEventListener("click", (event) => {
+
+        if (swmpConfig.allowMultiple != 'false')  {
+          var playerid = `play-ibmp-example2`;
+        } else {
+          var playerid = 'play-ibmp';
+        }
+        if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
+          if (swmpConfig.allowMultiple != 'false')  {
+            return false; //already exists, lets do nothing.
+          } else {
+            document.getElementById(playerid).remove();
+            //already exists, lets get rid of it. 
+          }
+        }
+
+
+        var newembed = new swmp({
+            url: "example.mp3",
+            id: playerid
+        });
+        container.appendChild(newembed.container);
+    });
+    container.appendChild(createAudio);
+
+
+    var createYoutube = document.createElement('button');
+    createYoutube.innerHTML = 'Create YouTube';
+    createYoutube.setAttribute('style', 'margin-right:5px;');
+    createYoutube.addEventListener("click", (event) => {
+
+        if (swmpConfig.allowMultiple != 'false')  {
+          var playerid = `play-ibmp-example3`;
+        } else {
+          var playerid = 'play-ibmp';
+        }
+        if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
+          if (swmpConfig.allowMultiple != 'false')  {
+            return false; //already exists, lets do nothing.
+          } else {
+            document.getElementById(playerid).remove();
+            //already exists, lets get rid of it. 
+          }
+        }
+
+
+        var newembed = new swmp({
+            url: "https://www.youtube.com/watch?v=d8MIAW2vYhc",
+            id: playerid,
+            title: "Youtube: {getid}"
+        });
+        container.appendChild(newembed.container);
+    });
+    container.appendChild(createYoutube);
+
+    
+
+    var configvalues = document.createElement('div');
+    for (const [key, value] of Object.entries(swmpConfig)) {
+        var swmpdemoconfig = document.createElement('div');
+        swmpdemoconfig.innerHTML = `${key}:${value}`;
+        configvalues.appendChild(swmpdemoconfig);
+    }
+    container.appendChild(configvalues);
 
 
 });
