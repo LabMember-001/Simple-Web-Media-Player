@@ -4,11 +4,11 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license      GPLv3
-// @version  1.1.1
-// @grant    none
+// @version  1.2
 // @updateURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
 // @downloadURL https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
 
+// @grant       none
 // @run-at      document-end
 
 // @match https://*.4chan.org/*
@@ -211,13 +211,42 @@ document.head.appendChild(swmpStyle);
 
 // Create youtube API callback
 var youtubeIsLoaded = false;
-var ytbuild = false
+var ytbuild;
+var ytmakeplayer;
+var ytcopyplayer;
+const injectlistener = document.createElement ('script');
+injectlistener.innerHTML = `
 function onYouTubeIframeAPIReady() {
-  console.log("Youtube API Ready");
-  ytbuild = new Event('ytbuild');
-  youtubeIsLoaded = true;
-  window.dispatchEvent(ytbuild);
-}
+    console.log("onYouTubeIframeAPIReadyInjected");
+    ytbuild = new Event('ytbuild');
+    window.dispatchEvent(ytbuild);
+
+
+    function deepClone(obj) {
+      if (obj === null || typeof obj !== "object")
+        return obj
+      var props = Object.getOwnPropertyDescriptors(obj)
+      for (var prop in props) {
+        props[prop].value = deepClone(props[prop].value)
+      }
+      return Object.create(
+        Object.getPrototypeOf(obj), 
+        props
+      )
+    }
+    ytmakeplayer = deepClone(YT.Player);
+    ytcopyplayer = new CustomEvent('ytcopyplayer', {
+      detail: {
+        ytmakeplayer
+      }
+    });
+    window.dispatchEvent(ytcopyplayer);
+}`;
+document.head.appendChild(injectlistener); 
+// This is to allow GM to access the onYouTube event and player from within SWMP class. 
+// Seems like a GM scope restriction separating the page and the script when iframe is imported, works fine on page installation by just doing window.on...
+// -- Probably scrap this, looks like GM is fucked and I should just use ViolentMonkey instead of trying to pass the imported object over to the player.
+
 
 // SWMP Code
 
@@ -280,9 +309,9 @@ class swmp {
       // Check if browser can play formats, create audio or video tag and fill with source. 
       this.preparePlayer();
     } else if (this.type == 'youtube') {
-      // Load Youtube iframe. This one should probably be done AFTER everything else is loaded to be honest.
+      // Load Youtube iframe.
       if (this.prepareYoutube() == false) {
-        console.log("stopping here");
+        console.log("Error: YouTube");
         return false;
       }
     }
@@ -291,8 +320,6 @@ class swmp {
     if (swmpConfig.theme != undefined) {
       this.container.classList.add(`swmp-theme-${swmpConfig.theme}`);
     }
-
-    
 
     if (this.type == 'video' || this.type == 'audio') {
     // Create buttons
@@ -744,126 +771,141 @@ class swmp {
 
   prepareYoutube() {
 
-    if (youtubeIsLoaded == false) {
+    console.log('SWMP: prepareYoutube() ');
 
+    if (youtubeIsLoaded == false) {
       // Include YouTube iframe API if not already added:
       if (!document.getElementById('swmp-youtube-api')) {
-        //console.log("Loading YouTube API");
+        console.log("SWMP: Loading YouTube API");
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
+        tag.setAttribute('id', 'swmp-youtube-api');
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
       window.addEventListener('ytbuild', (event) => {
-        //console.log('Firing YouTube Ready Event');
+        youtubeIsLoaded = true;
+        console.log('SWMP: Firing YouTube Ready Event from inside PrepareYouTube()');
         this.makeYoutube();
       });
     } else {
       // API Already loaded, just make video.
+      console.log('SWMP: YT API Already loaded, make vid');
       this.makeYoutube();
     }
   }
 
   makeYoutube() {
+    // Make new player
+    console.log('SWMP: makeYoutube()');
+    this.playerfirstrun = true;
+    var self = this;
+    this.onPlayerReady = (event) => {
+      console.log('SWMP Youtube: onPlayerReady()');
+      if (this.playerfirstrun == true) {
+        this.playerfirstrun = false;
+        this.playerContainer.appendChild(this.ytplayer.getIframe() );
+        this.windowTitle.textContent = this.ytplayer.getVideoData().title;
+        this.totalTimer.textContent = this.formatSeconds(this.ytplayer.getDuration() );
+        this.ytplayer.getIframe().style.display = 'inherit';
 
-        // Make new player
+        this.ytplayer.setVolume(this.defaultVolume);
+        this._volume = this.defaultVolume;
+        /*if (swmpConfig.muted == 'true') {
+          this.ytplayer.mute();
+          this.volumeButton.classList.add('swmp-mute');
+        } else {
+          this.ytplayer.unMute();
+        }*/
+        this.ytplayer.unMute();
 
-        this.playerfirstrun = true;
-        var self = this;
-        this.onPlayerReady = (event) => {
-          console.log('player ready');
-          if (this.playerfirstrun == true) {
-            this.playerfirstrun = false;
-            this.playerContainer.appendChild(this.ytplayer.getIframe() );
-            this.windowTitle.textContent = this.ytplayer.getVideoData().title;
-            this.totalTimer.textContent = this.formatSeconds(this.ytplayer.getDuration() );
-            this.ytplayer.getIframe().style.display = 'inherit';
-
-            this.ytplayer.setVolume(this.defaultVolume);
-            this._volume = this.defaultVolume;
-            /*if (swmpConfig.muted == 'true') {
-              this.ytplayer.mute();
-              this.volumeButton.classList.add('swmp-mute');
-            } else {
-              this.ytplayer.unMute();
-            }*/
-            this.ytplayer.unMute();
-
-            if (this.autoplay == 'true') {
-              this.ytplayer.playVideo();
-              this.playbutton.classList.add('swmp-playing');
-            }
-
-
-          }
-
-          window.addEventListener('message', function(event) {
-            if (event.source === self.ytplayer.getIframe().contentWindow) {
-                var data = JSON.parse(event.data);
-                //console.log(data);
-
-                  // Dispatch Volume and Mute Event -- These are sent together by iframe.
-                if (data.event === "infoDelivery" && data.info && data.info.volume) {
-                  //console.log(data.info.volume);
-                  //console.log(data.info.muted);
-                  if (data.info.volume != self._volume) {
-                    //console.log(data.info.volume);
-                    self.updateVolume();
-                  }
-                }
-
-                  // Dispatch on Time Event
-                if (data.event === "infoDelivery" && data.info && data.info.currentTime) {
-                  //console.log(data.info.currentTime);
-                  self.currentTimer.textContent = self.formatSeconds(data.info.currentTime);
-                }
-
-                  // Dispatch on Player state event
-                if (data.event === "infoDelivery" && data.info && data.info.playerState) {
-                  //console.log(data.info.playerState);
-                  self.updatePlay();
-                  self.updateVolume();
-                }
-            }
-          });
-
+        if (this.autoplay == 'true') {
+          this.ytplayer.playVideo();
+          this.playbutton.classList.add('swmp-playing');
         }
 
-        this.videogenerate = document.createElement('div');
-        this.videogenerate.style.display = 'none';
-        this.videogenerate.setAttribute('id', `ytplayer-${this.id}`);
-        document.body.appendChild(this.videogenerate);
 
-        this.ytplayer = new YT.Player(`ytplayer-${this.id}`, {
-          height: '1080',
-          width: '1920', // Allows quality to increase to 1080p. Can't be forced by API, need fast internet.
-          videoId: 'x2iKC0C32-g',
-          playerVars: {
-            'playsinline': 1,
-            'autoplay': 1,
-            'origin': window.location.href,
-            'rel': 0,
-            'modestbranding': 1,
-            'controls': 0
-          },
-          events: {
-            'onReady': this.onPlayerReady
-          }
-        });
+      }
 
-        console.log(this.ytplayer);
+      window.addEventListener('message', function(event) {
+        if (event.source === self.ytplayer.getIframe().contentWindow) {
+            var data = JSON.parse(event.data);
+            //console.log(data);
 
-        var youtubeid = '2iMYWzer1wY';
+              // Dispatch Volume and Mute Event -- These are sent together by iframe.
+            if (data.event === "infoDelivery" && data.info && data.info.volume) {
+              //console.log(data.info.volume);
+              //console.log(data.info.muted);
+              if (data.info.volume != self._volume) {
+                //console.log(data.info.volume);
+                self.updateVolume();
+              }
+            }
 
-        this.playerContainer = document.createElement('div');
-        this.playerContainer.setAttribute('class', 'swmp-player-container');
+              // Dispatch on Time Event
+            if (data.event === "infoDelivery" && data.info && data.info.currentTime) {
+              //console.log(data.info.currentTime);
+              self.currentTimer.textContent = self.formatSeconds(data.info.currentTime);
+            }
 
-        this.container.appendChild(this.playerContainer);
+              // Dispatch on Player state event
+            if (data.event === "infoDelivery" && data.info && data.info.playerState) {
+              //console.log(data.info.playerState);
+              self.updatePlay();
+              self.updateVolume();
+            }
+        }
+      });
 
-        this.prepareSettings();
-        this.prepareControls();
-        this.prepareSharedEvents();
-        this.prepareYoutubeEvents();
+    }
+
+    this.videogenerate = document.createElement('div');
+    this.videogenerate.style.display = 'none';
+    this.videogenerate.setAttribute('id', `ytplayer-${this.id}`);
+    document.body.appendChild(this.videogenerate);
+
+    // If GM 
+    var youtubegenerate;
+    if (typeof GM_info != "undefined") {
+      console.log('GM');
+      youtubegenerate = unsafeWindow.YT.Player;
+      console.log(unsafeWindow.YT.Player);
+    } else {
+      youtubegenerate = YT.Player; 
+      console.log(YT.Player);
+    }
+    
+    // Access Function: 
+    
+    this.ytplayer = new youtubegenerate(`ytplayer-${this.id}`, {
+      height: '1080',
+      width: '1920', // Allows quality to increase to 1080p. Can't be forced by API, need fast internet.
+      videoId: this.videoid,
+      playerVars: {
+        'playsinline': 1,
+        'autoplay': 1,
+        'loop': 1,
+        'origin': window.location.href,
+        'rel': 0,
+        'modestbranding': 1,
+        'controls': 0
+      },
+      events: {
+        'onReady': this.onPlayerReady
+      }
+    });
+    
+    console.log(this.ytplayer);
+
+    this.playerContainer = document.createElement('div');
+    this.playerContainer.setAttribute('class', 'swmp-player-container');
+
+    this.container.appendChild(this.playerContainer);
+
+    this.prepareSettings();
+    this.prepareControls();
+    this.prepareSharedEvents();
+    this.prepareYoutubeEvents();
 
   }
 
@@ -910,13 +952,13 @@ class swmp {
         this.seeker.setAttribute('value', "0");
       }
 
-      if (this.ytplayer.getPlayerState() == 0) {
+      /*if (this.ytplayer.getPlayerState() == 0) {
         console.log('0');
         if (swmpConfig.loop == 'true') {
           this.ytplayer.seekTo(0);
           this.ytplayer.playVideo();
         }
-      }
+      }*/
 
     };
 
@@ -1261,12 +1303,23 @@ class swmp {
   checkURL(url) {
 
     // if match youtube regex then do this and return
-    if (url.match(new RegExp('^(https?\:\/\/)?((www\.|)youtube\.com|youtu\.be)\/.+$', 'gi' ) ) ) {
-      console.log("match");
+
+    var regex = new RegExp("(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})", "gi");
+    var result = regex.exec(url);
+
+    console.log(regex);
+    console.log(url);
+    console.log(result);
+
+    if (url.match(regex) ) {
+      console.log('SWMP: YouTube');
       this.type = 'youtube';
+      this.videoid = result[1];
+      console.log(this.videoid);
       return true;
     }
 
+    console.log("SWMP: Video or Audio");
     // Check filename in URL for Type / MIME.
     this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
     this.fileExt = url.split(/[#?&]/).slice(-2)[0].split('.').pop().trim();
@@ -1454,7 +1507,7 @@ class swmp {
   // If you want to make site specific changes, either expand on it or just make a completely separate event listener below it.
 
 document.querySelector('body').addEventListener('click', (event) => {
-  //console.log(event.target.tagName);
+  //console.log("Userscript - "+event.target.tagName);
 
     // If there are no links in sight, do nothing.
   if (event.target.tagName != 'A' && event.target.parentNode.tagName != 'A') {
@@ -1474,7 +1527,7 @@ document.querySelector('body').addEventListener('click', (event) => {
     if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
       return clicked.getAttribute('href');
     } else if (backendScript == 'vichan') {
-      //console.log(clicked.parentNode.querySelectorAll('p.fileinfo a') );
+      //console.log("Userscript - "+clicked.parentNode.querySelectorAll('p.fileinfo a') );
       
       var allthelinks = clicked.parentNode.querySelectorAll('p.fileinfo a'); // Prevent capturing the (Hide) link on some installs
       var matchinglink = '';
@@ -1489,7 +1542,7 @@ document.querySelector('body').addEventListener('click', (event) => {
         matchinglink = clicked;
       }
       
-      //console.log(matchinglink);
+      //console.log("Userscript - "+matchinglink);
       return matchinglink.getAttribute('href');
       
     } else {
@@ -1530,13 +1583,22 @@ document.querySelector('body').addEventListener('click', (event) => {
       }
   }
 
-  /*function isYoutube(link) {
+  var clickedHref;
+  var clickedFileName;
+  var clickedTitle;
+  var anythingmatch;
+
+  function isYoutube(link) {
     var regex = new RegExp("(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})", "gi");
-    if (link.test(regex) == true) {
-      console.log(true);
+    var result = regex.exec(link);
+
+    if (link.match(regex) ) {
+      anythingmatch = true;
+      console.log('Userscript - YouTube: '+result[1]); // Video ID
+      clickedTitle = 'YouTube: ' + result[1];
       return true;
     } else {
-      console.log(false);
+      console.log('Userscript - Not YouTube');
       return false;
     }
   }
@@ -1544,82 +1606,88 @@ document.querySelector('body').addEventListener('click', (event) => {
   // If youtube
 
   if (isYoutube(clicked.getAttribute('href') ) ) {
-    // Youtube Stuff
-    console.log('is youtube');
-    event.stopPropagation();
-    event.preventDefault();
-    //return false;
-  }*/
-
-  // else do video stuff
-
-  // else
-
-  
-  var clickedHref = getVideo();
-  var clickedFileName = getFileNameFromUrl(clicked.getAttribute('href') );
-  var clickedTitle = false;
-  if (backendScript == '' || backendScript == null || backendScript == undefined) {
-    clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
-  } else if (backendScript == 'fourchan') {
-    clickedTitle = decodeURI(getTitle(clicked) );
-  } else if (backendScript == 'vichan') {
-    clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
-  } else {
-    clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    console.log('Userscript - YouTube link clicked');
+    clickedHref = clicked.getAttribute('href');
+    //clickedTitle = 'Loading YouTube';
   }
- 
-  console.log("URL: " + clicked.getAttribute('href') );
-  console.log("Filename: " + clickedFileName );
 
-  // Established what the Filename is, let's check if it matches files regex
-  
-  var regex = new RegExp(`\.(${swmpConfig.files})+$`, 'gi');
-  console.log(regex);
-  if (!clickedHref.match(regex) ) {
+  function isVideo(link) {
+    var regex = new RegExp(`\.(${swmpConfig.files})+$`, 'gi');
+    var result = regex.exec(link);
+
+    if (link.match(regex) != null) {
+      anythingmatch = true;
+      console.log('Userscript - Video/Audio match:' + result);
+      return true;
+    } else {
+      console.log('Userscript - Not Video/Audio');
+      return false;
+    }
+  }
+
+  //get video links
+  clickedHref = getVideo();
+
+  if (isVideo(clickedHref) )  {
+    //clickedHref = getVideo();
+    clickedFileName = getFileNameFromUrl(clicked.getAttribute('href') );
+    clickedTitle = false;
+    if (backendScript == '' || backendScript == null || backendScript == undefined) {
+      clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    } else if (backendScript == 'fourchan') {
+      clickedTitle = decodeURI(getTitle(clicked) );
+    } else if (backendScript == 'vichan') {
+      clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
+    } else {
+      clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    }
+   
+    console.log("Userscript - URL: " + clicked.getAttribute('href') );
+    console.log("Userscript - Filename: " + clickedFileName );
+  }
+
+  if (anythingmatch != true) {
     return false;
+  } else {
+    // If video audio or youtube matched, prevent other events.
+    event.preventDefault();
+    event.stopPropagation();
   }
   
-  console.log(clickedHref+": matched video or audio");
 
-  // Established the link is a video/audio file, let's prevent other events from happening.
-  event.preventDefault();
-  event.stopPropagation();
-  
-  // Add shift click check to open in new tab? Maybe playlists or whatever.
 
 
   // Okay, time to load the player.
   var playerid = false;
 
-    if (swmpConfig.allowMultiple != 'false')  {
-      playerid = `play-swmp-${clicked.getAttribute('href')}`;
-    } else {
-      playerid = 'play-swmp';
-    }
+  if (swmpConfig.allowMultiple != 'false')  {
+    playerid = `play-swmp-${clicked.getAttribute('href')}`;
+  } else {
+    playerid = 'play-swmp';
+  }
 
-    if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
-      if (swmpConfig.allowMultiple != 'false')  {
-        return false; //already exists, lets do nothing.
-      } else {
-        document.getElementById(playerid).remove();
-        //already exists, lets get rid of it. 
-      }
+  if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
+    if (swmpConfig.allowMultiple != 'false')  {
+      return false; //already exists, lets do nothing.
+    } else {
+      document.getElementById(playerid).remove();
+      //already exists, lets get rid of it. 
     }
+  }
   
-  console.log(playerid+clickedHref+clickedTitle);
-    let newembed = new swmp({
-      id: playerid,
-      url: clickedHref,
-      title: clickedTitle
-    });
+  //console.log(playerid+clickedHref+clickedTitle);
+  let newembed = new swmp({
+    id: playerid,
+    url: clickedHref,
+    title: clickedTitle
+  });
   
-  console.log(backendScript);
-      if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
-        clicked.parentNode.parentNode.appendChild(newembed.container);
-      } else {
-        clicked.parentNode.appendChild(newembed.container);
-      }
-  
+  //console.log(backendScript);
+  if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
+    clicked.parentNode.parentNode.appendChild(newembed.container);
+  } else {
+    clicked.parentNode.appendChild(newembed.container);
+  }
+
 
 }, true); // Fuck other scripts.

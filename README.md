@@ -13,7 +13,7 @@ There is a basic media player class that can be installed on any website, but I'
 - Gecko (Firefox, Tor, LibreWolf)
 
 It is likely there will be CSS bugs with other engines.
-Only tested with Firefox, Tor(?), Chrome and Safari, bug reports welcome.
+Only tested with Firefox, Tor(?), Vivaldi and Safari, bug reports welcome.
 
 ## Features
 
@@ -24,6 +24,8 @@ To open the settings menu right click on the window titlebar or the controls. Vi
 #### Themes
 
 Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.
+Also included a more modern-like theme, Modernity.
+
 Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.
 
 #### Player Behavior
@@ -37,6 +39,12 @@ In general on most sites you will be able to press Tab after opening the link to
 
 ## Installation
 
+#### Userscript install:
+
+If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may [install](https://github.com/LabMember-001/Simple-Web-Media-Player/raw/main/swmp.user.js) script. If you would like to read the full code there is a non-minified version here. 
+
+Note that the Youtube player does not load in Greasemonkey 4, use Violentmonkey.
+
 #### Website installation
 
 Repository: [Github](https://github.com/LabMember-001/Simple-Web-Media-Player)
@@ -47,23 +55,20 @@ Add swmp.js to your page.
 
 Create and place a video anywhere on any site by doing minor modifications to:
 
+```
 // Create a new element and define type (audio/video) and url (internal or external)
 var newembed = new swmp({
 	url: "example.mp3",
 });
 // Put new element inside defined element.
 document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
-				
+```				
 
-If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The build in link click scanner will assign any video created with an ID of the href to that file.
+If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The built in link click scanner will assign any video created with an ID of the href from that file.
 
 The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
 
 By setting 'windowed' to false on player creation the constructor will create an inline player. Otherwise you can drag and move the window wherever you want or close the player. You may also override some defaults.
-
-#### Userscript install:
-
-If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may install [this](https://github.com/LabMember-001/Simple-Web-Media-Player/raw/main/swmp.user.js) script. If you would like to read the full code there is a non-minified version here.
 
 ## Configuration
 

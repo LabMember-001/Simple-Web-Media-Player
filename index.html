@@ -107,7 +107,7 @@
                 <p>To open the settings menu right click on the window titlebar or the controls. Video right click functionality is preserved.</p>
 
                 <h4>Themes</h4>
-                <p>Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.<br/>
+                <p>Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.<br/> Also included a more modern-like theme, Modernity.<br/>
                 Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.</p>
 
                 <h4>Player Behavior</h4>
@@ -123,23 +123,25 @@
                 <h2>Installation</h2>
 
                 <h4>Userscript install:</h4>
-                <p>If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may <b><a href="swmp.user.js">install</a></b> script. <b><a a href="swmp.js">Source</a></b>.</p>
+                <p>If you have a userscript manager like greasemonkey/tampermonkey/violentmonkey you may <b><a href="swmp.user.js">install</a></b> script. <b><a a href="swmp.js">Source</a></b>.<br/>
+                    Note that the Youtube player does <b>not</b> load in Greasemonkey 4, use Violentmonkey.</p>
 
                 <h4>Website installation</h4>
                 <p>Repository: <a href="https://github.com/LabMember-001/Simple-Web-Media-Player" target="_blank">Github</a><br/>Full Download: </p>
                 <p>Add swmp.js to your page.</p>
                 <p>Create and place a video anywhere on any site by doing minor modifications to:<br/>
-                    <code>
+<code>
     // Create a new element and define type (audio/video) and url (internal or external)
     var newembed = new swmp({
         url: "example.mp3",
     });
     // Put new element inside defined element.
     document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
-                    </code>
+
+</code>
                 </p>
 
-                <p>If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The build in link click scanner will assign any video created with an ID of the href to that file.</p>
+                <p>If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The built in link click scanner will assign any video created with an ID of the href from that file.</p>
 
                 <p>The script automatically checks if the file extension supplied is audio/video and gives appropriate MIME type.
                 </p>
@@ -263,15 +265,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
         var newembed = new swmp({
-            url: "https://www.youtube.com/watch?v=d8MIAW2vYhc",
+            url: "https://youtu.be/x2iKC0C32-g?start=", //url: "https://www.youtube.com/watch?v=d8MIAW2vYhc",
             id: playerid,
-            title: "Youtube: {getid}"
+            title: "Youtube"
         });
         container.appendChild(newembed.container);
     });
     container.appendChild(createYoutube);
 
-    
 
     var configvalues = document.createElement('div');
     for (const [key, value] of Object.entries(swmpConfig)) {
