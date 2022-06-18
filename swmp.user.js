@@ -68,8 +68,7 @@ console.log('Loading IB Media Player.');
 // Low Priority
 // - Title length
 // - Fix support for archived.moe redirection urls.
-// - Fix the god damn & from player.php in vichan title.
-// - Youtube support
+// - Fix the "&" from player.php in vichan title.
 // - Fix titles on some backends. (Mostly just vichan+4chan taking original filename right now).
 */
 
@@ -209,44 +208,13 @@ swmpStyle.innerHTML = `.swmp *{background:0 0;border:0;outline:0;margin:0;paddin
 document.head.appendChild(swmpStyle);
 }
 
-// Create youtube API callback
 var youtubeIsLoaded = false;
-var ytbuild;
-var ytmakeplayer;
-var ytcopyplayer;
-const injectlistener = document.createElement ('script');
-injectlistener.innerHTML = `
-function onYouTubeIframeAPIReady() {
-    console.log("onYouTubeIframeAPIReadyInjected");
-    ytbuild = new Event('ytbuild');
-    window.dispatchEvent(ytbuild);
-
-
-    function deepClone(obj) {
-      if (obj === null || typeof obj !== "object")
-        return obj
-      var props = Object.getOwnPropertyDescriptors(obj)
-      for (var prop in props) {
-        props[prop].value = deepClone(props[prop].value)
-      }
-      return Object.create(
-        Object.getPrototypeOf(obj), 
-        props
-      )
-    }
-    ytmakeplayer = deepClone(YT.Player);
-    ytcopyplayer = new CustomEvent('ytcopyplayer', {
-      detail: {
-        ytmakeplayer
-      }
-    });
-    window.dispatchEvent(ytcopyplayer);
-}`;
-document.head.appendChild(injectlistener); 
-// This is to allow GM to access the onYouTube event and player from within SWMP class. 
-// Seems like a GM scope restriction separating the page and the script when iframe is imported, works fine on page installation by just doing window.on...
-// -- Probably scrap this, looks like GM is fucked and I should just use ViolentMonkey instead of trying to pass the imported object over to the player.
-
+var gmwindow;
+if (typeof GM_info != 'undefined') {
+  gmwindow = unsafeWindow;
+} else {
+  gmwindow = window;
+}
 
 // SWMP Code
 
@@ -710,14 +678,14 @@ class swmp {
   preparePlayer() {
     // Create Player HTML5 Video or Audio format.
     if (this.type == 'video') {
-      this.container.classList.add('video');
+      this.container.classList.add('swmp-video');
       this.player = document.createElement('video');
       this.player.setAttribute('class', 'swmp swmp-video swmp-player');
       if (this.poster != false && this.poster != undefined) {
         this.player.setAttribute('poster', this.poster);
       }
     } else if (this.type == 'audio') {
-      this.container.classList.add('audio');
+      this.container.classList.add('swmp-audio');
       this.player = document.createElement('audio');
       this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
     } else {
@@ -783,11 +751,14 @@ class swmp {
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
-      window.addEventListener('ytbuild', (event) => {
+      
+      gmwindow.onYouTubeIframeAPIReady = (event) => {
         youtubeIsLoaded = true;
         console.log('SWMP: Firing YouTube Ready Event from inside PrepareYouTube()');
         this.makeYoutube();
-      });
+      };
+      
+      
     } else {
       // API Already loaded, just make video.
       console.log('SWMP: YT API Already loaded, make vid');
@@ -863,21 +834,8 @@ class swmp {
     this.videogenerate.style.display = 'none';
     this.videogenerate.setAttribute('id', `ytplayer-${this.id}`);
     document.body.appendChild(this.videogenerate);
-
-    // If GM 
-    var youtubegenerate;
-    if (typeof GM_info != "undefined") {
-      console.log('GM');
-      youtubegenerate = unsafeWindow.YT.Player;
-      console.log(unsafeWindow.YT.Player);
-    } else {
-      youtubegenerate = YT.Player; 
-      console.log(YT.Player);
-    }
     
-    // Access Function: 
-    
-    this.ytplayer = new youtubegenerate(`ytplayer-${this.id}`, {
+    this.ytplayer = new gmwindow.YT.Player(`ytplayer-${this.id}`, {
       height: '1080',
       width: '1920', // Allows quality to increase to 1080p. Can't be forced by API, need fast internet.
       videoId: this.videoid,
@@ -885,7 +843,7 @@ class swmp {
         'playsinline': 1,
         'autoplay': 1,
         'loop': 1,
-        'origin': window.location.href,
+        //'origin': window.location.href,
         'rel': 0,
         'modestbranding': 1,
         'controls': 0
@@ -931,15 +889,19 @@ class swmp {
 
         var self = this;
         var timeInterval = setInterval(function() {
+          self._playerState = self.ytplayer.getPlayerState();
           if (self._playerState == 1) {
             self.updateTime();
+          }
+          if (self._playerState == 0)  { //Ended
+            self.updatePlay();
           }
           //console.log('time'); //still bugged on close unlike the other interval 
           if (self._playerState != 1 || self.container == null || self.container == undefined || self.container == false) {
             clearInterval(timeInterval);
             timeInterval = null;
           }
-        }, 40);
+        }, 80);
 
       } else if (this._playerState == 0 || this._playerState == -1 || this._playerState == 2 )  { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
         this.playbutton.classList.remove('swmp-playing');
@@ -947,18 +909,18 @@ class swmp {
 
       if (this._playerState == 0 || this._playerState == -1 ) {
         this.progress.value = 0;
-        this.progress.setAttribute('value', "0");
+        this.progress.setAttribute('value', 0);
         this.seeker.value = 0;
-        this.seeker.setAttribute('value', "0");
+        this.seeker.setAttribute('value', 0);
       }
 
-      /*if (this.ytplayer.getPlayerState() == 0) {
-        console.log('0');
+      if (this._playerState == 0) {
+        console.log('uwah video loop');
         if (swmpConfig.loop == 'true') {
           this.ytplayer.seekTo(0);
           this.ytplayer.playVideo();
         }
-      }*/
+      }
 
     };
 
@@ -1304,7 +1266,7 @@ class swmp {
 
     // if match youtube regex then do this and return
 
-    var regex = new RegExp("(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})", "gi");
+    var regex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
     var result = regex.exec(url);
 
     console.log(regex);
@@ -1589,10 +1551,10 @@ document.querySelector('body').addEventListener('click', (event) => {
   var anythingmatch;
 
   function isYoutube(link) {
-    var regex = new RegExp("(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})", "gi");
+    var regex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
     var result = regex.exec(link);
 
-    if (link.match(regex) ) {
+    if (link.match(regex) != null ) {
       anythingmatch = true;
       console.log('Userscript - YouTube: '+result[1]); // Video ID
       clickedTitle = 'YouTube: ' + result[1];
