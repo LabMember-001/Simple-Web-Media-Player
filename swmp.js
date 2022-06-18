@@ -1,18 +1,20 @@
 // ==UserScript==
 // @name     4chan \ IB Simple Web Media Player
-// @description   Windowed and configurable media player for 4chan and other imageboards running vichan, tinyib, wakaba, lynxchan, and jschan.
+// @description   Simple Web Media Player for 4chan and other imageboards.
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
-// @license      GPLv3;
-// @version  1.1
-// @grant    none
+// @license      GPLv3
+// @version  1.2
 // @updateURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
 // @downloadURL https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
 
+// @grant       none
 // @run-at      document-end
 
-// @match https://*.(4chan|4channel).org/*
-// @match https://*.(smuglo.li|smugloli.net)/*
+// @match https://*.4chan.org/*
+// @match https://*.4channel.org/*
+// @match https://*.smuglo.li/*
+// @match https://*.smugloli.net/*
 // @match https://*.kissu.moe/*
 // @match https://*.2kind.moe/*
 // @match https://*.1chan.net/*
@@ -29,8 +31,6 @@
 
 // ==/UserScript==
 
-
-// @match https://*/*
 // Most of the sites above are to test scripts.
 
 console.log('Loading IB Media Player.');
@@ -68,8 +68,7 @@ console.log('Loading IB Media Player.');
 // Low Priority
 // - Title length
 // - Fix support for archived.moe redirection urls.
-// - Fix the god damn & from player.php in vichan title.
-// - Youtube support
+// - Fix the "&" from player.php in vichan title.
 // - Fix titles on some backends. (Mostly just vichan+4chan taking original filename right now).
 */
 
@@ -142,13 +141,15 @@ var swmpConfig = {
   positionOffset: '100',
   positionSide: 'right',
   volume: 60,
+  muted: 'false',
   theme: 'default', //Default theme
   themes: //All themes
     [
       ['default', 'MPC Light'],
       ['dark', 'MPC Dark'],
       ['kurisu', 'Kurisumasu'],
-      ['bluemoon', 'Blue Moon']
+      ['bluemoon', 'Blue Moon'],
+      ['modernity', 'Modernity']
     ],
   files: 'avi|mpeg|mpg|ogv|mp4|webm|flv|wav|mp3|m4a|mp2|ogg|flac',
   allowMultiple: 'false'
@@ -191,15 +192,29 @@ if (localStorage.swmpWindowed == undefined) {
   swmpConfig.windowed = localStorage.swmpWindowed;
 }
 
+if (localStorage.swmpMuted == undefined) {
+  localStorage.swmpMuted = swmpConfig.muted;
+} else {
+  swmpConfig.muted = localStorage.swmpMuted;
+}
+
 
 // Add style to head when DOM is loaded.
 
-if (!document.getElementById("swmp-stylesheet")) { // Don't bother injecting style on demo page.
+if (!document.getElementById('swmp-stylesheet')) { // Don't bother injecting style on demo page.
 var swmpStyle = document.createElement('style');
-swmpStyle.innerHTML = `.swmp *{background:0 0;border:0;outline:0;margin:0;padding:0;line-height:1;height:unset;width:unset;font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;color:var(--swmp-text-color)}div.swmp{--swmp-background:#e6e6e6;--swmp-container-border:#000;--swmp-player-container-background:#000;--swmp-controls-background:var(--swmp-background);--swmp-text-color:#000;--swmp-button-background:var(--swmp-background);--swmp-button-mask-color:#000;--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-seek-background:var(--swmp-controls-background);--swmp-seek-progress-color:lightgrey;--swmp-seek-border-left:darkgray;--swmp-seek-border-top:darkgray;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:var(--swmp-controls-background);--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#fff;--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000;--swmp-btn-border-left:#fff;--swmp-btn-border-top:#fff;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#fff;--swmp-btn-border-bottom-active:#fff}div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-background:#333;--swmp-container-border:#000;--swmp-controls-background:var(--swmp-background);--swmp-text-color:#888;--swmp-button-background:var(--swmp-background);--swmp-button-mask-color:#888;--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-seek-progress-color:#555;--swmp-seek-border-left:#1a1a1a;--swmp-seek-border-top:#1a1a1a;--swmp-seek-border-right:#464646;--swmp-seek-border-bottom:#464646;--swmp-range-thumb-color:var(--swmp-background);--swmp-range-thumb-border-left:#777;--swmp-range-thumb-border-top:#777;--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000;--swmp-btn-border-left:#777;--swmp-btn-border-top:#777;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#777;--swmp-btn-border-bottom-active:#777}div.swmp.swmp-theme-kurisu,div.swmp.swmp-theme-kurisu *{--swmp-background:#a44242;--swmp-text-color:#fff;--swmp-button-mask-color:#fff}div.swmp.swmp-theme-bluemoon,div.swmp.swmp-theme-bluemoon *{--swmp-background:#272d37;--swmp-text-color:#eee;--swmp-button-mask-color:#d3d3d3;--swmp-controls-background:#49525D;--swmp-btn-border-left:#DDDDDD;--swmp-btn-border-top:#DDDDDD;--swmp-range-thumb-border-top:#ddd;--swmp-range-thumb-color:#272d37}div.swmp.swmp-container{position:relative;display:inline-flex;flex-direction:column;padding:2px;background:var(--swmp-background);font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;color:var(--swmp-text-color);border:1px solid var(--swmp-container-border);line-height:1;z-index:1;overflow:hidden;min-width:320px;width:auto;outline:0}div.swmp.swmp-window.swmp-window-container{display:flex;justify-content:space-between;padding-bottom:2px}div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container,div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container{display:none}div.swmp.swmp-minimized video{display:none}div.swmp.swmp-fullscreen video{display:block}span.swmp.swmp-window.swmp-window-titlebar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:none;user-select:none;position:relative;margin:auto;cursor:move;width:100%;text-align:center;display:block}span.swmp.swmp-window.swmp-window-title{display:block;max-width:260px;text-overflow:ellipsis;overflow:hidden;margin:auto;line-height:1.5;margin-bottom:-2px}span.swmp.swmp-window.swmp-window-buttons-contain{display:flex;flex:0 1 auto}div.swmp .swmp-player-container{display:flex;height:100%;background:var(--swmp-player-container-background)}div.swmp.swmp-container.swmp-audio{display:block}div.swmp.swmp-container.swmp-fullscreen{background:#000;position:unset!important;width:100%;height:auto}div.swmp.swmp-container.swmp-fullscreen video{width:100%;height:auto;max-width:100%;max-height:100%}div.swmp video{max-width:500px;max-height:500px;width:auto;height:auto;margin:auto}div.swmp audio{min-width:320px;min-height:40px}div.swmp.swmp-controls{bottom:0;left:0;background:var(--swmp-controls-background);width:100%;display:flex;flex-direction:column}div.swmp.swmp-fullscreen div.swmp.swmp-controls{position:absolute;opacity:0;transition:opacity .5s 1s ease-out}div.swmp.swmp-fullscreen div.swmp.swmp-controls:hover{opacity:1;position:absolute;transition:none}div.swmp.swmp-controls span.swmp-seek-container{display:flex;width:calc(100% - 6px);height:var(--swmp-seek-height);margin:auto}div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);-webkit-appearance:none;background:#0000;padding:0;margin:0;height:var(--swmp-seek-height);position:absolute;z-index:1;cursor:pointer;-webkit-margin-top:-14px}span.swmp input[type=range]::-webkit-slider-runnable-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp input[type=range]::-moz-range-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp progress::-webkit-progress-bar{background:#0000}span.swmp progress::-webkit-progress-value{background:var(--swmp-seek-progress-color)}span.swmp progress::-moz-progress-bar{background:var(--swmp-seek-progress-color)}span.swmp input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:2px;border-radius:0;padding:4px 3px;background:#0000;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;margin-top:-6px;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-moz-range-thumb{appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:6px;border-radius:0;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-webkit-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]::-moz-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]{background:0 0;border:0;outline:0}span.swmp progress.swmp-volume{width:50px;position:absolute;height:6px;right:8px;border:none;bottom:7px;z-index:0;background:var(--swmp-seek-background)}span.swmp input.swmp-volume[type=range]{-webkit-appearance:none;background:#0000;padding:0;margin-left:2px;cursor:pointer;position:relative}span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{padding:4px 2px;width:2px}span.swmp input.swmp-volume[type=range]::-moz-range-thumb{padding:0 1px;width:1px}div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress{width:100%;height:6px;z-index:0;position:relative;background:var(--swmp-seek-background);bottom:-12px;border:none}span.swmp.swmp-row-bottom{display:flex;flex-direction:row;height:20px;margin-bottom:2px}div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom{padding-bottom:5px}span.swmp.swmp-buttons-container{height:100%}select.swmp.swmp-selector{-webkit-appearance:none;appearance:none;background:var(--swmp-button-background);border:1px solid var(--swmp-text-color);color:var(--swmp-text-color);outline:0;border-radius:0;width:85px;overflow:hidden;text-overflow:ellipsis}label.swmp.swmp-settings{display:inline-flex;flex-direction:row-reverse}input.swmp.swmp-settings{margin:-2px 0 0 4px;border:1px solid var(--swmp-text-color);appearance:none;-webkit-appearance:none;outline:0;width:14px;height:14px;background:var(--swmp-controls-background)}input.swmp.swmp-settings:checked{outline:5px inset var(--swmp-text-color);outline-offset:-8px}button.swmp.swmp-button{min-width:26px;height:100%;padding:0 4px;display:inline-block;cursor:pointer;margin-left:2px;margin-right:2px;color:var(--swmp-button-mask-color);background:var(--swmp-button-background);border:1px solid;border-bottom-color:var(--swmp-btn-border-bottom);border-right-color:var(--swmp-btn-border-right);border-top-color:var(--swmp-btn-border-top);border-left-color:var(--swmp-btn-border-left);filter:unset}button.swmp.swmp-button span{display:block;width:16px;height:16px;image-rendering:pixelated;background-repeat:no-repeat;background-color:var(--swmp-button-mask-color);-webkit-mask-image:var(--image);mask-image:var(--image);-webkit-mask-size:16px;mask-size:16px;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}span.swmp.swmp-window button{height:20px;min-width:22px;width:22px}button.swmp.swmp-button.swmp-window-minimize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-close span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-playbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-playbutton.swmp-playing span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-stopbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC')}.swmp.swmp-timer-container,button.swmp.swmp-button.swmp-fullscreen{margin-left:auto}button.swmp.swmp-button.swmp-fullscreen span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC')}button.swmp.swmp-button.swmp-volume span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-min span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-volume.swmp-max span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-mute span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')}span.swmp.swmp-volume-container{display:flex;width:60px;height:100%;position:relative}span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range{width:50px;vertical-align:top;position:relative}button.swmp.swmp-button:active{border-bottom-color:var(--swmp-btn-border-bottom-active);border-right-color:var(--swmp-btn-border-right-active);border-top-color:var(--swmp-btn-border-top-active);border-left-color:var(--swmp-btn-border-left-active)}span.swmp.swmp-timer-container{display:inline-table;margin-right:5px;cursor:default}span.swmp.swmp-timer-container span.swmp.swmp-time{display:table-cell;vertical-align:bottom}#quote-preview{z-index:1}`;
-document.querySelector("head").appendChild(swmpStyle);
+swmpStyle.setAttribute('id', 'swmp-stylesheet');
+swmpStyle.innerHTML = `.swmp *{background:0 0;border:0;outline:0;margin:0;padding:0;line-height:1;height:unset;width:unset;font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;color:var(--swmp-text-color)}div.swmp{--swmp-background:#e6e6e6;--swmp-container-border:#000;--swmp-container-box-shadow:none;--swmp-player-container-background:#000;--swmp-controls-background:var(--swmp-background);--swmp-text-color:#000;--swmp-button-background:var(--swmp-background);--swmp-button-mask-color:#000;--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-seek-background:var(--swmp-controls-background);--swmp-seek-progress-color:lightgrey;--swmp-seek-border-left:darkgray;--swmp-seek-border-top:darkgray;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:var(--swmp-controls-background);--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#fff;--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000;--swmp-btn-border-left:#fff;--swmp-btn-border-top:#fff;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#fff;--swmp-btn-border-bottom-active:#fff}div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-background:#333;--swmp-container-border:#000;--swmp-controls-background:var(--swmp-background);--swmp-text-color:#888;--swmp-button-background:var(--swmp-background);--swmp-button-mask-color:#888;--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-seek-progress-color:#555;--swmp-seek-border-left:#1a1a1a;--swmp-seek-border-top:#1a1a1a;--swmp-seek-border-right:#464646;--swmp-seek-border-bottom:#464646;--swmp-range-thumb-color:var(--swmp-background);--swmp-range-thumb-border-left:#777;--swmp-range-thumb-border-top:#777;--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000;--swmp-btn-border-left:#777;--swmp-btn-border-top:#777;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#777;--swmp-btn-border-bottom-active:#777}div.swmp.swmp-theme-kurisu,div.swmp.swmp-theme-kurisu *{--swmp-background:#a44242;--swmp-text-color:#fff;--swmp-button-mask-color:#fff}div.swmp.swmp-theme-bluemoon,div.swmp.swmp-theme-bluemoon *{--swmp-background:#272d37;--swmp-text-color:#eee;--swmp-button-mask-color:#d3d3d3;--swmp-controls-background:#49525D;--swmp-btn-border-left:#DDDDDD;--swmp-btn-border-top:#DDDDDD;--swmp-range-thumb-border-top:#ddd;--swmp-range-thumb-color:#272d37}div.swmp.swmp-container{position:relative;display:inline-flex;flex-direction:column;padding:2px;background:var(--swmp-background);font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;color:var(--swmp-text-color);border:1px solid var(--swmp-container-border);line-height:1;z-index:1;overflow:hidden;min-width:320px;width:auto;outline:0;box-shadow:var(--swmp-container-box-shadow)}div.swmp.swmp-window.swmp-window-container{display:flex;justify-content:space-between;padding-bottom:2px}div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container,div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container{display:none}div.swmp.swmp-minimized div.swmp-player-container{display:none}div.swmp.swmp-fullscreen div.swmp-player-container{display:block}span.swmp.swmp-window.swmp-window-titlebar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:none;user-select:none;position:relative;margin:auto;cursor:move;width:100%;text-align:center;display:block}span.swmp.swmp-window.swmp-window-title{display:block;max-width:260px;text-overflow:ellipsis;overflow:hidden;margin:auto;line-height:1.5;margin-bottom:-2px}span.swmp.swmp-window.swmp-window-buttons-contain{display:flex;flex:0 1 auto}div.swmp .swmp-player-container{display:flex;height:100%;background:var(--swmp-player-container-background)}div.swmp.swmp-container.swmp-audio{display:block}div.swmp.swmp-container.swmp-fullscreen{background:#000;position:unset!important;width:100%;height:auto}div.swmp.swmp-container.swmp-fullscreen iframe,div.swmp.swmp-container.swmp-fullscreen video{width:100%;height:100%;max-width:100%;max-height:100%}div.swmp video{background:#000;max-width:500px;max-height:500px;width:auto;height:auto;margin:auto}div.swmp iframe{background:#000;min-width:420px;min-height:236px;max-width:500px;max-height:500px;width:auto;height:auto;margin:auto;pointer-events:none}div.swmp audio{min-width:320px;min-height:40px}div.swmp.swmp-controls{bottom:0;left:0;background:var(--swmp-controls-background);width:100%;display:flex;flex-direction:column}div.swmp.swmp-fullscreen div.swmp.swmp-controls{position:absolute;opacity:0;transition:opacity .5s 1s ease-out}div.swmp.swmp-fullscreen div.swmp.swmp-controls:hover{opacity:1;position:absolute;transition:none}div.swmp.swmp-controls span.swmp-seek-container{display:flex;width:calc(100% - 6px);height:var(--swmp-seek-height);margin:auto}div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);-webkit-appearance:none;background:#0000;padding:0;margin:0;height:var(--swmp-seek-height);position:absolute;z-index:1;cursor:pointer;-webkit-margin-top:-14px}span.swmp input[type=range]::-webkit-slider-runnable-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp input[type=range]::-moz-range-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp progress::-webkit-progress-bar{background:#0000}span.swmp progress::-webkit-progress-value{background:var(--swmp-seek-progress-color)}span.swmp progress::-moz-progress-bar{background:var(--swmp-seek-progress-color)}span.swmp input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:2px;border-radius:0;padding:4px 3px;background:#0000;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;margin-top:-6px;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-moz-range-thumb{appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:6px;border-radius:0;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-webkit-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]::-moz-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]{background:0 0;border:0;outline:0}span.swmp progress.swmp-volume{width:50px;position:absolute;height:6px;right:8px;border:none;bottom:7px;z-index:0;background:var(--swmp-seek-background)}span.swmp input.swmp-volume[type=range]{-webkit-appearance:none;background:#0000;padding:0;margin-left:2px;cursor:pointer;position:relative}span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{padding:4px 2px;width:2px}span.swmp input.swmp-volume[type=range]::-moz-range-thumb{padding:0 1px;width:1px}div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress{width:100%;height:6px;z-index:0;position:relative;background:var(--swmp-seek-background);bottom:-12px;border:none}span.swmp.swmp-row-bottom{display:flex;flex-direction:row;height:20px;margin-bottom:2px}div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom{padding-bottom:5px}span.swmp.swmp-buttons-container{height:100%}select.swmp.swmp-selector{-webkit-appearance:none;appearance:none;background:var(--swmp-button-background);border:1px solid var(--swmp-text-color);color:var(--swmp-text-color);outline:0;border-radius:0;width:85px;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;text-indent:0}label.swmp.swmp-settings{display:inline-flex;flex-direction:row-reverse}input.swmp.swmp-settings{margin:-2px 0 0 4px;border:1px solid var(--swmp-text-color);appearance:none;-webkit-appearance:none;outline:0;width:14px;height:14px;background:var(--swmp-controls-background)}input.swmp.swmp-settings:checked{outline:5px inset var(--swmp-text-color);outline-offset:-8px}button.swmp.swmp-button{min-width:26px;height:100%;padding:0 4px;display:inline-block;cursor:pointer;margin-left:2px;margin-right:2px;color:var(--swmp-button-mask-color);background:var(--swmp-button-background);border:1px solid;border-bottom-color:var(--swmp-btn-border-bottom);border-right-color:var(--swmp-btn-border-right);border-top-color:var(--swmp-btn-border-top);border-left-color:var(--swmp-btn-border-left);filter:unset}button.swmp.swmp-button span{display:block;width:16px;height:16px;image-rendering:pixelated;background-repeat:no-repeat;background-color:var(--swmp-button-mask-color);-webkit-mask-image:var(--image);mask-image:var(--image);-webkit-mask-size:16px;mask-size:16px;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}span.swmp.swmp-window button{height:20px;min-width:22px;width:22px}button.swmp.swmp-button.swmp-window-minimize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-close span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-playbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-playbutton.swmp-playing span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-stopbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC')}.swmp.swmp-timer-container,button.swmp.swmp-button.swmp-fullscreen{margin-left:auto}button.swmp.swmp-button.swmp-fullscreen span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC')}button.swmp.swmp-button.swmp-volume span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-min span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-volume.swmp-max span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-mute span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')}span.swmp.swmp-volume-container{display:flex;width:60px;height:100%;position:relative}span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range{width:50px;vertical-align:top;position:relative}button.swmp.swmp-button:active{border-bottom-color:var(--swmp-btn-border-bottom-active);border-right-color:var(--swmp-btn-border-right-active);border-top-color:var(--swmp-btn-border-top-active);border-left-color:var(--swmp-btn-border-left-active)}span.swmp.swmp-timer-container{display:inline-table;margin-right:5px;cursor:default}span.swmp.swmp-timer-container span.swmp.swmp-time{display:table-cell;vertical-align:bottom}#quote-preview{z-index:1}div.swmp.swmp-theme-modernity,div.swmp.swmp-theme-modernity *{--swmp-background:#222;--swmp-container-border:#222;--swmp-text-color:#eee;--swmp-button-mask-color:#eee;--swmp-controls-background:#222;--swmp-btn-border-left:#0000;--swmp-btn-border-top:#0000;--swmp-btn-border-right:#0000;--swmp-btn-border-bottom:#0000;--swmp-btn-border-left-active:#0000;--swmp-btn-border-top-active:#0000;--swmp-btn-border-right-active:#0000;--swmp-btn-border-bottom-active:#0000;--swmp-seek-background:#444;--swmp-seek-progress-color:#bbb;--swmp-seek-border-left:#444;--swmp-seek-border-top:#444;--swmp-seek-border-right:#444;--swmp-seek-border-bottom:#444;--swmp-container-box-shadow:0px 0px 10px #000;font-family:Arial;font-weight:700}div.swmp.swmp-theme-modernity input[type=range]::-moz-range-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:4px}div.swmp.swmp-theme-modernity input[type=range]::-webkit-slider-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:4px}`;
+document.head.appendChild(swmpStyle);
 }
 
+var youtubeIsLoaded = false;
+var gmwindow;
+if (typeof GM_info != 'undefined') {
+  gmwindow = unsafeWindow;
+} else {
+  gmwindow = window;
+}
 
 // SWMP Code
 
@@ -214,7 +229,7 @@ class swmp {
       this.id = obj.id;
     }
 
-    this.type = obj.type; // "video" or "audio" player.
+    this.type = obj.type; // "video" or "audio" player. Youtube too.
     this.mime = obj.mime; // MIME type for source, Example: "video/webm". Feed to enable checking for file support (webm not supported by iOS)
     this.url = obj.url; // File Location
     this.poster = obj.poster; // Optional Video Preview for when autoplay is off.
@@ -250,32 +265,21 @@ class swmp {
     this.container.setAttribute('id', this.id);
     this.container.setAttribute('tabindex', '0');
 
-    // Create Player HTML5 Video or Audio format.
-    if (this.type == 'video') {
-      this.container.classList.add('video');
-      this.player = document.createElement('video');
-      this.player.setAttribute('class', 'swmp swmp-video swmp-player');
-      if (this.poster != false && this.poster != undefined) {
-        this.player.setAttribute('poster', this.poster);
-      }
-    } else if (this.type == 'audio') {
-      this.container.classList.add('audio');
-      this.player = document.createElement('audio');
-      this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
-    } else {
-      console.log(`SWMP Error: invalid type of ${this.type}.`);
-      return false;
+
+    // Create Window Container
+    if (this.windowed != 'false') {
+      this.prepareWindow();
     }
 
-    // Check Format Support
-    if (this.mime != undefined) {
-      if (this.player.canPlayType(this.mime) == '') {
-        this.closeError = document.createElement('span');
-        this.closeError.innerHTML = `Your browser can't play this format: ${this.mime}`;
-        this.container.addEventListener('click', (event) => {
-          this.container.remove();
-        });
-        this.container.appendChild(this.closeError);
+    // Prepare the media that's gonna play.
+
+    if (this.type == 'video' || this.type == 'audio') {
+      // Check if browser can play formats, create audio or video tag and fill with source. 
+      this.preparePlayer();
+    } else if (this.type == 'youtube') {
+      // Load Youtube iframe.
+      if (this.prepareYoutube() == false) {
+        console.log("Error: YouTube");
         return false;
       }
     }
@@ -285,108 +289,90 @@ class swmp {
       this.container.classList.add(`swmp-theme-${swmpConfig.theme}`);
     }
 
-    // Create Window Container
-    if (this.windowed != 'false') {
-      this.windowContainer = document.createElement('div');
-      this.windowContainer.setAttribute('class', 'swmp swmp-window swmp-window-container');
-      this.container.appendChild(this.windowContainer);
+    if (this.type == 'video' || this.type == 'audio') {
+    // Create buttons
+      this.prepareSharedEvents();
+      this.prepareControls();
+      this.preparePlayerEvents();
+      this.prepareSettings();
+    } else if (this.type == 'youtube') {
+      //this.prepareSharedEvents();
+      //this.prepareYoutubeEvents();
+    }
 
-        // Create Title/WindowDragbar and put inside Window Container
-        this.windowTitlebar = document.createElement('span');
-        this.windowTitlebar.setAttribute('class', 'swmp swmp-window swmp-window-titlebar');
-        if (this.title != undefined) {
-          this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.title}</span>`;
-        } else {     // Maybe add extract filename only from external sites later?
-          this.windowTitlebar.innerHTML = `<span class="swmp swmp-window swmp-window-title">${this.url}</span>`;
+  }
+
+  prepareWindow() {
+    this.windowContainer = document.createElement('div');
+    this.windowContainer.setAttribute('class', 'swmp swmp-window swmp-window-container');
+    this.container.appendChild(this.windowContainer);
+
+    // Create Title/WindowDragbar and put inside Window Container
+    this.windowTitlebar = document.createElement('span');
+    this.windowTitlebar.setAttribute('class', 'swmp swmp-window swmp-window-titlebar');
+
+    this.windowTitle = document.createElement('span');
+    this.windowTitle.setAttribute('class', 'swmp swmp-window swmp-window-title');
+    if (this.title != undefined) {
+    this.windowTitle.textContent = this.title;
+    } else {
+    this.windowTitle.textContent = this.url;
+    }
+
+    this.windowTitlebar.appendChild(this.windowTitle);
+    this.windowContainer.appendChild(this.windowTitlebar);
+
+    // Create Window Buttons Container
+    this.windowButtonsContain = document.createElement('span');
+    this.windowButtonsContain.setAttribute('class', 'swmp swmp-window swmp-window-buttons-contain');
+    this.windowContainer.appendChild(this.windowButtonsContain);
+
+    // Create Minimize Button (Video only)
+    if (this.type == 'video' || this.type == 'youtube') {
+      this.windowMinimize = document.createElement('button');
+      this.windowMinimize.setAttribute('class', 'swmp swmp-button swmp-window-minimize');
+      this.windowMinimize.innerHTML = '<span></span>';
+      this.windowMinimize.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (this.container.classList.contains('swmp-minimized') ) {
+          this.container.classList.remove('swmp-minimized');
+        } else {
+          this.container.classList.add('swmp-minimized');
         }
-        /*this.windowTitlebar.addEventListener("click", (event) => {
-          alert('click');
-        });*/
-        this.windowContainer.appendChild(this.windowTitlebar);
-
-        // Create Window Buttons Container
-        this.windowButtonsContain = document.createElement('span');
-        this.windowButtonsContain.setAttribute('class', 'swmp swmp-window swmp-window-buttons-contain');
-        this.windowContainer.appendChild(this.windowButtonsContain);
-
-        // Create Minimize Button (Video only)
-        if (this.type == 'video') {
-          this.windowMinimize = document.createElement('button');
-          this.windowMinimize.setAttribute('class', 'swmp swmp-button swmp-window-minimize');
-          this.windowMinimize.innerHTML = '<span></span>';
-          this.windowMinimize.addEventListener('click', (event) => {
-            event.preventDefault();
-            if (this.container.classList.contains('swmp-minimized') ) {
-              this.container.classList.remove('swmp-minimized');
-            } else {
-              this.container.classList.add('swmp-minimized');
-            }
-          });
-          this.windowButtonsContain.appendChild(this.windowMinimize);
-        }
-
-        // Create Close Button
-        this.windowClose = document.createElement('button');
-        this.windowClose.setAttribute('class', 'swmp swmp-button swmp-window-close');
-        this.windowClose.innerHTML = '<span></span>';
-        this.windowClose.addEventListener('click', (event) => {
-          event.preventDefault();
-          this.container.remove();
-        });
-        this.windowButtonsContain.appendChild(this.windowClose);
-
-        // Window Event
-        this.makeDraggable(this.container);
-
-
-        // Disable Default Context Menu on Titlebar
-        this.windowTitlebar.addEventListener('contextmenu', function(evt) { 
-          evt.preventDefault();
-        }, false);
-        // Right Click Event
-        this.windowTitlebar.addEventListener('mousedown', (event) => {
-          event.preventDefault();
-          switch (event.which) {
-            case 3: //rightclick
-            this.openSettings();
-              break;  
-          }
-        });
-
-
+      });
+      this.windowButtonsContain.appendChild(this.windowMinimize);
     }
 
+    // Create Close Button
+    this.windowClose = document.createElement('button');
+    this.windowClose.setAttribute('class', 'swmp swmp-button swmp-window-close');
+    this.windowClose.innerHTML = '<span></span>';
+    this.windowClose.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.container.remove();
+    });
+    this.windowButtonsContain.appendChild(this.windowClose);
 
-    // Preload metadata
-    this.player.setAttribute('preload', 'metadata');
+    // Window Event
+    this.makeDraggable(this.container);
 
-    
-    // Create Player Container and Put inside Container
-    this.playerContainer = document.createElement('div');
-    this.playerContainer.setAttribute('class', 'swmp-player-container');
-    this.container.appendChild(this.playerContainer);
-    
-    // Put Player inside Video Container
-    this.playerContainer.appendChild(this.player);
 
-    // Create and put Source inside Player
-    this.source = document.createElement('source');
-    this.source.setAttribute('src', this.url);
-    if (this.mime != undefined) {
-      this.source.setAttribute('type', this.mime);
-    }
-    this.player.appendChild(this.source);
+    // Disable Default Context Menu on Titlebar
+    this.windowTitlebar.addEventListener('contextmenu', function(evt) { 
+      evt.preventDefault();
+    }, false);
+    // Right Click Event
+    this.windowTitlebar.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      switch (event.which) {
+        case 3: //rightclick
+        this.openSettings();
+          break;  
+      }
+    });
+  }
 
-    // Is Autoplay?
-    if ( (swmpConfig.autoplay == true || swmpConfig.autoplay == 'true') && this.autoplay != false) {
-      this.player.setAttribute('autoplay', true);
-    }
-
-    // Is Loop?
-    if ( (swmpConfig.loop == true || swmpConfig.loop == 'true') && this.loop != false) {
-      this.player.setAttribute('loop', true);
-    }
-
+  prepareControls() {
     // Create and put Controls inside Container
     this.controls = document.createElement('div');
     this.controls.setAttribute('class', 'swmp swmp-controls');
@@ -446,11 +432,16 @@ class swmp {
     this.playbutton.innerHTML = "<span></span>"; // ◀
     this.playbutton.addEventListener("click", event => {
       event.preventDefault();
-      if (this.player.paused ) {
-        this.player.play();
-      } else {
-        this.player.pause();
-      }
+
+        if (this.type == 'video' || this.type == 'audio') {
+          if (this.player.paused ) {
+            this.player.play();
+          } else {
+            this.player.pause();
+          }
+        } else if (this.type == 'youtube') {
+          this.togglePlay();
+        }
     });
     this.buttonsContain.appendChild(this.playbutton);
 
@@ -460,13 +451,23 @@ class swmp {
     this.stopbutton.innerHTML = "<span></span>"; // ■
     this.stopbutton.addEventListener("click", event => {
       event.preventDefault();
-      this.player.pause();
-      this.seeker.value = 0;
-      this.seeker.setAttribute("value", 0);
-      this.progress.value = 0;
-      this.progress.setAttribute("value", 0);
-      this.player.currentTime = 0;
-      this.currentTimer.textContent = '00:00';
+
+      if (this.type == 'video' || this.type == 'audio') {
+        this.player.pause();
+        this.seeker.value = 0;
+        this.seeker.setAttribute("value", 0);
+        this.progress.value = 0;
+        this.progress.setAttribute("value", 0);
+        this.player.currentTime = 0;
+        this.currentTimer.textContent = '00:00';
+      } else if (this.type == 'youtube') {
+        this.seeker.value = 0;
+        this.seeker.setAttribute("value", 0);
+        this.progress.value = 0;
+        this.progress.setAttribute("value", 0);
+        this.ytplayer.stopVideo();
+        this.currentTimer.textContent = '00:00';
+      }
     });
     this.buttonsContain.appendChild(this.stopbutton);
 
@@ -528,7 +529,7 @@ class swmp {
     this.timerContain.appendChild(this.totalTimer);
 
     // Create a Fullscreen Button and put inside Bottom Row Container
-    if (this.type == 'video') {
+    if (this.type == 'video' || this.type == 'youtube') {
       this.fullscreenbutton = document.createElement('button');
       this.fullscreenbutton.setAttribute('class', 'swmp swmp-button swmp-fullscreen');
       this.fullscreenbutton.innerHTML = "<span></span>"; // ▣
@@ -538,224 +539,9 @@ class swmp {
       });
       this.bottomRow.appendChild(this.fullscreenbutton);
     }
+  }
 
-    this.playerContainer.addEventListener('click', event => {
-      this.togglePlay();
-    });
-
-    this.playerContainer.addEventListener('dblclick', event => {
-      this.fullscreen(this.container);
-    });
-
-    this.container.addEventListener('keydown', event => {
-      if (event.repeat) { return; } // Don't spam
-
-      switch(event.key) { 
-        case ' ': //Space
-          this.togglePlay();
-          break;
-        case 'f':
-          this.fullscreen(this.container);
-          break;
-        case 'm':
-          this.toggleMute();
-          break;
-        case 'x':
-          this.container.remove();
-          break;
-        default:
-          return;
-      }
-
-      event.preventDefault();
-
-    }, true);
-
-    this.player.onended = (event) => {
-      this.player.classList.remove('swmp-playing');
-      this.playbutton.classList.remove('swmp-playing');
-      this.seeker.value = 0;
-      this.progress.value = 0;
-      clearInterval(this.player.interval);
-      this.currentTimer.textContent = '00:00';
-    };
-
-    this.player.addEventListener('loadedmetadata', (event) => {
-      this.totalTimer.textContent = this.formatSeconds(this.player.duration);
-    });
-
-
-    this.player.onplay = (event) => {
-      this.player.classList.add('swmp-playing');
-      this.playbutton.classList.add('swmp-playing');
-      var self = this;
-      this.player.interval = window.setInterval(function(event) {
-        self.player.timeupdate();
-      }, 40);
-    };
-
-    this.player.onpause = (event) => {
-      this.player.classList.remove('swmp-playing');
-      this.playbutton.classList.remove('swmp-playing');
-      clearInterval(this.player.interval);
-    };
-
-    this.player.onerror = (event) => {
-      clearInterval(this.player.interval);
-      var _error = this.player.error.message;
-      this.container.innerHTMl = _error;
-    };
-
-    this.player.timeupdate = (event) => {
-      this.seeker.value = Math.floor(this.player.currentTime / this.player.duration * this.seeker.max);
-      this.seeker.setAttribute("value", this.seeker.value);
-      this.progress.value = this.seeker.value;
-      this.progress.setAttribute("value", this.seeker.value);
-      this.updateTimer();
-    };
-
-    this.seeker.oninput = (event) => {
-      //on mousedown temporary add a mute to avoid annoying seeking sounds?
-      this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
-      this.progress.value = this.seeker.value;
-      this.progress.setAttribute("value", this.seeker.value);
-      this.updateTimer();
-    };
-
-    this.container.addEventListener('fullscreenchange', event => {
-      const fullscreenElement =
-      document.fullscreenElement ||
-      document.mozFullScreenElement ||
-      document.webkitFullscreenElement ||
-      document.msFullscreenElement;
-
-      if (!fullscreenElement) {
-        this.container.classList.remove('swmp-fullscreen');
-      } else {
-        this.container.classList.add('swmp-fullscreen');
-      }
-    });
-
-    this.formatSeconds = (seconds) => {
-      this._sec_num = parseInt(seconds, 10);
-      this._hours   = Math.floor(this._sec_num / 3600);
-      this._minutes = Math.floor(this._sec_num / 60) % 60;
-      this._seconds = this._sec_num % 60;
-
-        return [this._hours,this._minutes,this._seconds]
-          .map(v => v < 10 ? "0" + v : v)
-          .filter((v,i) => v !== "00" || i > 0)
-          .join(":");
-    };
-
-    this.updateTimer = () => {
-      this.currentTimer.textContent = this.formatSeconds(this.player.currentTime);
-      //this.totalTimer.textContent = this.formatSeconds(this.player.duration);
-    };
-
-    this.fullscreen = (element) => {
-      const fullscreenElement =
-      document.fullscreenElement ||
-      document.mozFullScreenElement ||
-      document.webkitFullscreenElement ||
-      document.msFullscreenElement;
-
-      if (fullscreenElement) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen(); //Safari sucks
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-        this.container.classList.remove('swmp-fullscreen');
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        } else if (element.msRequestFullscreen) {
-          element.msRequestFullscreen();
-        }
-        this.container.classList.add('swmp-fullscreen');
-      }
-    };
-
-    this.toggleMute = () => {
-      if (this.player.muted) {
-        this.volumeButton.classList.remove('swmp-mute');
-        this.player.muted = false;
-        this._volume = Math.floor(this.player.volume * 100);
-        this.volumeRange.setAttribute('value', this._volume );
-        this.volumeRange.value = this._volume;
-        this.volumeProgress.setAttribute('value', this._volume );
-        this.volumeProgress.value = this._volume;
-      } else {
-        this.volumeButton.classList.add('swmp-mute');
-        this.player.muted = true;
-        this.volumeRange.setAttribute('value', 0 );
-        this.volumeRange.value = 0;
-        this.volumeProgress.setAttribute('value', 0 );
-        this.volumeProgress.value = 0;
-      }
-    };
-
-    this.togglePlay = () => {
-      if (this.player.paused ) {
-        this.player.play();
-      } else {
-        this.player.pause();
-      }     
-    };
-
-    this.updateVolume = (firstrun = false) => {
-
-      this.volumeButton.classList.remove('swmp-mute');
-
-      if (firstrun == true) {
-        this.volumeRange.setAttribute('value', this.defaultVolume);
-        this.volumeProgress.setAttribute('value', this.defaultVolume);
-        this.playerVolume = this.defaultVolume;
-        this.volumeButton.classList.add('swmp-min');
-      }
-
-      if (this.player.muted) {
-        this.player.muted = false;
-      }
-
-      this.volumeRange.setAttribute('value', this.volumeRange.value );
-      this.volumeProgress.setAttribute('value', this.volumeRange.value );
-      this.player.volume = parseFloat(this.volumeRange.value / 100);
-
-      if (this.player.volume > 0.50) {
-        this.volumeButton.classList.add('swmp-max');
-        this.volumeButton.classList.remove('swmp-med');
-        this.volumeButton.classList.remove('swmp-min');
-      } else if (this.player.volume > 0.10) {
-        this.volumeButton.classList.add('swmp-med');
-        this.volumeButton.classList.remove('swmp-max');
-        this.volumeButton.classList.remove('swmp-min');
-      } else if (this.player.volume > 0.05) {
-        this.volumeButton.classList.add('swmp-min');
-        this.volumeButton.classList.remove('swmp-max');
-        this.volumeButton.classList.remove('swmp-med');
-      }
-
-      localStorage.swmpVolume = this.volumeRange.value;
-      swmpConfig.volume = this.volumeRange.value;
-    };
-
-    this.volumeRange.oninput = (event) => {
-      this.updateVolume();
-    };
-
-    this.player.addEventListener('volumechange', this.updateVolume() );
-
-    this.updateVolume(true); // First time Run
+  prepareSettings() {
 
     this.openSettings = () => {
       // Settings Menu
@@ -768,16 +554,7 @@ class swmp {
       this.settingsContainer = document.createElement('div');
       this.settingsContainer.setAttribute('class', 'swmp swmp-settings swmp-settings-container');
       this.settingsContainer.innerHTML = 'Settings:';
-      this.container.appendChild(this.settingsContainer); //maybe move this after buttons tbh
 
-      /*// Create Close Settings Button
-      this.settingsClose = document.createElement('button');
-      this.settingsClose.setAttribute('class', 'swmp button settings settings-close');
-      this.settingsClose.innerHTML = 'Close Settings';
-      this.settingsClose.addEventListener('click', (event) => {
-        this.settingsContainer.remove();
-      });
-      this.settingsContainer.appendChild(this.settingsClose);*/
 
       this.br = document.createElement('br');
       this.settingsContainer.appendChild(this.br);
@@ -847,12 +624,20 @@ class swmp {
       this.loopCheck.addEventListener('change', (event) => {
         if (this.loopCheck.checked == true) {
           this.loopCheck.setAttribute('checked', 'checked');
-          this.player.setAttribute('loop', 'true');
+          if (this.type == 'video' || this.type == 'audio') {
+            this.player.setAttribute('loop', 'true');
+          } else if (this.type == 'youtube') {
+            // Youtube Loop
+          }
           localStorage.swmpLoop = 'true';
           swmpConfig.loop = 'true';
         } else {
           this.loopCheck.removeAttribute('checked');
-          this.player.removeAttribute('loop');
+          if (this.type == 'video' || this.type == 'audio') {
+            this.player.removeAttribute('loop');
+          } else if (this.type == 'youtube') {
+            // Youtube Loop
+          }
           localStorage.swmpLoop = 'false';
           swmpConfig.loop = 'false';
         }
@@ -883,7 +668,577 @@ class swmp {
       });
       this.multiLabel.appendChild(this.multiCheck);
       this.settingsContainer.appendChild(this.multiLabel);
+
+
+      this.container.appendChild(this.settingsContainer);
+
     };
+  }
+
+  preparePlayer() {
+    // Create Player HTML5 Video or Audio format.
+    if (this.type == 'video') {
+      this.container.classList.add('swmp-video');
+      this.player = document.createElement('video');
+      this.player.setAttribute('class', 'swmp swmp-video swmp-player');
+      if (this.poster != false && this.poster != undefined) {
+        this.player.setAttribute('poster', this.poster);
+      }
+    } else if (this.type == 'audio') {
+      this.container.classList.add('swmp-audio');
+      this.player = document.createElement('audio');
+      this.player.setAttribute('class', 'swmp swmp-audio swmp-player');
+    } else {
+      console.log(`SWMP Error: invalid type of ${this.type}.`);
+      return false;
+    }
+
+    // Check Format Support
+    if (this.mime != undefined) {
+      if (this.player.canPlayType(this.mime) == '') {
+        this.closeError = document.createElement('span');
+        this.closeError.innerHTML = `Your browser can't play this format: ${this.mime}`;
+        this.container.addEventListener('click', (event) => {
+          this.container.remove();
+        });
+        this.container.appendChild(this.closeError);
+        return false;
+      }
+    }
+
+    // Preload metadata
+    this.player.setAttribute('preload', 'metadata');
+
+    
+    // Create Player Container and Put inside Container
+    this.playerContainer = document.createElement('div');
+    this.playerContainer.setAttribute('class', 'swmp swmp-player-container');
+    this.container.appendChild(this.playerContainer);
+    
+    // Put Player inside Video Container
+    this.playerContainer.appendChild(this.player);
+
+    // Create and put Source inside Player
+    this.source = document.createElement('source');
+    this.source.setAttribute('src', this.url);
+    if (this.mime != undefined) {
+      this.source.setAttribute('type', this.mime);
+    }
+    this.player.appendChild(this.source);
+
+    // Is Autoplay?
+    if ( (swmpConfig.autoplay == true || swmpConfig.autoplay == 'true') && this.autoplay != false) {
+      this.player.setAttribute('autoplay', true);
+    }
+
+    // Is Loop?
+    if ( (swmpConfig.loop == true || swmpConfig.loop == 'true') && this.loop != false) {
+      this.player.setAttribute('loop', true);
+    }
+  }
+
+  prepareYoutube() {
+
+    console.log('SWMP: prepareYoutube() ');
+
+    if (youtubeIsLoaded == false) {
+      // Include YouTube iframe API if not already added:
+      if (!document.getElementById('swmp-youtube-api')) {
+        console.log("SWMP: Loading YouTube API");
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        tag.setAttribute('id', 'swmp-youtube-api');
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+      
+      gmwindow.onYouTubeIframeAPIReady = (event) => {
+        youtubeIsLoaded = true;
+        console.log('SWMP: Firing YouTube Ready Event from inside PrepareYouTube()');
+        this.makeYoutube();
+      };
+      
+      
+    } else {
+      // API Already loaded, just make video.
+      console.log('SWMP: YT API Already loaded, make vid');
+      this.makeYoutube();
+    }
+  }
+
+  makeYoutube() {
+    // Make new player
+    console.log('SWMP: makeYoutube()');
+    this.playerfirstrun = true;
+    var self = this;
+    this.onPlayerReady = (event) => {
+      console.log('SWMP Youtube: onPlayerReady()');
+      if (this.playerfirstrun == true) {
+        this.playerfirstrun = false;
+        this.playerContainer.appendChild(this.ytplayer.getIframe() );
+        this.windowTitle.textContent = this.ytplayer.getVideoData().title;
+        this.totalTimer.textContent = this.formatSeconds(this.ytplayer.getDuration() );
+        this.ytplayer.getIframe().style.display = 'inherit';
+
+        this.ytplayer.setVolume(this.defaultVolume);
+        this._volume = this.defaultVolume;
+        /*if (swmpConfig.muted == 'true') {
+          this.ytplayer.mute();
+          this.volumeButton.classList.add('swmp-mute');
+        } else {
+          this.ytplayer.unMute();
+        }*/
+        this.ytplayer.unMute();
+
+        if (this.autoplay == 'true') {
+          this.ytplayer.playVideo();
+          this.playbutton.classList.add('swmp-playing');
+        }
+
+
+      }
+
+      window.addEventListener('message', function(event) {
+        if (event.source === self.ytplayer.getIframe().contentWindow) {
+            var data = JSON.parse(event.data);
+            //console.log(data);
+
+              // Dispatch Volume and Mute Event -- These are sent together by iframe.
+            if (data.event === "infoDelivery" && data.info && data.info.volume) {
+              //console.log(data.info.volume);
+              //console.log(data.info.muted);
+              if (data.info.volume != self._volume) {
+                //console.log(data.info.volume);
+                self.updateVolume();
+              }
+            }
+
+              // Dispatch on Time Event
+            if (data.event === "infoDelivery" && data.info && data.info.currentTime) {
+              //console.log(data.info.currentTime);
+              self.currentTimer.textContent = self.formatSeconds(data.info.currentTime);
+            }
+
+              // Dispatch on Player state event
+            if (data.event === "infoDelivery" && data.info && data.info.playerState) {
+              //console.log(data.info.playerState);
+              self.updatePlay();
+              self.updateVolume();
+            }
+        }
+      });
+
+    }
+
+    this.videogenerate = document.createElement('div');
+    this.videogenerate.style.display = 'none';
+    this.videogenerate.setAttribute('id', `ytplayer-${this.id}`);
+    document.body.appendChild(this.videogenerate);
+    
+    this.ytplayer = new gmwindow.YT.Player(`ytplayer-${this.id}`, {
+      height: '1080',
+      width: '1920', // Allows quality to increase to 1080p. Can't be forced by API, need fast internet.
+      videoId: this.videoid,
+      playerVars: {
+        'playsinline': 1,
+        'autoplay': 1,
+        'loop': 1,
+        //'origin': window.location.href,
+        'rel': 0,
+        'modestbranding': 1,
+        'controls': 0
+      },
+      events: {
+        'onReady': this.onPlayerReady
+      }
+    });
+    
+    console.log(this.ytplayer);
+
+    this.playerContainer = document.createElement('div');
+    this.playerContainer.setAttribute('class', 'swmp-player-container');
+
+    this.container.appendChild(this.playerContainer);
+
+    this.prepareSettings();
+    this.prepareControls();
+    this.prepareSharedEvents();
+    this.prepareYoutubeEvents();
+
+  }
+
+
+  prepareYoutubeEvents() {
+
+    this.togglePlay = function() {
+      if (this.ytplayer.getPlayerState() == 1) { // Playing
+        this.ytplayer.pauseVideo();
+      } else { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
+        this.ytplayer.playVideo();
+      }
+    };
+
+    var timeInterval;
+    this.updatePlay = () => {
+
+      this._playerState = this.ytplayer.getPlayerState();
+
+      if (this._playerState == 1) { // Playing
+        this.playbutton.classList.add('swmp-playing');
+        this.updateTime();
+
+        var self = this;
+        var timeInterval = setInterval(function() {
+          self._playerState = self.ytplayer.getPlayerState();
+          if (self._playerState == 1) {
+            self.updateTime();
+          }
+          if (self._playerState == 0)  { //Ended
+            self.updatePlay();
+          }
+          //console.log('time'); //still bugged on close unlike the other interval 
+          if (self._playerState != 1 || self.container == null || self.container == undefined || self.container == false) {
+            clearInterval(timeInterval);
+            timeInterval = null;
+          }
+        }, 80);
+
+      } else if (this._playerState == 0 || this._playerState == -1 || this._playerState == 2 )  { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
+        this.playbutton.classList.remove('swmp-playing');
+      }
+
+      if (this._playerState == 0 || this._playerState == -1 ) {
+        this.progress.value = 0;
+        this.progress.setAttribute('value', 0);
+        this.seeker.value = 0;
+        this.seeker.setAttribute('value', 0);
+      }
+
+      if (this._playerState == 0) {
+        console.log('uwah video loop');
+        if (swmpConfig.loop == 'true') {
+          this.ytplayer.seekTo(0);
+          this.ytplayer.playVideo();
+        }
+      }
+
+    };
+
+    this.seeker.oninput = (event) => {
+      //on mousedown temporary add a mute to avoid annoying seeking sounds?
+      this.ytplayer.seekTo(Math.floor(this.ytplayer.getDuration() * this.seeker.value / this.seeker.max) );
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute('value', this.seeker.value);
+      this.updatePlay();
+    };
+
+    this.updateTime = () => {
+      this.seeker.value = Math.floor(this.ytplayer.getCurrentTime() / this.ytplayer.getDuration() * this.seeker.max);
+      this.seeker.setAttribute('value', this.seeker.value);
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute('value', this.seeker.value);
+    };
+
+
+    this.toggleMute = () => {
+
+      if (this.ytplayer.isMuted() == true ) {
+        this.volumeButton.classList.remove('swmp-mute');
+        this._volume = this.ytplayer.getVolume() ;
+        this.ytplayer.unMute();
+        this.ytplayer.setVolume(this._volume);
+        this.volumeRange.setAttribute('value', this._volume );
+        this.volumeRange.value = this._volume;
+        this.volumeProgress.setAttribute('value', this._volume );
+        this.volumeProgress.value = this._volume;
+        swmpConfig.muted = 'false';
+        localStorage.swmpMuted = 'false';
+      } else {
+        this.volumeButton.classList.add('swmp-mute');
+        this.ytplayer.mute();
+        this.volumeRange.setAttribute('value', 0 );
+        this.volumeRange.value = 0;
+        this.volumeProgress.setAttribute('value', 0 );
+        this.volumeProgress.value = 0;
+        swmpConfig.muted = 'true';
+        localStorage.swmpMuted = 'true';
+      }
+    };
+
+    this.updateVolume = (firstrun = false) => {
+      this.volumeButton.classList.remove('swmp-mute');
+
+      if (firstrun == true) {
+        this.volumeRange.setAttribute('value', this.defaultVolume);
+        this.volumeProgress.setAttribute('value', this.defaultVolume);
+        this._volume = this.defaultVolume;
+        this.volumeButton.classList.add('swmp-min');
+      }
+
+      this._volume = this.ytplayer.getVolume();
+
+      this.volumeRange.setAttribute('value', this.volumeRange.value );
+      this.volumeProgress.setAttribute('value', this.volumeRange.value );
+      this.ytplayer.setVolume(this.volumeRange.value);
+
+      if (this._volume > 50) {
+        this.volumeButton.classList.add('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this._volume > 10) {
+        this.volumeButton.classList.add('swmp-med');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this._volume > 5) {
+        this.volumeButton.classList.add('swmp-min');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+      }
+
+      localStorage.swmpVolume = this.volumeRange.value;
+      swmpConfig.volume = this.volumeRange.value;
+    };
+
+    this.volumeRange.oninput = (event) => {
+      this.updateVolume();
+    };
+   
+
+  }
+
+
+
+  prepareSharedEvents() {
+
+    this.playerContainer.addEventListener('click', event => {
+      this.togglePlay();
+    });
+
+    this.playerContainer.addEventListener('dblclick', event => {
+      this.fullscreen(this.container);
+    });
+
+    this.container.addEventListener('keydown', event => {
+      if (event.repeat) { return; } // Don't spam
+
+      switch(event.key) { 
+        case ' ': //Space
+          this.togglePlay();
+          break;
+        case 'f':
+          this.fullscreen(this.container);
+          break;
+        case 'm':
+          this.toggleMute();
+          break;
+        case 'x':
+          this.container.remove();
+          break;
+        default:
+          return;
+      }
+
+      event.preventDefault();
+
+    }, true);
+
+    this.container.addEventListener('fullscreenchange', event => {
+      const fullscreenElement =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement ||
+      document.msFullscreenElement;
+
+      if (!fullscreenElement) {
+        this.container.classList.remove('swmp-fullscreen');
+      } else {
+        this.container.classList.add('swmp-fullscreen');
+      }
+    });
+
+    this.fullscreen = (element) => {
+      const fullscreenElement =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement ||
+      document.msFullscreenElement;
+
+      if (fullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen(); //Safari sucks
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        this.container.classList.remove('swmp-fullscreen');
+      } else {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+        this.container.classList.add('swmp-fullscreen');
+      }
+    };
+  }
+
+  preparePlayerEvents() {
+
+
+    this.player.onended = (event) => {
+      this.player.classList.remove('swmp-playing');
+      this.playbutton.classList.remove('swmp-playing');
+      this.seeker.value = 0;
+      this.progress.value = 0;
+      clearInterval(this.player.interval);
+      this.currentTimer.textContent = '00:00';
+    };
+
+    this.player.addEventListener('loadedmetadata', (event) => {
+      this.totalTimer.textContent = this.formatSeconds(this.player.duration);
+    });
+
+
+    this.player.onplay = (event) => {
+      this.player.classList.add('swmp-playing');
+      this.playbutton.classList.add('swmp-playing');
+      var self = this;
+      this.player.interval = window.setInterval(function(event) {
+        self.player.timeupdate();
+      }, 40);
+    };
+
+    this.player.onpause = (event) => {
+      this.player.classList.remove('swmp-playing');
+      this.playbutton.classList.remove('swmp-playing');
+      clearInterval(this.player.interval);
+    };
+
+    this.player.onerror = (event) => {
+      clearInterval(this.player.interval);
+      var _error = this.player.error.message;
+      this.container.innerHTMl = _error;
+    };
+
+    this.player.timeupdate = (event) => {
+      this.seeker.value = Math.floor(this.player.currentTime / this.player.duration * this.seeker.max);
+      this.seeker.setAttribute("value", this.seeker.value);
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute("value", this.seeker.value);
+      this.updateTimer();
+    };
+
+    this.seeker.oninput = (event) => {
+      //on mousedown temporary add a mute to avoid annoying seeking sounds?
+      this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
+      this.progress.value = this.seeker.value;
+      this.progress.setAttribute("value", this.seeker.value);
+      this.updateTimer();
+    };
+
+    this.updateTimer = () => {
+      this.currentTimer.textContent = this.formatSeconds(this.player.currentTime);
+      //this.totalTimer.textContent = this.formatSeconds(this.player.duration);
+    };
+
+    this.togglePlay = () => {
+      if (this.player.paused ) {
+        this.player.play();
+      } else {
+        this.player.pause();
+      }     
+    };
+
+    this.toggleMute = () => {
+      if (this.player.muted) {
+        this.volumeButton.classList.remove('swmp-mute');
+        this.player.muted = false;
+        this._volume = this.player.volume;
+        this.volumeRange.setAttribute('value', this._volume * 100 );
+        this.volumeRange.value = this._volume * 100;
+        this.volumeProgress.setAttribute('value', this._volume * 100 );
+        this.volumeProgress.value = this._volume * 100;
+        swmpConfig.muted = 'false';
+        localStorage.swmpMuted = 'false';
+      } else {
+        this.volumeButton.classList.add('swmp-mute');
+        this.player.muted = true;
+        this.volumeRange.setAttribute('value', 0 );
+        this.volumeRange.value = 0;
+        this.volumeProgress.setAttribute('value', 0 );
+        this.volumeProgress.value = 0;
+        swmpConfig.muted = 'true';
+        localStorage.swmpMuted = 'true';
+      }
+      //console.log(this._volume);
+    };
+
+    this.updateVolume = (firstrun = false) => {
+
+      this.volumeButton.classList.remove('swmp-mute');
+
+      if (firstrun == true) {
+        this.volumeRange.setAttribute('value', this.defaultVolume);
+        this.volumeProgress.setAttribute('value', this.defaultVolume);
+        this.volumeButton.classList.add('swmp-min');
+        this._volume = this.defaultVolume;
+
+      }
+
+      if (this.player.muted) {
+        this.player.muted = false;
+      }
+
+      this.volumeRange.setAttribute('value', this.volumeRange.value );
+      this.volumeProgress.setAttribute('value', this.volumeRange.value );
+      this.player.volume = parseFloat(this.volumeRange.value / 100);
+      this._volume = this.player.volume;
+
+      if (this._volume > 0.50) {
+        this.volumeButton.classList.add('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this._volume > 0.10) {
+        this.volumeButton.classList.add('swmp-med');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-min');
+      } else if (this._volume > 0.05) {
+        this.volumeButton.classList.add('swmp-min');
+        this.volumeButton.classList.remove('swmp-max');
+        this.volumeButton.classList.remove('swmp-med');
+      }
+
+      //console.log(this._volume);
+
+      localStorage.swmpVolume = this.volumeRange.value;
+      swmpConfig.volume = this.volumeRange.value;
+    };
+
+    this.volumeRange.oninput = (event) => {
+      this.updateVolume();
+    };
+
+    this.player.addEventListener('volumechange', this.updateVolume() );
+    this.updateVolume(true); // First time Run
+  }
+
+  formatSeconds = (seconds) => {
+    this._sec_num = parseInt(seconds, 10);
+    this._hours   = Math.floor(this._sec_num / 3600);
+    this._minutes = Math.floor(this._sec_num / 60) % 60;
+    this._seconds = this._sec_num % 60;
+
+      return [this._hours,this._minutes,this._seconds]
+        .map(v => v < 10 ? "0" + v : v)
+        .filter((v,i) => v !== "00" || i > 0)
+        .join(":");
   }
 
   removeClassByPrefix(el, prefix) {
@@ -892,7 +1247,6 @@ class swmp {
     el.className = el.className.replace(regEx, '');
   }
 
-  // Probably gonna use imagenumber(multifile)+postnumber for ID to check if existing window is open
   uuid() {
     // Source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
     var dt = new Date().getTime();
@@ -904,23 +1258,30 @@ class swmp {
       return uuid;
   }
 
-    // Nice as this would be to use for some things since it's simpler...
-    // I need to check fileext manually on most imageboards anyways to not waste requests.
-    // Not needed for this script.
-  /*getContentType(url) {
-    var response = fetch(url, {
-      method: 'HEAD',
-      //mode: 'cors',
-      cache: 'default',
-      referrerPolicy: 'no-referrer'
-    }).then( data => )
-  }*/
-
   getFileName(url) {
     return url.split('/').pop().split('#')[0].split('?')[0];
   }
 
   checkURL(url) {
+
+    // if match youtube regex then do this and return
+
+    var regex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
+    var result = regex.exec(url);
+
+    console.log(regex);
+    console.log(url);
+    console.log(result);
+
+    if (url.match(regex) ) {
+      console.log('SWMP: YouTube');
+      this.type = 'youtube';
+      this.videoid = result[1];
+      console.log(this.videoid);
+      return true;
+    }
+
+    console.log("SWMP: Video or Audio");
     // Check filename in URL for Type / MIME.
     this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
     this.fileExt = url.split(/[#?&]/).slice(-2)[0].split('.').pop().trim();
@@ -1108,7 +1469,7 @@ class swmp {
   // If you want to make site specific changes, either expand on it or just make a completely separate event listener below it.
 
 document.querySelector('body').addEventListener('click', (event) => {
-    //console.log(event.target.tagName);
+  //console.log("Userscript - "+event.target.tagName);
 
     // If there are no links in sight, do nothing.
   if (event.target.tagName != 'A' && event.target.parentNode.tagName != 'A') {
@@ -1128,7 +1489,7 @@ document.querySelector('body').addEventListener('click', (event) => {
     if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
       return clicked.getAttribute('href');
     } else if (backendScript == 'vichan') {
-      //console.log(clicked.parentNode.querySelectorAll('p.fileinfo a') );
+      //console.log("Userscript - "+clicked.parentNode.querySelectorAll('p.fileinfo a') );
       
       var allthelinks = clicked.parentNode.querySelectorAll('p.fileinfo a'); // Prevent capturing the (Hide) link on some installs
       var matchinglink = '';
@@ -1139,11 +1500,11 @@ document.querySelector('body').addEventListener('click', (event) => {
         }
       }
       
-      if (matchinglink == '') { // Kissu New UI (no thanks, but here it is anyways)
+      if (matchinglink == '') { // Kissu New UI (no thanks, but here it is anyways) <- This should also return normal href if not video?
         matchinglink = clicked;
       }
       
-      //console.log(matchinglink);
+      //console.log("Userscript - "+matchinglink);
       return matchinglink.getAttribute('href');
       
     } else {
@@ -1183,74 +1544,112 @@ document.querySelector('body').addEventListener('click', (event) => {
         return newlink.slice(-1)[0]; // return last in array, grabs t= title for vichan player.php links.
       }
   }
-  
-  var clickedHref = getVideo();
-  var clickedFileName = getFileNameFromUrl(clicked.getAttribute('href') );
-  var clickedTitle = false;
-  if (backendScript == '' || backendScript == null || backendScript == undefined) {
-    clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
-  } else if (backendScript == 'fourchan') {
-    clickedTitle = decodeURI(getTitle(clicked) );
-  } else if (backendScript == 'vichan') {
-    clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
-  } else {
-    clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
-  }
- 
-  console.log("URL: " + clicked.getAttribute('href') );
-  console.log("Filename: " + clickedFileName );
 
-  
-  // Established what the Filename is, let's check if it matches files regex
-  
-  let regex = new RegExp(`\.(${swmpConfig.files})+$`, 'gi');
-  
-  if (!clickedHref.match(regex) ) {
-    //console.log("not a video or audio");
+  var clickedHref;
+  var clickedFileName;
+  var clickedTitle;
+  var anythingmatch;
+
+  function isYoutube(link) {
+    var regex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
+    var result = regex.exec(link);
+
+    if (link.match(regex) != null ) {
+      anythingmatch = true;
+      console.log('Userscript - YouTube: '+result[1]); // Video ID
+      clickedTitle = 'YouTube: ' + result[1];
+      return true;
+    } else {
+      console.log('Userscript - Not YouTube');
+      return false;
+    }
+  }
+
+  // If youtube
+
+  if (isYoutube(clicked.getAttribute('href') ) ) {
+    console.log('Userscript - YouTube link clicked');
+    clickedHref = clicked.getAttribute('href');
+    //clickedTitle = 'Loading YouTube';
+  }
+
+  function isVideo(link) {
+    var regex = new RegExp(`\.(${swmpConfig.files})+$`, 'gi');
+    var result = regex.exec(link);
+
+    if (link.match(regex) != null) {
+      anythingmatch = true;
+      console.log('Userscript - Video/Audio match:' + result);
+      return true;
+    } else {
+      console.log('Userscript - Not Video/Audio');
+      return false;
+    }
+  }
+
+  //get video links
+  clickedHref = getVideo();
+
+  if (isVideo(clickedHref) )  {
+    //clickedHref = getVideo();
+    clickedFileName = getFileNameFromUrl(clicked.getAttribute('href') );
+    clickedTitle = false;
+    if (backendScript == '' || backendScript == null || backendScript == undefined) {
+      clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    } else if (backendScript == 'fourchan') {
+      clickedTitle = decodeURI(getTitle(clicked) );
+    } else if (backendScript == 'vichan') {
+      clickedTitle = decodeURI(getTitle(clicked.getAttribute('href') ) );
+    } else {
+      clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
+    }
+   
+    console.log("Userscript - URL: " + clicked.getAttribute('href') );
+    console.log("Userscript - Filename: " + clickedFileName );
+  }
+
+  if (anythingmatch != true) {
     return false;
+  } else {
+    // If video audio or youtube matched, prevent other events.
+    event.preventDefault();
+    event.stopPropagation();
   }
   
-  console.log(clickedHref+": matched video or audio");
 
-  // Established the link is a video/audio file, let's prevent other events from happening.
-  event.preventDefault();
-  event.stopPropagation();
-  
-  // Add shift click check to open in new tab? Maybe playlists or whatever.
 
 
   // Okay, time to load the player.
   var playerid = false;
+
+  if (swmpConfig.allowMultiple != 'false')  {
+    playerid = `play-swmp-${clicked.getAttribute('href')}`;
+  } else {
+    playerid = 'play-swmp';
+  }
+
+  if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
     if (swmpConfig.allowMultiple != 'false')  {
-      playerid = `play-swmp-${clicked.getAttribute('href')}`;
+      return false; //already exists, lets do nothing.
     } else {
-      playerid = 'play-swmp';
+      document.getElementById(playerid).remove();
+      //already exists, lets get rid of it. 
     }
-    if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
-      if (swmpConfig.allowMultiple != 'false')  {
-        return false; //already exists, lets do nothing.
-      } else {
-        document.getElementById(playerid).remove();
-        //already exists, lets get rid of it. 
-      }
-      
-    }
+  }
   
-    console.log(playerid+clickedHref+clickedTitle);
-      
-      let newembed = new swmp({
-        id: playerid,
-        url: clickedHref,
-        title: clickedTitle
-      });
+  //console.log(playerid+clickedHref+clickedTitle);
+  let newembed = new swmp({
+    id: playerid,
+    url: clickedHref,
+    title: clickedTitle
+  });
   
-  console.log(backendScript);
-      
-      if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
-        clicked.parentNode.parentNode.appendChild(newembed.container);
-      } else {
-        clicked.parentNode.appendChild(newembed.container);
-      }
-  
+  //console.log(backendScript);
+  if (backendScript == 'jschan') { // To preserve tab to select player and enable player keybinds like close/fullscreen/pause/mute.
+    clicked.parentNode.parentNode.appendChild(newembed.container);
+  } else {
+    clicked.parentNode.appendChild(newembed.container);
+  }
+
 
 }, true); // Fuck other scripts.
