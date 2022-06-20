@@ -222,7 +222,7 @@ if (typeof GM_info != 'undefined') {
 }
 
 var fileregex = new RegExp(`\.(${swmpConfig.files})+$`, 'gmi');
-var ytregex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)(t=([0-9]))?", "gmi");
+var ytregex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
 
 // SWMP Code
 
