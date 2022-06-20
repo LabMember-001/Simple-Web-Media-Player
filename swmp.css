@@ -275,6 +275,12 @@ div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker {
     -webkit-margin-top: -14px; /* webkit */
 }
 
+input[type="range"].swmp {
+    background: 0 0!important;
+    border: 0!important;
+    outline: 0!important;
+}
+
 span.swmp input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
@@ -347,12 +353,6 @@ span.swmp input[type="range"]::-webkit-range-progress {
 span.swmp input[type="range"]::-moz-range-progress {
     height: 6px;
     background-color: #0000 
-}
-
-span.swmp input[type="range"] {
-    background: none;
-    border: 0;
-    outline: 0;
 }
 
 span.swmp progress.swmp-volume {

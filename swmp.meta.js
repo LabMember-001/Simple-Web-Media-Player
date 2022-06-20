@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name     4chan \ IB Simple Web Media Player
+// @name          4chan \ IB Simple Web Media Player
 // @description   Simple Web Media Player for 4chan and other imageboards.
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
-// @license      GPLv3
-// @version  1.2
-// @updateURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
-// @downloadURL https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
+// @license       GPLv3
+// @version       1.2.1
+// @updateURL     https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
+// @downloadURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
 
-// @grant       none
-// @run-at      document-end
+// @grant         none
+// @run-at        document-end
 
 // @match https://*.4chan.org/*
 // @match https://*.4channel.org/*
@@ -23,6 +23,7 @@
 // @match https://*.7chan.org/*
 // @match https://*.420chan.org/*
 // @match https://*.anon.cafe/*
+// @match https://*.4-ch.net/*
 
 // @match https://*.archived.moe/*
 // @match https://*.desuarchive.org/*
