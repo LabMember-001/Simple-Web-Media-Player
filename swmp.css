@@ -150,6 +150,8 @@ div.swmp.swmp-minimized div.swmp-player-container {
 
 div.swmp.swmp-fullscreen div.swmp-player-container {
     display: block;
+    width: 100vw; /* my god safari fuck off */
+    height: 100vh;
 }
 
 span.swmp.swmp-window.swmp-window-titlebar {
