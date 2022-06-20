@@ -4,9 +4,7 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license       GPLv3
-// @version       1.2.1
-// @updateURL     https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
-// @downloadURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
+// @version       1.2.2
 
 // @grant         none
 // @run-at        document-end
@@ -141,7 +139,8 @@ var swmpConfig = {
   positionOffset: '100',
   positionSide: 'right',
   volume: 60,
-  muted: 'false',
+  volumeScroll: 'true',
+  muted: 'false', //Not implemented
   theme: 'default', //Default theme
   themes: //All themes
     [
@@ -198,6 +197,12 @@ if (localStorage.swmpMuted == undefined) {
   swmpConfig.muted = localStorage.swmpMuted;
 }
 
+if (localStorage.swmpVolumeScroll == undefined) {
+  localStorage.swmpVolumeScroll = swmpConfig.volumeScroll;
+} else {
+  swmpConfig.volumeScroll = localStorage.swmpVolumeScroll;
+}
+
 
 // Add style to head when DOM is loaded.
 
@@ -217,7 +222,7 @@ if (typeof GM_info != 'undefined') {
 }
 
 var fileregex = new RegExp(`\.(${swmpConfig.files})+$`, 'gmi');
-var ytregex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)", "gmi");
+var ytregex = new RegExp("^(?:https?:)?//[^/]*(?:youtube(?:-nocookie)?\.com|youtu\.be|yewtu\.be).*[=/]([-\\w]{11})(?:\\?|=|&|$)(t=([0-9]))?", "gmi");
 
 // SWMP Code
 
@@ -671,6 +676,33 @@ class swmp {
       });
       this.multiLabel.appendChild(this.multiCheck);
       this.settingsContainer.appendChild(this.multiLabel);
+      
+      this.br = document.createElement('br');
+      this.settingsContainer.appendChild(this.br);
+      
+        // Volume Scroll Settings
+      this.volumeScrollLabel = document.createElement('label');
+      this.volumeScrollLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-volumescroll-label');
+      this.volumeScrollLabel.textContent = 'Volume Scroll';
+      this.volumeScrollCheck = document.createElement('input');
+      this.volumeScrollCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-volumescroll-input');
+      this.volumeScrollCheck.setAttribute('type', 'checkbox');
+      if (localStorage.swmpVolumeScroll == 'true') {
+        this.volumeScrollCheck.setAttribute('checked', 'checked');
+      }
+      this.volumeScrollCheck.addEventListener('change', (event) => {
+        if (this.volumeScrollCheck.checked == true) {
+          this.volumeScrollCheck.setAttribute('checked', 'checked');
+          localStorage.swmpVolumeScroll = 'true';
+          swmpConfig.volumeScroll = 'true';
+        } else {
+          this.volumeScrollCheck.removeAttribute('checked');
+          localStorage.swmpVolumeScroll = 'false';
+          swmpConfig.volumeScroll = 'false';
+        }
+      });
+      this.volumeScrollLabel.appendChild(this.volumeScrollCheck);
+      this.settingsContainer.appendChild(this.volumeScrollLabel);
 
 
       this.container.appendChild(this.settingsContainer);
@@ -1021,6 +1053,50 @@ class swmp {
       this.fullscreen(this.container);
     });
 
+    this.playerContainer.addEventListener('wheel', event => {
+      if (swmpConfig.volumeScroll != 'true') {
+        return false;
+      }
+      event.preventDefault();
+        if (this.type == 'video' || this.type == 'audio') {
+          if (event.wheelDelta > 0) {
+            var vol = this.player.volume + 0.04;
+            if (vol > 1.0) {
+              vol = 1.0;
+            }
+            
+          } else {
+            var vol = this.player.volume - 0.04;
+            if (vol < 0.0) {
+              vol = 0.0;
+            }
+          }
+          var newvolume = Math.floor(vol * 100);
+          
+        } else if (this.type == 'youtube') {
+          if (event.wheelDelta > 0) {
+            var vol = this.ytplayer.getVolume() + 4;
+            if (vol > 100) {
+              vol = 100;
+            }
+            
+          } else {
+            var vol = this.ytplayer.getVolume() - 4;
+            if (vol < 0) {
+              vol = 0;
+            }
+          }
+          var newvolume = vol;
+        }
+      
+        this.volumeProgress.setAttribute('value', newvolume);
+        this.volumeProgress.value = newvolume;
+        this.volumeRange.setAttribute('value', newvolume);
+        this.volumeRange.value = newvolume;
+        this.updateVolume(); // Change icon blah blah
+      
+    }, false);
+
     this.container.addEventListener('keydown', event => {
       if (event.repeat) { return; } // Don't spam
 
@@ -1276,7 +1352,7 @@ class swmp {
       console.log('SWMP: YouTube');
       this.type = 'youtube';
       this.videoid = result[1];
-      console.log(this.videoid);
+      console.log('SWMP: Youtube ID: '+ this.videoid);
       return true;
     }
 

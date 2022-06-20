@@ -4,9 +4,7 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license       GPLv3
-// @version       1.2.1
-// @updateURL     https://okabe.moe/projects/simplewebmediaplayer/swmp.meta.js
-// @downloadURL   https://okabe.moe/projects/simplewebmediaplayer/swmp.user.js
+// @version       1.2.2
 
 // @grant         none
 // @run-at        document-end
