@@ -51,11 +51,11 @@ Repository: [Github](https://github.com/LabMember-001/Simple-Web-Media-Player)
 
 Full Download: -
 
-Add swmp.js to your page.
+Add ``dist/swmp.js`` and ``dist/swmp.css`` to your page.
 
 Create and place a video anywhere on any site by doing minor modifications to:
 
-```
+```js
 // Create a new element and define type (audio/video) and url (internal or external)
 var newembed = new swmp({
 	url: "example.mp3",
