@@ -342,7 +342,6 @@ class swmp {
       this.previousButton = document.createElement('button');
       this.previousButton.innerHTML = "<span>P</span>"; 
       this.previousButton.addEventListener('click', (e)=>{
-        console.log('anterioir')
         this.previousMedia()
       })
       this.buttonsContain.appendChild(this.previousButton)
@@ -350,7 +349,6 @@ class swmp {
       this.nextButton = document.createElement('button');
       this.nextButton.innerHTML = "<span>N</span>"; 
       this.nextButton.addEventListener('click', (e)=>{
-        console.log('proxima')
         this.nextMedia()
       })
       this.buttonsContain.appendChild(this.nextButton)
