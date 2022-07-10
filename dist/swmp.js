@@ -36,6 +36,7 @@ class swmp {
 	 * @param {string} [obj.autoplay] Optional Autoplay
 	 * @param {string} [obj.loop] Optional Loop
 	 * @param {string} [obj.windowed] Optional set false to disable windowed mode and place inline
+   * @param {string} [obj.playlist] List of urls 
 	 * @returns 
 	 */
   constructor(obj) {
@@ -56,6 +57,9 @@ class swmp {
     this.windowed = obj.windowed; // Optional set false to disable windowed mode and place inline
     
     this.defaultVolume = parseInt(swmpConfig.volume);
+
+    this.playlistLocation = 0
+    this.playlist = obj.playlist
 
     if (obj.url == undefined) {
       console.log('No media given');
@@ -118,6 +122,51 @@ class swmp {
       //this.prepareYoutubeEvents();
     }
 
+  }
+
+  nextMedia(){
+    if(this.playlistLocation === this.playlist.length -1)
+    {
+      return
+    }
+
+    this.playlistLocation++
+    this.url = this.playlist[this.playlistLocation]
+    
+    this.refreshPlayer()
+  }
+
+  previousMedia(){
+    if(this.playlistLocation === 0)
+    {
+      return
+    }
+
+    this.playlistLocation--
+    this.url = this.playlist[this.playlistLocation]
+
+    this.refreshPlayer()
+  }
+
+  clearPlayer(){
+    let videoPlayer = document.querySelector('.swmp-player-container')
+    let controller = document.querySelector('.swmp-controls')
+    if(videoPlayer){
+      this.container.removeChild(videoPlayer)
+    }
+    if(controller){
+      this.container.removeChild(controller)
+    }
+  }
+
+  refreshPlayer(){
+    this.clearPlayer()
+
+    this.preparePlayer()
+    this.prepareSharedEvents();
+    this.prepareControls();
+    this.preparePlayerEvents();
+    this.prepareSettings();
   }
 
   prepareWindow() {
@@ -289,6 +338,24 @@ class swmp {
     });
     this.buttonsContain.appendChild(this.stopbutton);
 
+    if(this.playlist){
+      this.previousButton = document.createElement('button');
+      this.previousButton.innerHTML = "<span>P</span>"; 
+      this.previousButton.addEventListener('click', (e)=>{
+        console.log('anterioir')
+        this.previousMedia()
+      })
+      this.buttonsContain.appendChild(this.previousButton)
+
+      this.nextButton = document.createElement('button');
+      this.nextButton.innerHTML = "<span>N</span>"; 
+      this.nextButton.addEventListener('click', (e)=>{
+        console.log('proxima')
+        this.nextMedia()
+      })
+      this.buttonsContain.appendChild(this.nextButton)
+    }
+    
     // Create a Volume Container
     this.volumeContain = document.createElement('span');
     this.volumeContain.setAttribute('class', 'swmp swmp-volume-container');
@@ -554,7 +621,6 @@ class swmp {
     // Preload metadata
     this.player.setAttribute('preload', 'metadata');
 
-    
     // Create Player Container and Put inside Container
     this.playerContainer = document.createElement('div');
     this.playerContainer.setAttribute('class', 'swmp swmp-player-container');
