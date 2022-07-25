@@ -247,6 +247,9 @@ class swmp {
     
     this.defaultVolume = parseInt(swmpConfig.volume);
 
+    this.playlistLocation = 0
+    this.playlist = obj.playlist
+
     if (obj.url == undefined) {
       console.log('No media given');
       return false;
@@ -308,6 +311,51 @@ class swmp {
       //this.prepareYoutubeEvents();
     }
 
+  }
+
+  nextMedia(){
+    if(this.playlistLocation === this.playlist.length -1)
+    {
+      return
+    }
+
+    this.playlistLocation++
+    this.url = this.playlist[this.playlistLocation]
+
+    this.refreshPlayer()
+  }
+
+  previousMedia(){
+    if(this.playlistLocation === 0)
+    {
+      return
+    }
+
+    this.playlistLocation--
+    this.url = this.playlist[this.playlistLocation]
+
+    this.refreshPlayer()
+  }
+
+  clearPlayer(){
+    let videoPlayer = document.querySelector('.swmp-player-container')
+    let controller = document.querySelector('.swmp-controls')
+    if(videoPlayer){
+      this.container.removeChild(videoPlayer)
+    }
+    if(controller){
+      this.container.removeChild(controller)
+    }
+  }
+
+  refreshPlayer(){
+    this.clearPlayer()
+
+    this.preparePlayer()
+    this.prepareSharedEvents();
+    this.prepareControls();
+    this.preparePlayerEvents();
+    this.prepareSettings();
   }
 
   prepareWindow() {
@@ -478,6 +526,22 @@ class swmp {
       }
     });
     this.buttonsContain.appendChild(this.stopbutton);
+
+    if(this.playlist){
+      this.previousButton = document.createElement('button');
+      this.previousButton.innerHTML = "<span>P</span>"; 
+      this.previousButton.addEventListener('click', (e)=>{
+        this.previousMedia()
+      })
+      this.buttonsContain.appendChild(this.previousButton)
+
+      this.nextButton = document.createElement('button');
+      this.nextButton.innerHTML = "<span>N</span>"; 
+      this.nextButton.addEventListener('click', (e)=>{
+        this.nextMedia()
+      })
+      this.buttonsContain.appendChild(this.nextButton)
+    }
 
     // Create a Volume Container
     this.volumeContain = document.createElement('span');
