@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license       GPLv3
-// @version       1.2.3
+// @version       1.3.0
 
 // @grant         none
 // @run-at        document-end

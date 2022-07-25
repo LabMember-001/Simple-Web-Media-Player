@@ -62,7 +62,17 @@ var newembed = new swmp({
 });
 // Put new element inside defined element.
 document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
-```				
+```	
+
+
+You can also create playlists of local or external media files:
+
+```
+var newembed = new swmp({
+    url: "example3.webm",
+    playlist: ["example3.webm", "example2.webm", "https://youtu.be/x2iKC0C32-g", "example.mp3"],
+});
+```			
 
 If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The built in link click scanner will assign any video created with an ID of the href from that file.
 

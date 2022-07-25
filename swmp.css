@@ -491,6 +491,14 @@ span.swmp.swmp-window button {
     width: 22px;
 }
 
+button.swmp.swmp-button.swmp-playlist span {
+    --image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAAAAAAAAAAAAAA16TeWAAAABHRSTlMARP/Eyy24XQAAAHtJREFUeJzN0cENwCAIBVDbyRzRIUwT0SYeOoAjNJ2ofuAgsUcP5YB5kaigc/8Kj7QpCtJeBRQA8oLICAJqQFZcAN2CvtWRFSeAAoA8kBQFoCrIjCKgg3MQSOQPmLKHN/x89Hipec740MQtxLk50/Y4EDMqXva25EMWxwtbsHeLI1Cp3AAAAABJRU5ErkJggg==);
+}
+
+button.swmp.swmp-button.swmp-playlist.swmp-playlist-prev span {
+    transform: rotate(180deg);
+}
+
 button.swmp.swmp-button.swmp-window-minimize span {
     --image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');
     margin-top: 2px;
