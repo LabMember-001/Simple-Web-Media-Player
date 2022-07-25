@@ -139,6 +139,17 @@
     document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
 
 </code>
+
+                </p>
+
+                <p>
+                You can also create playlists of local or external media files:
+<code>
+        var newembed = new swmp({
+            url: "example3.webm",
+            playlist: ["example3.webm", "example2.webm", "https://youtu.be/x2iKC0C32-g", "example.mp3"],
+        });
+</code>
                 </p>
 
                 <p>If you want to make videos manually instead of using the built in link filename detection make sure to assign the manually created player an ID if you want to make the multi configuration work. The built in link click scanner will assign any video created with an ID of the href from that file.</p>
@@ -272,6 +283,34 @@ window.addEventListener('DOMContentLoaded', (event) => {
         container.appendChild(newembed.container);
     });
     container.appendChild(createYoutube);
+
+    var createPlaylist = document.createElement('button');
+    createPlaylist.innerHTML = 'Create Playlist';
+    createPlaylist.setAttribute('style', 'margin-right:5px;');
+    createPlaylist.addEventListener("click", (event) => {
+
+        if (swmpConfig.allowMultiple != 'false')  {
+          var playerid = `play-ibmp-example4`;
+        } else {
+          var playerid = 'play-ibmp';
+        }
+        if (typeof(document.getElementById(playerid)) != 'undefined' && document.getElementById(playerid) != null) {
+          if (swmpConfig.allowMultiple != 'false')  {
+            return false; //already exists, lets do nothing.
+          } else {
+            document.getElementById(playerid).remove();
+            //already exists, lets get rid of it. 
+          }
+        }
+
+        var newembed = new swmp({
+            url: "example3.webm",
+            playlist: ["example3.webm", "example2.webm", "https://youtu.be/x2iKC0C32-g", "example.mp3"],
+            id: playerid,
+        });
+        container.appendChild(newembed.container);
+    });
+    container.appendChild(createPlaylist);
 
 
     var configvalues = document.createElement('div');
