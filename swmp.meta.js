@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license       GPLv3
-// @version       1.3.1
+// @version       1.3.2
 
 // @grant         none
 // @run-at        document-end
@@ -14,6 +14,7 @@
 // @match https://*.smuglo.li/*
 // @match https://*.smugloli.net/*
 // @match https://*.kissu.moe/*
+// @match https://*.4taba.net/*
 // @match https://*.2kind.moe/*
 // @match https://*.1chan.net/*
 // @match https://*.otterchat.net/*
