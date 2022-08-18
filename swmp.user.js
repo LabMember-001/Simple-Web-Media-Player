@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        https://github.com/LabMember-001
 // @license       GPLv3
-// @version       1.3.1
+// @version       1.3.2
 
 // @grant         none
 // @run-at        document-end
@@ -14,6 +14,7 @@
 // @match https://*.smuglo.li/*
 // @match https://*.smugloli.net/*
 // @match https://*.kissu.moe/*
+// @match https://*.4taba.net/*
 // @match https://*.2kind.moe/*
 // @match https://*.1chan.net/*
 // @match https://*.otterchat.net/*
@@ -36,7 +37,7 @@ console.log('Loading IB Media Player.');
 
 /* Repository:                                              */
 /* https://github.com/LabMember-001/Simple-Web-Media-Player */
-/* https://okabe.moe/projects/simplewebmediaplayer          */
+/* https://labmember-001.github.io/Simple-Web-Media-Player/ */
 /*                                                          */
 /*                                                          */
 /*                                                          */
@@ -151,7 +152,8 @@ var swmpConfig = {
       ['modernity', 'Modernity']
     ],
   files: 'avi|mpeg|mpg|ogv|mp4|webm|flv|wav|mp3|m4a|mp2|ogg|flac',
-  allowMultiple: 'false'
+  allowMultiple: 'false',
+  downloadAttribute: 'true' //true = override default action, false = download
 }
 
   // Initialize site configuration. As of now it's on a per site basis and not using GM values, I like different designs.
@@ -201,6 +203,12 @@ if (localStorage.swmpVolumeScroll == undefined) {
   localStorage.swmpVolumeScroll = swmpConfig.volumeScroll;
 } else {
   swmpConfig.volumeScroll = localStorage.swmpVolumeScroll;
+}
+
+if (localStorage.swmpDownloadAttribute == undefined) {
+  localStorage.swmpDownloadAttribute = swmpConfig.downloadAttribute;
+} else {
+  swmpConfig.downloadAttribute = localStorage.swmpDownloadAttribute;
 }
 
 
@@ -547,7 +555,11 @@ class swmp {
     this.stopbutton.innerHTML = "<span></span>"; // ■
     this.stopbutton.addEventListener("click", event => {
       event.preventDefault();
-
+      if (this.loaded != true) {
+        console.log('Userscript: Can\'t send stop yet.');
+        return;
+      }
+      
       if (this.type == 'video' || this.type == 'audio') {
         this.player.pause();
         this.seeker.value = 0;
@@ -812,6 +824,29 @@ class swmp {
       this.volumeScrollLabel.appendChild(this.volumeScrollCheck);
       this.settingsContainer.appendChild(this.volumeScrollLabel);
 
+        // Override Download link Attribute Settings
+      this.downloadAttributeLabel = document.createElement('label');
+      this.downloadAttributeLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-downloadattribute-label');
+      this.downloadAttributeLabel.textContent = 'Override Download';
+      this.downloadAttributeCheck = document.createElement('input');
+      this.downloadAttributeCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-downloadattribute-label');
+      this.downloadAttributeCheck.setAttribute('type', 'checkbox');
+      if (localStorage.swmpDownloadAttribute == 'true') {
+        this.downloadAttributeCheck.setAttribute('checked', 'checked');
+      }
+      this.downloadAttributeCheck.addEventListener('change', (event) => {
+        if (this.downloadAttributeCheck.checked == true) {
+          this.downloadAttributeCheck.setAttribute('checked', 'checked');
+          localStorage.swmpDownloadAttribute = 'true';
+          swmpConfig.downloadAttribute = 'true';
+        } else {
+          this.downloadAttributeCheck.removeAttribute('checked');
+          localStorage.swmpDownloadAttribute = 'false';
+          swmpConfig.downloadAttribute = 'false';
+        }
+      });
+      this.downloadAttributeLabel.appendChild(this.downloadAttributeCheck);
+      this.settingsContainer.appendChild(this.downloadAttributeLabel);
 
       this.container.appendChild(this.settingsContainer);
 
@@ -914,8 +949,10 @@ class swmp {
     console.log('SWMP: makeYoutube()');
     this.playerfirstrun = true;
     var self = this;
+    this.loaded = false;
     this.container.classList.add('swmp-youtube');
     this.onPlayerReady = (event) => {
+      this.loaded = true;
       if (!this.container.classList.contains('swmp-youtube')) { //cancel if already changed playlist
         return;
       }
@@ -1028,6 +1065,10 @@ class swmp {
   prepareYoutubeEvents() {
 
     this.togglePlay = function() {
+      if (this.loaded != true) {
+        console.log('Userscript: YT must load before togglePlay.');
+        return;
+      }
       if (this.ytplayer.getPlayerState() == 1) { // Playing
         this.ytplayer.pauseVideo();
       } else { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
@@ -1089,6 +1130,10 @@ class swmp {
     }
 
     this.seeker.oninput = (event) => {
+      if (this.loaded != true) {
+        console.log('Userscript: Video must load before seeking');
+        return;
+      }
       //on mousedown temporary add a mute to avoid annoying seeking sounds?
       this.ytplayer.seekTo(Math.floor(this.ytplayer.getDuration() * this.seeker.value / this.seeker.max) );
       this.progress.value = this.seeker.value;
@@ -1106,30 +1151,39 @@ class swmp {
 
     this.toggleMute = () => {
 
-      if (this.ytplayer.isMuted() == true ) {
-        this.volumeButton.classList.remove('swmp-mute');
-        this._volume = this.ytplayer.getVolume() ;
-        this.ytplayer.unMute();
-        this.ytplayer.setVolume(this._volume);
-        this.volumeRange.setAttribute('value', this._volume );
-        this.volumeRange.value = this._volume;
-        this.volumeProgress.setAttribute('value', this._volume );
-        this.volumeProgress.value = this._volume;
-        swmpConfig.muted = 'false';
-        localStorage.swmpMuted = 'false';
-      } else {
-        this.volumeButton.classList.add('swmp-mute');
-        this.ytplayer.mute();
-        this.volumeRange.setAttribute('value', 0 );
-        this.volumeRange.value = 0;
-        this.volumeProgress.setAttribute('value', 0 );
-        this.volumeProgress.value = 0;
-        swmpConfig.muted = 'true';
-        localStorage.swmpMuted = 'true';
+      try {
+        if (this.ytplayer.isMuted() == true ) {
+          this.volumeButton.classList.remove('swmp-mute');
+          this._volume = this.ytplayer.getVolume() ;
+          this.ytplayer.unMute();
+          this.ytplayer.setVolume(this._volume);
+          this.volumeRange.setAttribute('value', this._volume );
+          this.volumeRange.value = this._volume;
+          this.volumeProgress.setAttribute('value', this._volume );
+          this.volumeProgress.value = this._volume;
+          swmpConfig.muted = 'false';
+          localStorage.swmpMuted = 'false';
+        } else {
+          this.volumeButton.classList.add('swmp-mute');
+          this.ytplayer.mute();
+          this.volumeRange.setAttribute('value', 0 );
+          this.volumeRange.value = 0;
+          this.volumeProgress.setAttribute('value', 0 );
+          this.volumeProgress.value = 0;
+          swmpConfig.muted = 'true';
+          localStorage.swmpMuted = 'true';
+        }
+      } catch(e) {
+        console.log('Userscript: '+e);
       }
     }
 
     this.updateVolume = (firstrun = false) => {
+      
+      if (this.loaded != true) {
+        return;
+      }
+      
       this.volumeButton.classList.remove('swmp-mute');
 
       if (firstrun == true) {
@@ -1333,20 +1387,25 @@ class swmp {
       this.progress.value = 0;
       clearInterval(this.player.interval);
       this.currentTimer.textContent = '00:00';
-
+      this.loaded = false;
       if (this.playlist != undefined && swmpConfig.loop == 'false' && swmpConfig.autoplay == 'true') { //doesnt activate on loop
         this.nextMedia();
         return;
       }
-
     }
 
     this.player.addEventListener('loadedmetadata', (event) => {
       this.totalTimer.textContent = this.formatSeconds(this.player.duration);
     });
+    
+    this.player.addEventListener('loadeddata', (event) => {
+      // Video is loaded and can be played
+      this.loaded = true;
+    });
 
 
     this.player.onplay = (event) => {
+      this.loaded = true;
       this.player.classList.add('swmp-playing');
       this.playbutton.classList.add('swmp-playing');
       this.player.interval = window.setInterval((event) => {
@@ -1377,11 +1436,19 @@ class swmp {
     }
 
     this.seeker.oninput = (event) => {
-      //on mousedown temporary add a mute to avoid annoying seeking sounds?
-      this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
-      this.progress.value = this.seeker.value;
-      this.progress.setAttribute("value", this.seeker.value);
-      this.updateTimer();
+      if (this.loaded != true) {
+        console.log('Userscript: Video status must be loaded first');
+        return;
+      }
+      try {
+        //on mousedown temporary add a mute to avoid annoying seeking sounds?
+        this.player.currentTime = Math.floor(this.player.duration * this.seeker.value / this.seeker.max);
+        this.progress.value = this.seeker.value;
+        this.progress.setAttribute("value", this.seeker.value);
+        this.updateTimer();
+      } catch (e) {
+        console.log('Userscript: ' + e);
+      }
     }
 
     this.updateTimer = () => {
@@ -1390,11 +1457,15 @@ class swmp {
     }
 
     this.togglePlay = () => {
-      if (this.player.paused ) {
-        this.player.play();
-      } else {
-        this.player.pause();
-      }     
+      try {
+        if (this.player.paused ) {
+          this.player.play();
+        } else {
+          this.player.pause();
+        }
+      } catch (e) {
+          console.log('Userscript: ' + e)
+      }
     }
 
     this.toggleMute = () => {
@@ -1720,6 +1791,11 @@ document.querySelector('body').addEventListener('click', (event) => {
     clicked = event.target.parentNode;
   } else if (event.target.parentNode.parentNode.tagName == 'A') {
     clicked = event.target.parentNode.parentNode;
+  }
+
+  // Download attribute override
+  if (swmpConfig.downloadAttribute == 'false' && clicked.hasAttribute('download')) {
+    return;
   }
   
   function getVideo() {
