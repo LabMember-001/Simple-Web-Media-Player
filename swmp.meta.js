@@ -2,9 +2,9 @@
 // @name          4chan \ IB Simple Web Media Player
 // @description   Simple Web Media Player for 4chan and other imageboards.
 // @namespace     LabMember-001
-// @author        https://github.com/LabMember-001
+// @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.3.2
+// @version       1.3.3
 
 // @grant         none
 // @run-at        document-end
