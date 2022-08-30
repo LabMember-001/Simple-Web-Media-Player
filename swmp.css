@@ -494,6 +494,10 @@ button.swmp.swmp-button span {
 
 }
 
+button.swmp.swmp-button:active span {
+    transform: translateX(1px) translateY(1px);
+}
+
 span.swmp.swmp-window button {
     height: 20px;
     min-width: 22px;
