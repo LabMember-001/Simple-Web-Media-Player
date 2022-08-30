@@ -233,7 +233,7 @@ div.swmp.swmp-container.swmp-fullscreen iframe, div.swmp.swmp-container.swmp-ful
 }
 
 div.swmp video {
-    background: #000;
+    background: var(--swmp-player-container-background);
     max-width: 500px;
     max-height: 500px;
     width: auto;
@@ -242,7 +242,7 @@ div.swmp video {
 }
 
 div.swmp iframe {
-    background: #000;
+    background: var(--swmp-player-container-background);
     min-width: 420px;
     min-height: 236px;
     max-width: 500px;
@@ -254,6 +254,7 @@ div.swmp iframe {
 }
 
 div.swmp audio {
+    background: var(--swmp-player-container-background);
     min-width: 320px;
     min-height: 40px;
 }
@@ -292,7 +293,7 @@ div.swmp.swmp-controls span.swmp-seek-container {
     width: calc(100% - 6px);
     height: var(--swmp-seek-height);
     margin: auto;
-    /*position: relative;*/
+    position: relative;
 }
 
 div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker {
@@ -420,13 +421,13 @@ span.swmp input.swmp-volume[type="range"]::-moz-range-thumb {
 }
 
 div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress {
-    width: 100%;
+    width: calc(100% - var(--swmp-seek-offset));
+    left: calc(var(--swmp-seek-offset)/ 2);
     height: 6px;
     z-index: 0;
     position: relative;
     background: var(--swmp-seek-background);
     bottom: -12px;
-    /*left: 5px;*/
     border: none;
 }
 
@@ -679,4 +680,33 @@ div.swmp.swmp-theme-modernity input[type="range"]::-webkit-slider-thumb {
     box-shadow: none;
     border-radius: 100%;
     padding: 4px;
+}
+
+/* MOBILE */
+@media screen and (max-width: 480px) {
+
+    div.swmp.swmp-container {
+        top: 5px !important;
+        right: 5px !important;
+        left: 5px !important;
+        margin-bottom: 10px;
+    }
+
+    div.swmp.swmp-container.swmp-maximized {
+        margin: 0;
+    }
+
+    div.swmp iframe, div.swmp video, div.swmp audio {
+        max-width: 100%!important;
+        max-height: 100%!important;
+        min-width: unset;
+        min-height: unset;
+        width: 100%;
+        height: 100%;
+    }
+
+    span.swmp.swmp-volume-container {
+        display: none;
+    }
+
 }
