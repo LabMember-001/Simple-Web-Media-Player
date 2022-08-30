@@ -186,13 +186,14 @@ span.swmp.swmp-window.swmp-window-buttons-contain {
 
 div.swmp .swmp-player-container {
     display: flex;
+    position: relative;
     height: 100%;
     background: var(--swmp-player-container-background);
 }
 
-div.swmp.swmp-container.swmp-audio {
+/*div.swmp.swmp-container.swmp-audio {
     display: block;
-}
+}*/
 
 div.swmp.swmp-container.swmp-fullscreen {
     background: #000;
@@ -202,7 +203,29 @@ div.swmp.swmp-container.swmp-fullscreen {
 
 }
 
-div.swmp.swmp-container.swmp-fullscreen video, div.swmp.swmp-container.swmp-fullscreen iframe {
+div.swmp.swmp-container.swmp-maximized {
+    position: fixed!important;
+    top: 0!important;
+    bottom: 0!important;
+    right: 0!important;
+    left: 0!important;
+    transition: all 0.2s 0s ease-out;
+}
+
+div.swmp.swmp-container.swmp-maximized iframe, div.swmp.swmp-container.swmp-maximized video, div.swmp.swmp-container.swmp-maximized audio {
+    position: absolute;
+    max-width:100%;
+    max-height:100%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+div.swmp.swmp-container.swmp-fullscreen iframe, div.swmp.swmp-container.swmp-fullscreen video, div.swmp.swmp-container.swmp-fullscreen audio {
+    position: relative;
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -514,6 +537,13 @@ button.swmp.swmp-button.swmp-playlist.swmp-playlist-prev span {
 
 button.swmp.swmp-button.swmp-window-minimize span {
     --image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');
+    margin-top: 2px;
+    -webkit-mask-size: 12px;
+    mask-size: 12px;
+}
+
+button.swmp.swmp-button.swmp-window-maximize span {
+    --image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANUlEQVQ4T2NkoBAwQvX/J9McRqobADOQkINgLsZwwagBDAyjYUCFMCCUAtHlqZcXSLUZrh4AU/cYEVH9Rd0AAAAASUVORK5CYII=');
     margin-top: 2px;
     -webkit-mask-size: 12px;
     mask-size: 12px;

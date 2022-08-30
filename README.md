@@ -34,7 +34,10 @@ You can also override some defaults such as disabling autoplay, disabling loop, 
 
 #### Keybinds
 
-Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).
+Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default), [Left] = Seek Backward, [Right] = Seek Forward.
+
+You may also doubleclick the video player to toggle fullscreen or doubleclick the window titlebar to toggle maximized mode (cover browser). If enabled you may use scrollwheel to change volume.
+
 In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.
 
 ## Installation
@@ -59,6 +62,11 @@ Create and place a video anywhere on any site by doing minor modifications to:
 // Create a new element and define type (audio/video) and url (internal or external)
 var newembed = new swmp({
 	url: "example.mp3",
+});
+// You can also add a custom event on buttons such as unhiding a thumbnail used to open the player
+newembed.windowClose.addEventListener('click', () => {
+    // Custom close event
+    // Alternatively delete the button with .remove() or hide the entire titlebar.
 });
 // Put new element inside defined element.
 document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
@@ -86,4 +94,4 @@ Some sites may need additional changes done to the script. The script is configu
 
 ## Demo
 
-[Demo](https://okabe.moe/projects/simplewebmediaplayer/#demo) - Try before installing.
+[Demo](https://labmember-001.github.io/Simple-Web-Media-Player/#demo) - Try before installing.

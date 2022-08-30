@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.3.3
+// @version       1.4.0
 
 // @grant         none
 // @run-at        document-end
