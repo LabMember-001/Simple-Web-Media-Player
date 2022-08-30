@@ -126,7 +126,7 @@ div.swmp.swmp-container {
     color: var(--swmp-text-color);
     border: 1px solid var(--swmp-container-border);
     line-height: 1; /* futaba/buri themes */
-    z-index: 1;
+    z-index: 100;
     overflow: hidden;
     min-width: 320px;
     width: auto;
