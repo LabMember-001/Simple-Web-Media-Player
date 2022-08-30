@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Simple Web Media Player</title>
+    <title>「 Simple Web Media Player 」</title>
 
     <style>
 
@@ -115,7 +115,9 @@
                 <p>You can also override some defaults such as disabling autoplay, disabling loop, or even allowing to run multiple players at once. By default if you open a media file while one is playing the old player will be replaced.</p>
 
                 <h4>Keybinds</h4>
-                <p>Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default).<br/>
+                <p>Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default), [Left] = Seek Backward, [Right] = Seek Forward.<br/>
+                You may also doubleclick the video player to toggle fullscreen or doubleclick the window titlebar to toggle maximized mode (cover browser). If enabled you may use scrollwheel to change volume.
+
                 In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.</p>
             </div>
 
@@ -135,6 +137,11 @@
     // Create a new element and define type (audio/video) and url (internal or external)
     var newembed = new swmp({
         url: "example.mp3",
+    });
+    // You can also add a custom event on buttons such as unhiding a thumbnail used to open the player
+    newembed.windowClose.addEventListener('click', () => {
+        // Custom close event
+        // Alternatively delete the button with .remove() or hide the entire titlebar.
     });
     // Put new element inside defined element.
     document.getElementById("example").appendChild(newembed.container); // Define where to place video with id, class, or whatever method you prefer.
@@ -307,7 +314,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         var newembed = new swmp({
             url: "example3.webm",
             playlist: ["example3.webm", "example2.webm", "https://youtu.be/x2iKC0C32-g", "example.mp3"],
-            id: playerid,
+            id: playerid
         });
         container.appendChild(newembed.container);
     });
