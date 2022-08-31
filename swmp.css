@@ -270,6 +270,9 @@ div.swmp.swmp-controls {
 
 div.swmp.swmp-settings-container {
     background: var(--swmp-settings-background);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 div.swmp.swmp-fullscreen div.swmp.swmp-controls {
@@ -468,6 +471,7 @@ select.swmp.swmp-selector {
 label.swmp.swmp-settings {
     display: inline-flex;
     flex-direction: row-reverse;
+    line-height: 1.2;
 }
 
 input.swmp.swmp-settings {
@@ -492,8 +496,7 @@ button.swmp.swmp-button {
     padding: 0 4px;
     display: inline-block;
     cursor: pointer;
-    margin-left: 2px;
-    margin-right: 2px;
+    margin: 0 2px;
     color: var(--swmp-button-mask-color);
     background: var(--swmp-button-background);
     border: 1px solid;
@@ -732,7 +735,7 @@ div.swmp.swmp-theme-winxp.swmp-container {
 div.swmp.swmp-theme-winxp .swmp-window-title {
     color: #fff;
 }
-div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-titlebar {
+div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-container {
     background-image: linear-gradient(180deg, #3636ff 0%, #0003db 74%);
 }
 div.swmp.swmp-theme-winxp .swmp-window button.swmp-button {
@@ -744,6 +747,12 @@ div.swmp.swmp-theme-winxp .swmp-window button.swmp-button span {
 }
 div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close {
     background: red;
+}
+div.swmp.swmp-theme-winxp span.swmp input[type="range"]::-moz-range-thumb {
+    border-radius: 2px;
+}
+div.swmp.swmp-theme-winxp span.swmp input[type="range"]::-webkit-slider-thumb {
+    border-radius: 2px;
 }
 
 /* WIN_XP THEME END */
