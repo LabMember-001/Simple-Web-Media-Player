@@ -64,6 +64,29 @@
             padding: 2px;
         }
 
+        /* god damn hate ios buttons nobody should have to suffer that */
+        input[type="button"], button {
+          -webkit-appearance: none;
+                  appearance: none;
+          background: #eaeaea;
+          border: 1px solid #8e8e8e;
+          border-radius: 3px;
+          padding: 2px 4px;
+          margin: 2px;
+          color: #000;
+        }
+        input[type="button"]:focus, button:focus {
+          outline: 0;
+        }
+        input[type="button"]:hover, button:hover {
+          background: #d0cfcf;
+          border-color: #6f6f6f;
+        }
+        input[type="button"]:active, button:active {
+          background: #bdbdbd;
+          border-color: #555454;
+        }
+
         @media screen and (max-width: 480px) {
 
             nav ul {
