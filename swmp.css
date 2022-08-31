@@ -23,7 +23,12 @@ div.swmp {
     --swmp-container-border: #000;
     --swmp-container-box-shadow: none;
     --swmp-player-container-background: #000;
+    --swmp-player-container-border-left: #000;
+    --swmp-player-container-border-top: #000;
+    --swmp-player-container-border-right: #000;
+    --swmp-player-container-border-bottom: #000;
     --swmp-controls-background: var(--swmp-background);
+    --swmp-settings-background: var(--swmp-controls-background);
     --swmp-text-color: #000;
     --swmp-button-background: var(--swmp-background);
     --swmp-button-mask-color: #000;
@@ -44,6 +49,7 @@ div.swmp {
     --swmp-range-thumb-border-right: #000;
     --swmp-range-thumb-border-bottom: #000;
 
+    --swmp-btn-border-radius: 0;
     --swmp-btn-border-left: #fff;
     --swmp-btn-border-top: #fff;
     --swmp-btn-border-right: #000;
@@ -100,19 +106,6 @@ div.swmp.swmp-theme-kurisu, div.swmp.swmp-theme-kurisu * {
     --swmp-button-mask-color: #fff;
 }
 
-/* Blue Moon */
-
-div.swmp.swmp-theme-bluemoon, div.swmp.swmp-theme-bluemoon * {
-    --swmp-background: #272d37;
-    --swmp-text-color: #eee;
-    --swmp-button-mask-color: #d3d3d3;
-    --swmp-controls-background: #49525D;
-    --swmp-btn-border-left: #DDDDDD;
-    --swmp-btn-border-top: #DDDDDD;
-    --swmp-range-thumb-border-top: #ddd;
-    --swmp-range-thumb-color: #272d37;
-}
-
 div.swmp.swmp-container {
     position: relative;
     display: inline-flex;
@@ -152,6 +145,7 @@ div.swmp.swmp-fullscreen div.swmp-player-container {
     display: block;
     width: 100vw; /* my god safari fuck off */
     height: 100vh;
+    border: none;
 }
 
 span.swmp.swmp-window.swmp-window-titlebar {
@@ -189,18 +183,23 @@ div.swmp .swmp-player-container {
     position: relative;
     height: 100%;
     background: var(--swmp-player-container-background);
+    border: 1px solid;
+    border-left-color: var(--swmp-player-container-border-left);
+    border-top-color: var(--swmp-player-container-border-top);
+    border-right-color: var(--swmp-player-container-border-right);
+    border-bottom-color: var(--swmp-player-container-border-bottom);
 }
 
-/*div.swmp.swmp-container.swmp-audio {
-    display: block;
-}*/
+div.swmp.swmp-audio div.swmp-player-container, div.swmp.swmp-fullscreen div.swmp-player-container {
+    border: none;
+}
 
 div.swmp.swmp-container.swmp-fullscreen {
     background: #000;
     position: unset!important; /* more safari behavior junk */
     width: 100%;
     height: auto;
-
+    border-radius: 0!important;
 }
 
 div.swmp.swmp-container.swmp-maximized {
@@ -210,6 +209,7 @@ div.swmp.swmp-container.swmp-maximized {
     right: 0!important;
     left: 0!important;
     transition: all 0.2s 0s ease-out;
+    border-radius: 0!important;
 }
 
 div.swmp.swmp-container.swmp-maximized iframe, div.swmp.swmp-container.swmp-maximized video, div.swmp.swmp-container.swmp-maximized audio {
@@ -266,6 +266,10 @@ div.swmp.swmp-controls {
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+div.swmp.swmp-settings-container {
+    background: var(--swmp-settings-background);
 }
 
 div.swmp.swmp-fullscreen div.swmp.swmp-controls {
@@ -493,6 +497,7 @@ button.swmp.swmp-button {
     color: var(--swmp-button-mask-color);
     background: var(--swmp-button-background);
     border: 1px solid;
+    border-radius: var(--swmp-btn-border-radius);
     border-bottom-color: var(--swmp-btn-border-bottom);
     border-right-color: var(--swmp-btn-border-right);
     border-top-color: var(--swmp-btn-border-top);
@@ -635,7 +640,9 @@ span.swmp.swmp-timer-container span.swmp.swmp-time {
 }
 
 
-/* Modernity */ 
+/* Modernity THEME START */ 
+/* Modernity THEME START */ 
+/* Modernity THEME START */ 
 
 div.swmp.swmp-theme-modernity, div.swmp.swmp-theme-modernity * {
     --swmp-background: #222;
@@ -681,6 +688,70 @@ div.swmp.swmp-theme-modernity input[type="range"]::-webkit-slider-thumb {
     border-radius: 100%;
     padding: 4px;
 }
+/* Modernity THEME END */ 
+/* Modernity THEME END */ 
+/* Modernity THEME END */ 
+
+/* WIN_XP THEME START */
+/* WIN_XP THEME START */
+/* WIN_XP THEME START */
+
+div.swmp.swmp-theme-winxp, div.swmp.swmp-theme-winxp * {
+    --swmp-background: blue;
+    --swmp-container-border: none;
+    --swmp-controls-background: #eeead9;
+
+    --swmp-button-background: #fff;
+
+    --swmp-seek-background: #ddd;
+    --swmp-seek-progress-color: #17b900;
+    --swmp-seek-border-left: #a4a4a4;
+    --swmp-seek-border-top: #a4a4a4;
+    --swmp-seek-border-right: #fff;
+    --swmp-seek-border-bottom: #fff;
+
+    --swmp-range-thumb-color: #fff;
+    --swmp-range-thumb-border-left: #fff;
+    --swmp-range-thumb-border-top: #3319e4;
+    --swmp-range-thumb-border-right: #000;
+    --swmp-range-thumb-border-bottom: #000;
+
+    --swmp-btn-border-radius: 3px;
+    --swmp-btn-border-left: #2202ff;
+    --swmp-btn-border-top: #2202ff;
+    --swmp-btn-border-right: #000;
+    --swmp-btn-border-bottom: #000;
+    --swmp-btn-border-left-active: red;
+    --swmp-btn-border-top-active: red;
+    --swmp-btn-border-right-active: #000;
+    --swmp-btn-border-bottom-active: #000;
+}
+div.swmp.swmp-theme-winxp.swmp-container {
+    border-radius: 3px;
+}
+div.swmp.swmp-theme-winxp .swmp-window-title {
+    color: #fff;
+}
+div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-titlebar {
+    background-image: linear-gradient(180deg, #3636ff 0%, #0003db 74%);
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button {
+    background: blue;
+    border-color:#fff;
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button span {
+    background-color: #fff;
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close {
+    background: red;
+}
+
+/* WIN_XP THEME END */
+/* WIN_XP THEME END */
+/* WIN_XP THEME END */
+
+
+
 
 /* MOBILE */
 @media screen and (max-width: 480px) {

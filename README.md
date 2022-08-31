@@ -23,7 +23,7 @@ To open the settings menu right click on the window titlebar or the controls. Vi
 
 #### Themes
 
-Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and Blue Moon.
+Comes preinstalled with 4 styles of the default MPC inspired theme. MPC Light, MPC Dark, Kurisumasu, and WIN_XP.
 Also included a more modern-like theme, Modernity.
 
 Many sites have different vibes they want to give off so are on a per-domain basis so you can best pick the theme that suits each site.
