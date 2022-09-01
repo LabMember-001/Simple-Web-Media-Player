@@ -38,8 +38,6 @@ Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, 
 
 You may also doubleclick the video player to toggle fullscreen or doubleclick the window titlebar to toggle maximized mode (cover browser). If enabled you may use scrollwheel to change volume.
 
-In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.
-
 ## Installation
 
 #### Userscript install:
