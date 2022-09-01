@@ -287,11 +287,11 @@ div.swmp.swmp-fullscreen.swmp-movingmouse div.swmp.swmp-controls {
     transition: none;
 }
 
-div.swmp.swmp-fullscreen {
+div.swmp.swmp-container {
     cursor: none;
 }
 
-div.swmp.swmp-fullscreen.swmp-movingmouse {
+div.swmp.swmp-movingmouse {
     cursor: unset;
 }
 
@@ -512,6 +512,7 @@ button.swmp.swmp-button span {
     display: block;
     width: 16px;
     height: 16px;
+    image-rendering: crisp-edges; /* Tor Browser */
     image-rendering: pixelated;
     background-repeat: no-repeat;
     background-color: var(--swmp-button-mask-color);
