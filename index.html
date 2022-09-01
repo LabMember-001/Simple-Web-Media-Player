@@ -164,9 +164,7 @@
 
                 <h4>Keybinds</h4>
                 <p>Keybinds while media is focused: [Space] = Play/Pause, [F] = Fullscreen Toggle, [X] = Close Window, [M] = Toggle Mute, [Esc] = Exit Fullscreen (Browser Default), [Left] = Seek Backward, [Right] = Seek Forward.<br/>
-                You may also doubleclick the video player to toggle fullscreen or doubleclick the window titlebar to toggle maximized mode (cover browser). If enabled you may use scrollwheel to change volume.
-
-                In general on most sites you will be able to press Tab after opening the link to open the player to select the player and enable keybinds specifically for that player without interfering with other keybind shortcuts you may have.</p>
+                You may also doubleclick the video player to toggle fullscreen or doubleclick the window titlebar to toggle maximized mode (cover browser). If enabled you may use scrollwheel to change volume.</p>
             </div>
 
 <a name="installation"></a>
@@ -279,6 +277,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             id: playerid
         });
         container.appendChild(newembed.container);
+        newembed.container.focus();
     });
     container.appendChild(createVideo);
 
@@ -307,6 +306,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             id: playerid
         });
         container.appendChild(newembed.container);
+        newembed.container.focus();
     });
     container.appendChild(createAudio);
 
@@ -337,6 +337,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             title: "Youtube"
         });
         container.appendChild(newembed.container);
+        newembed.container.focus();
     });
     container.appendChild(createYoutube);
 
@@ -365,6 +366,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             id: playerid
         });
         container.appendChild(newembed.container);
+        newembed.container.focus();
     });
     container.appendChild(createPlaylist);
 
