@@ -289,11 +289,11 @@ div.swmp.swmp-fullscreen.swmp-movingmouse div.swmp.swmp-controls {
     transition: none;
 }
 
-div.swmp.swmp-container {
+div.swmp.swmp-container .swmp-player-container {
     cursor: none;
 }
 
-div.swmp.swmp-movingmouse {
+div.swmp.swmp-movingmouse .swmp-player-container {
     cursor: unset;
 }
 
