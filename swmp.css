@@ -21,6 +21,7 @@
 div.swmp {
     --swmp-background: #e6e6e6;
     --swmp-container-border: #000;
+    --swmp-container-border-radius: 0;
     --swmp-container-box-shadow: none;
     --swmp-player-container-background: #000;
     --swmp-player-container-border-left: #000;
@@ -118,6 +119,7 @@ div.swmp.swmp-container {
     letter-spacing: 1px;
     color: var(--swmp-text-color);
     border: 1px solid var(--swmp-container-border);
+    border-radius: var(--swmp-container-border-radius);
     line-height: 1; /* futaba/buri themes */
     z-index: 100;
     overflow: hidden;
@@ -202,7 +204,7 @@ div.swmp.swmp-container.swmp-fullscreen {
     border-radius: 0!important;
 }
 
-div.swmp.swmp-container.swmp-maximized {
+.swmp.swmp-container.swmp-maximized {
     position: fixed!important;
     top: 0!important;
     bottom: 0!important;
@@ -701,9 +703,10 @@ div.swmp.swmp-theme-modernity input[type="range"]::-webkit-slider-thumb {
 /* WIN_XP THEME START */
 
 div.swmp.swmp-theme-winxp, div.swmp.swmp-theme-winxp * {
-    --swmp-background: blue;
+    --swmp-background: #0253d2;
     --swmp-container-border: none;
-    --swmp-controls-background: #eeead9;
+    --swmp-container-border-radius: 3px;
+    --swmp-controls-background: #ece9d8;
 
     --swmp-button-background: #fff;
 
@@ -730,24 +733,34 @@ div.swmp.swmp-theme-winxp, div.swmp.swmp-theme-winxp * {
     --swmp-btn-border-right-active: #000;
     --swmp-btn-border-bottom-active: #000;
 }
-div.swmp.swmp-theme-winxp.swmp-container {
-    border-radius: 3px;
-}
 div.swmp.swmp-theme-winxp .swmp-window-title {
     color: #fff;
+    text-shadow: 1px 1px #0f1089;
 }
 div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-container {
-    background-image: linear-gradient(180deg, #3636ff 0%, #0003db 74%);
+    background: linear-gradient(180deg,#0684df,#0347c6 8%,#0240bb 40%,#0451c6 88%,#0253cc 93%,#0149cc 95%,#0230a4 100%);
 }
 div.swmp.swmp-theme-winxp .swmp-window button.swmp-button {
-    background: blue;
-    border-color:#fff;
+    background: linear-gradient(#1690e8, #2969e3 8%, #0438bd 100%);
+    border-color: #fff;
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:hover {
+    background: linear-gradient(#2295e8, #3674ec 8%, #0b3fc6 100%);
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:active {
+    background: linear-gradient(#0c74bf, #144cb7 8%, #0438bd 100%);
 }
 div.swmp.swmp-theme-winxp .swmp-window button.swmp-button span {
     background-color: #fff;
 }
 div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close {
-    background: red;
+    background: linear-gradient(#ea4646, #e65a5a 8%, #d22828 100%);
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:hover {
+    background: linear-gradient(#ea5050, #e66a6a 8%, #db3434 100%);
+}
+div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:active {
+    background: linear-gradient(#d22b2b, #c33838 8%, #d22828 100%);
 }
 div.swmp.swmp-theme-winxp span.swmp input[type="range"]::-moz-range-thumb {
     border-radius: 2px;
