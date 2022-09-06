@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.4.8
+// @version       1.4.9
 
 // @grant         none
 // @run-at        document-end
@@ -164,66 +164,39 @@ var swmpConfig = {
   doubleclickMaximize: 'false' //true = doubleclick video to maximize instead of fullscreen
 }
 
-  // Initialize site configuration. As of now it's on a per site basis and not using GM values, I like different designs.
-if (localStorage.swmpVolume == undefined) {
-  localStorage.swmpVolume = swmpConfig.volume;
-} else {
-  swmpConfig.volume = localStorage.swmpVolume;
+  // swmpConfig.nameLikeThis, localStorage.swmpNameLikeThis
+  // Converted like this: localStorage.swmpVolume, swmpConfig.volume
+  // Important: Converts first character in storage after swmp to uppercase!
+var storageValues = [
+  'volume',
+  'theme',
+  'autoplay',
+  'loop',
+  'allowMultiple',
+  'windowed',
+  'muted',
+  'volumeScroll',
+  'downloadAttribute',
+  'doubleclickMaximize'
+];
+
+function upperFirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-if (localStorage.swmpTheme == undefined) {
-  localStorage.swmpTheme = swmpConfig.theme;
-} else {
-  swmpConfig.theme = localStorage.swmpTheme;
+function initStorage(item) {
+  var local_item = `swmp${upperFirst(item)}`;
+  var config_item = item;
+  if (localStorage.getItem(`${local_item}`) == undefined) {
+    localStorage.setItem(`${local_item}`, swmpConfig[`${config_item}`]);
+  } else {
+    swmpConfig[`${config_item}`] = localStorage.getItem(`${local_item}`);
+  }
 }
 
-if (localStorage.swmpAutoplay == undefined) {
-  localStorage.swmpAutoplay = swmpConfig.autoplay;
-} else {
-  swmpConfig.autoplay = localStorage.swmpAutoplay;
-}
-
-if (localStorage.swmpLoop == undefined) {
-  localStorage.swmpLoop = swmpConfig.loop;
-} else {
-  swmpConfig.loop = localStorage.swmpLoop;
-}
-
-if (localStorage.swmpAllowMultiple == undefined) {
-  localStorage.swmpAllowMultiple = swmpConfig.allowMultiple;
-} else {
-  swmpConfig.allowMultiple = localStorage.swmpAllowMultiple;
-}
-
-if (localStorage.swmpWindowed == undefined) {
-  localStorage.swmpWindowed = swmpConfig.windowed;
-} else {
-  swmpConfig.windowed = localStorage.swmpWindowed;
-}
-
-if (localStorage.swmpMuted == undefined) {
-  localStorage.swmpMuted = swmpConfig.muted;
-} else {
-  swmpConfig.muted = localStorage.swmpMuted;
-}
-
-if (localStorage.swmpVolumeScroll == undefined) {
-  localStorage.swmpVolumeScroll = swmpConfig.volumeScroll;
-} else {
-  swmpConfig.volumeScroll = localStorage.swmpVolumeScroll;
-}
-
-if (localStorage.swmpDownloadAttribute == undefined) {
-  localStorage.swmpDownloadAttribute = swmpConfig.downloadAttribute;
-} else {
-  swmpConfig.downloadAttribute = localStorage.swmpDownloadAttribute;
-}
-
-if (localStorage.swmpDoubleclickMaximize == undefined) {
-  localStorage.swmpDoubleclickMaximize = swmpConfig.doubleclickMaximize;
-} else {
-  swmpConfig.doubleclickMaximize = localStorage.swmpDoubleclickMaximize;
-}
+storageValues.forEach( (item) => {
+  initStorage(item);
+});
 
 
 // Add style to head when DOM is loaded.
@@ -333,7 +306,7 @@ class swmp {
 
     this.prepareSharedEventsInit();
 
-  }
+  } //END CONSTRUCTOR
 
   nextMedia() {
     if (this.playlistLocation === this.playlist.length -1) {
@@ -435,8 +408,6 @@ class swmp {
       }
     }
 
-
-
     this.windowTitlebar.appendChild(this.windowTitle);
     this.windowContainer.appendChild(this.windowTitlebar);
 
@@ -529,7 +500,6 @@ class swmp {
     // Create Progress/Seeker Container
     this.seekContain = document.createElement('span');
     this.seekContain.setAttribute('class', 'swmp swmp-seek-container');
-    //this.seekContain.textContent = 'seek-cntnr';
     this.controls.appendChild(this.seekContain);
 
     // Create Progress Bar
@@ -745,166 +715,92 @@ class swmp {
 
       this.settingsContainer.appendChild(this.themeSelector);
 
-      
-        // Autoplay Settings
-      this.autoplayLabel = document.createElement('label');
-      this.autoplayLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-autoplay-label');
-      this.autoplayLabel.textContent = 'Autoplay';
-      this.autoplayCheck = document.createElement('input');
-      this.autoplayCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-autoplay-input');
-      this.autoplayCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpAutoplay == 'true') {
-        this.autoplayCheck.setAttribute('checked', 'checked');
-      }
-      this.autoplayCheck.addEventListener('change', (event) => {
-        if (this.autoplayCheck.checked == true) {
-          this.autoplayCheck.setAttribute('checked', 'checked');
-          localStorage.swmpAutoplay = 'true';
-          swmpConfig.autoplay = 'true';
-        } else {
-          this.autoplayCheck.removeAttribute('checked');
-          localStorage.swmpAutoplay = 'false';
-          swmpConfig.autoplay = 'false';
+        // Defines true/false checkboxes.
+      this.settingsCheckboxContent = {
+        autoplay: { 
+          'label': 'Autoplay',
+          'desc': 'Enable/Disable Autoplaying of media.'
+        },
+        loop: { 
+          'label': 'Loop',
+          'desc': 'Enable/Disable Looping of media.'
+        },
+        allowMultiple: { 
+          'label': 'Multi',
+          'desc': 'Disabled will remove existing players and open new.'
+        },
+        volumeScroll: { 
+          'label': 'Volume Scrolling',
+          'desc': 'Enabled will allow using scroll wheel on player to change volume.'
+        },
+        downloadAttribute: { 
+          'label': 'Override Download',
+          'desc': 'Enable to make [download=""] links launch player instead.'
+        },
+        doubleclickMaximize: { 
+          'label': 'Doubleclick Maximize', 
+          'desc': 'When enabled replaces the default behavior from doubleclick fullscreen on video to instead maximize the video size.'
         }
-      });
-      this.autoplayLabel.appendChild(this.autoplayCheck);
-      this.settingsContainer.appendChild(this.autoplayLabel);
-
-        // Loop Settings
-      this.loopLabel = document.createElement('label');
-      this.loopLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-loop-label');
-      this.loopLabel.textContent = 'Loop';
-      this.loopCheck = document.createElement('input');
-      this.loopCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-loop-input');
-      this.loopCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpLoop == 'true') {
-        this.loopCheck.setAttribute('checked', 'checked');
       }
-      this.loopCheck.addEventListener('change', (event) => {
-        if (this.loopCheck.checked == true) {
-          this.loopCheck.setAttribute('checked', 'checked');
-          if (this.type == 'video' || this.type == 'audio') {
-            this.player.setAttribute('loop', 'true');
-          } else if (this.type == 'youtube') {
-            // Youtube Loop
+      this.checkbox = [];
+      this.createToggle = function(key, obj) {
+          // Label
+        this.checkbox[`${key}Label`] = document.createElement('label');
+        this.checkbox[`${key}Label`].setAttribute('class', `swmp swmp-settings swmp-label swmp-${key}-label`);
+        this.checkbox[`${key}Label`].textContent = `${obj['label']}`;
+        this.checkbox[`${key}Label`].setAttribute('title', `${obj['desc']}`);
+          // Checkbox
+        this.checkbox[`${key}Check`] = document.createElement('input');
+        this.checkbox[`${key}Check`].setAttribute('class', `swmp swmp-settings swmp-input swmp-${key}-input`);
+        this.checkbox[`${key}Check`].setAttribute('type', 'checkbox');
+          // Initialize value
+        if (localStorage[`swmp${upperFirst(key)}`] == 'true') {
+          this.checkbox[`${key}Check`].setAttribute('checked', 'checked');
+        }
+          // Event listener for true/false
+        this.checkbox[`${key}Check`].addEventListener('change', (event) => {
+          if (this.checkbox[`${key}Check`].checked == true) {
+            //SPECIFIC ACTIONS
+            //LOOP
+            if (key == 'loop') {
+              if (this.type == 'video' || this.type == 'audio') {
+                this.player.setAttribute('loop', 'true');
+              } else if (this.type == 'youtube') {
+              // Youtube Loop
+              }
+            }
+            //END SPECIFIC
+            this.checkbox[`${key}Check`].setAttribute('checked', 'checked');
+            localStorage.setItem(`swmp${upperFirst(key)}`, 'true');
+            swmpConfig[`${key}`] = 'true';
+          } else {
+            //SPECIFIC ACTIONS
+            //LOOP
+            if (key == 'loop') {
+              if (this.type == 'video' || this.type == 'audio') {
+                this.player.removeAttribute('loop');
+              } else if (this.type == 'youtube') {
+                // Youtube Loop
+              }
+            }
+            //END SPECIFIC
+
+            this.checkbox[`${key}Check`].removeAttribute('checked');
+            localStorage.setItem(`swmp${upperFirst(key)}`, 'false');
+            swmpConfig[`${key}`] = 'false';
           }
-          localStorage.swmpLoop = 'true';
-          swmpConfig.loop = 'true';
-        } else {
-          this.loopCheck.removeAttribute('checked');
-          if (this.type == 'video' || this.type == 'audio') {
-            this.player.removeAttribute('loop');
-          } else if (this.type == 'youtube') {
-            // Youtube Loop
-          }
-          localStorage.swmpLoop = 'false';
-          swmpConfig.loop = 'false';
-        }
-      });
-      this.loopLabel.appendChild(this.loopCheck);
-      this.settingsContainer.appendChild(this.loopLabel);
-      
-        // Multiple Players Settings
-      this.multiLabel = document.createElement('label');
-      this.multiLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-multi-label');
-      this.multiLabel.textContent = 'Multi';
-      this.multiCheck = document.createElement('input');
-      this.multiCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-multi-input');
-      this.multiCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpAllowMultiple == 'true') {
-        this.multiCheck.setAttribute('checked', 'checked');
+        });
+
+        // Put Checkbox inside Label
+        this.checkbox[`${key}Label`].appendChild(this.checkbox[`${key}Check`]);
+        // Add to settings container
+        this.settingsContainer.appendChild(this.checkbox[`${key}Label`]);
       }
-      this.multiCheck.addEventListener('change', (event) => {
-        if (this.multiCheck.checked == true) {
-          this.multiCheck.setAttribute('checked', 'checked');
-          localStorage.swmpAllowMultiple = 'true';
-          swmpConfig.allowMultiple = 'true';
-        } else {
-          this.multiCheck.removeAttribute('checked');
-          localStorage.swmpAllowMultiple = 'false';
-          swmpConfig.allowMultiple = 'false';
-        }
+
+      // Create the toggles
+      Object.entries(this.settingsCheckboxContent).forEach( ([item, value]) => {
+        this.createToggle(item, value);
       });
-      this.multiLabel.appendChild(this.multiCheck);
-      this.settingsContainer.appendChild(this.multiLabel);
-      
-      this.br = document.createElement('br');
-      this.settingsContainer.appendChild(this.br);
-      
-        // Volume Scroll Settings
-      this.volumeScrollLabel = document.createElement('label');
-      this.volumeScrollLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-volumescroll-label');
-      this.volumeScrollLabel.textContent = 'Volume Scroll';
-      this.volumeScrollCheck = document.createElement('input');
-      this.volumeScrollCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-volumescroll-input');
-      this.volumeScrollCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpVolumeScroll == 'true') {
-        this.volumeScrollCheck.setAttribute('checked', 'checked');
-      }
-      this.volumeScrollCheck.addEventListener('change', (event) => {
-        if (this.volumeScrollCheck.checked == true) {
-          this.volumeScrollCheck.setAttribute('checked', 'checked');
-          localStorage.swmpVolumeScroll = 'true';
-          swmpConfig.volumeScroll = 'true';
-        } else {
-          this.volumeScrollCheck.removeAttribute('checked');
-          localStorage.swmpVolumeScroll = 'false';
-          swmpConfig.volumeScroll = 'false';
-        }
-      });
-      this.volumeScrollLabel.appendChild(this.volumeScrollCheck);
-      this.settingsContainer.appendChild(this.volumeScrollLabel);
-
-        // Override Download link Attribute Settings
-      this.downloadAttributeLabel = document.createElement('label');
-      this.downloadAttributeLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-downloadattribute-label');
-      this.downloadAttributeLabel.textContent = 'Override Download';
-      this.downloadAttributeCheck = document.createElement('input');
-      this.downloadAttributeCheck.setAttribute('class', 'swmp swmp-settings swmp-input swmp-downloadattribute-input');
-      this.downloadAttributeCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpDownloadAttribute == 'true') {
-        this.downloadAttributeCheck.setAttribute('checked', 'checked');
-      }
-      this.downloadAttributeCheck.addEventListener('change', (event) => {
-        if (this.downloadAttributeCheck.checked == true) {
-          this.downloadAttributeCheck.setAttribute('checked', 'checked');
-          localStorage.swmpDownloadAttribute = 'true';
-          swmpConfig.downloadAttribute = 'true';
-        } else {
-          this.downloadAttributeCheck.removeAttribute('checked');
-          localStorage.swmpDownloadAttribute = 'false';
-          swmpConfig.downloadAttribute = 'false';
-        }
-      });
-      this.downloadAttributeLabel.appendChild(this.downloadAttributeCheck);
-      this.settingsContainer.appendChild(this.downloadAttributeLabel);
-
-
-        // Replace doubleclick fullscreen with doubleclick maximize
-      this.doubleclickMaximizeLabel = document.createElement('label');
-      this.doubleclickMaximizeLabel.setAttribute('class', 'swmp swmp-settings swmp-label swmp-doubleclickmaximize-label');
-      this.doubleclickMaximizeLabel.textContent = 'Doubleclick Maximize';
-      this.doubleclickMaximizeCheck = document.createElement('input');
-      this.doubleclickMaximizeCheck.setAttribute('class', 'swmp swmp-settings swmp-label swmp-doubleclickmaximize-input');
-      this.doubleclickMaximizeCheck.setAttribute('type', 'checkbox');
-      if (localStorage.swmpDoubleclickMaximize == 'true') {
-        this.doubleclickMaximizeCheck.setAttribute('checked', 'checked');
-      }
-      this.doubleclickMaximizeCheck.addEventListener('change', (event) => {
-        if (this.doubleclickMaximizeCheck.checked == true) {
-          this.doubleclickMaximizeCheck.setAttribute('checked', 'checked');
-          localStorage.swmpDoubleclickMaximize = 'true';
-          swmpConfig.doubleclickMaximize = 'true';
-        } else {
-          this.doubleclickMaximizeCheck.removeAttribute('checked');
-          localStorage.swmpDoubleclickMaximize = 'false';
-          swmpConfig.doubleclickMaximize = 'false';
-        }
-      });
-      this.doubleclickMaximizeLabel.appendChild(this.doubleclickMaximizeCheck);
-      this.settingsContainer.appendChild(this.doubleclickMaximizeLabel);
-
-
 
       this.container.appendChild(this.settingsContainer);
 
@@ -1047,7 +943,7 @@ class swmp {
         if (event.source === self.ytplayer.getIframe().contentWindow) {
             var data = JSON.parse(event.data);
             //console.log(data);
-
+            
               // Dispatch Volume and Mute Event -- These are sent together by iframe.
             if (data.event === "infoDelivery" && data.info && data.info.volume) {
               //console.log(data.info.volume);
@@ -1100,8 +996,6 @@ class swmp {
         'onReady': this.onPlayerReady
       }
     });
-    
-    //console.log(this.ytplayer);
 
     this.playerContainer = document.createElement('div');
     this.playerContainer.setAttribute('class', 'swmp-player-container');
@@ -1376,8 +1270,9 @@ class swmp {
     });
 
     this.container.addEventListener('keydown', event => {
+      event.stopPropagation();
+      event.preventDefault();
       if (event.repeat) { return; } // Don't spam
-
       switch(event.key) { 
         case ' ': //Space
           this.togglePlay();
@@ -1410,9 +1305,6 @@ class swmp {
         default:
           return;
       }
-
-      event.preventDefault();
-
     }, true);
 
     this.container.addEventListener('fullscreenchange', event => {
