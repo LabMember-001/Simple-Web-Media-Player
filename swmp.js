@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.4.9
+// @version       1.4.10
 
 // @grant         none
 // @run-at        document-end
@@ -46,10 +46,10 @@ console.log('Loading IB Media Player.');
 /*                                                          */
 /*                                                          */
 
-/*    == BOARD SUPPORT == 
+/*    == BOARD SUPPORT ==
 // Script will alter behavior on different imageboard backends
 // When adding custom board scripts, alter board behavior on bottom of the script. You'll need some knowledge on JS.
-// In most cases, simply adding an @match to the top of this script to turn it on for that domain will work 
+// In most cases, simply adding an @match to the top of this script to turn it on for that domain will work
 // as it captures all link presses and checks for webm.
 // If you want more compatability, check the issue tracker for existing requests and if there are none, you may request help.
 */
@@ -85,7 +85,7 @@ console.log('Loading IB Media Player.');
 // Kusaba
 */
 
-/*  == Script Specific Bugs == 
+/*  == Script Specific Bugs ==
 // - Vichan shows original title when clicked on video thumb, but not link.
 // - Doesnt grab titles on Fuuka, TinyIB, Wakaba, FoolFuuka
 //
@@ -106,21 +106,21 @@ var currentUrl = window.location.href;
   // Board Types - probably temporary.
 var swmpBoards = {
   fourchan: // For title support, otherwise works well without adding here.
-      ['https:\/\/*..*(4chan|4channel).org\/*'], 
+      ['https:\/\/*..*(4chan|4channel).org\/*'],
   vichan:  // For Title and thumbnail click support. Not great without due to thumbnails.
-      ['https:\/\/*..*(smuglo.li|smugloli.net)\/*', 
+      ['https:\/\/*..*(smuglo.li|smugloli.net)\/*',
        'https:\/\/*..*2kind.moe\/*',
        'https:\/\/*..*kissu.moe\/*',
        'https:\/\/*..*sushigirl.us\/*',
        'https:\/\/*..*uboachan.net\/*'],
   tinyib: // Title support not written, otherwise works well without adding here.
-      ['https:\/\/*..*1chan.net\/*'], 
+      ['https:\/\/*..*1chan.net\/*'],
   wakaba: // Title support not written, otherwise works well without adding here.
-      ['https:\/\/*..*otterchat.net\/*'], 
+      ['https:\/\/*..*otterchat.net\/*'],
   lynxchan: // Title support not written, otherwise works well without adding here.
-      ['https:\/\/*..*anon.cafe\/*'], 
+      ['https:\/\/*..*anon.cafe\/*'],
   jschan: // Title support not written. Jschan installations *must* be added here to work properly.
-      ['https:\/\/*..*fatchan.org\/*'] 
+      ['https:\/\/*..*fatchan.org\/*']
 }
 
   // regex to check the backend script of current domain
@@ -133,10 +133,12 @@ Object.keys(swmpBoards).forEach(script => {
   });
 });
 
-console.log(backendScript);
+if (backendScript.length != 0) {
+  console.log(backendScript);
+}
 
 
-  // This configuration variable can be overwritten wherever you want later 
+  // This configuration variable can be overwritten wherever you want later
   // on as you wish or add your own site variables for user configuration.
 var swmpConfig = {
   autoplay: 'true', // Autoplay media when launched by SWMP.
@@ -204,7 +206,7 @@ storageValues.forEach( (item) => {
 if (!document.getElementById('swmp-stylesheet')) { // Don't bother injecting style on demo page.
   var swmpStyle = document.createElement('style');
   swmpStyle.setAttribute('id', 'swmp-stylesheet');
-  swmpStyle.innerHTML = `div.swmp,div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-container-border:#000;--swmp-controls-background:var(--swmp-background);--swmp-button-background:var(--swmp-background);--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000}.swmp *,div.swmp.swmp-container{font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;line-height:1;outline:0;color:var(--swmp-text-color)}div.swmp iframe,div.swmp video{max-width:500px;max-height:500px;width:auto;height:auto;margin:auto}.swmp *,div.swmp.swmp-container,select.swmp.swmp-selector{color:var(--swmp-text-color)}div.swmp,div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *,div.swmp.swmp-theme-winxp,div.swmp.swmp-theme-winxp *{--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000}.swmp *{background:0 0;border:0;margin:0;padding:0;height:unset;width:unset}div.swmp{--swmp-background:#e6e6e6;--swmp-container-border-radius:0;--swmp-container-box-shadow:none;--swmp-player-container-background:#000;--swmp-player-container-border-left:#000;--swmp-player-container-border-top:#000;--swmp-player-container-border-right:#000;--swmp-player-container-border-bottom:#000;--swmp-settings-background:var(--swmp-controls-background);--swmp-text-color:#000;--swmp-button-mask-color:#000;--swmp-seek-background:var(--swmp-controls-background);--swmp-seek-progress-color:lightgrey;--swmp-seek-border-left:darkgray;--swmp-seek-border-top:darkgray;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:var(--swmp-controls-background);--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#fff;--swmp-btn-border-radius:0;--swmp-btn-border-left:#fff;--swmp-btn-border-top:#fff;--swmp-btn-border-right-active:#fff;--swmp-btn-border-bottom-active:#fff}div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-background:#333;--swmp-text-color:#888;--swmp-button-mask-color:#888;--swmp-seek-progress-color:#555;--swmp-seek-border-left:#1a1a1a;--swmp-seek-border-top:#1a1a1a;--swmp-seek-border-right:#464646;--swmp-seek-border-bottom:#464646;--swmp-range-thumb-color:var(--swmp-background);--swmp-range-thumb-border-left:#777;--swmp-range-thumb-border-top:#777;--swmp-btn-border-left:#777;--swmp-btn-border-top:#777;--swmp-btn-border-right-active:#777;--swmp-btn-border-bottom-active:#777}div.swmp.swmp-theme-kurisu,div.swmp.swmp-theme-kurisu *{--swmp-background:#a44242;--swmp-text-color:#fff;--swmp-button-mask-color:#fff}div.swmp.swmp-container{position:relative;display:inline-flex;flex-direction:column;padding:2px;background:var(--swmp-background);border:1px solid var(--swmp-container-border);border-radius:var(--swmp-container-border-radius);z-index:100;overflow:hidden;min-width:320px;width:auto;box-shadow:var(--swmp-container-box-shadow)}div.swmp .swmp-player-container,div.swmp audio,div.swmp iframe,div.swmp video{background:var(--swmp-player-container-background)}div.swmp.swmp-window.swmp-window-container{display:flex;justify-content:space-between;padding-bottom:2px}div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container,div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container,div.swmp.swmp-minimized div.swmp-player-container{display:none}div.swmp.swmp-fullscreen div.swmp-player-container{display:block;width:100vw;height:100vh}span.swmp.swmp-window.swmp-window-titlebar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:none;user-select:none;position:relative;margin:auto;cursor:move;width:100%;text-align:center;display:block}span.swmp.swmp-window.swmp-window-title{display:block;max-width:260px;text-overflow:ellipsis;overflow:hidden;margin:auto auto -2px;line-height:1.5}span.swmp.swmp-window.swmp-window-buttons-contain{display:flex;flex:0 1 auto;margin-right:-2px}div.swmp .swmp-player-container{display:flex;position:relative;height:100%;border:1px solid;border-left-color:var(--swmp-player-container-border-left);border-top-color:var(--swmp-player-container-border-top);border-right-color:var(--swmp-player-container-border-right);border-bottom-color:var(--swmp-player-container-border-bottom)}div.swmp.swmp-audio div.swmp-player-container,div.swmp.swmp-fullscreen div.swmp-player-container{border:none}div.swmp.swmp-container.swmp-fullscreen{background:#000;position:unset!important;width:100%;height:auto;border-radius:0!important}.swmp.swmp-container.swmp-maximized{position:fixed!important;top:0!important;bottom:0!important;right:0!important;left:0!important;transition:.2s ease-out;border-radius:0!important}div.swmp.swmp-container.swmp-maximized audio,div.swmp.swmp-container.swmp-maximized iframe,div.swmp.swmp-container.swmp-maximized video{position:absolute;max-width:100%;max-height:100%;width:100%;height:100%;top:0;bottom:0;left:0;right:0}div.swmp.swmp-container.swmp-fullscreen audio,div.swmp.swmp-container.swmp-fullscreen iframe,div.swmp.swmp-container.swmp-fullscreen video{position:relative;width:100%;height:100%;max-width:100%;max-height:100%}div.swmp iframe{min-width:420px;min-height:236px;pointer-events:none}div.swmp audio{min-width:320px;min-height:40px}div.swmp.swmp-controls{bottom:0;left:0;background:var(--swmp-controls-background);width:100%;display:flex;flex-direction:column}div.swmp.swmp-settings-container{background:var(--swmp-settings-background);display:flex;flex-direction:column;align-items:flex-start}div.swmp.swmp-fullscreen div.swmp.swmp-controls{position:absolute;opacity:0;transition:opacity .5s ease-out}div.swmp.swmp-fullscreen.swmp-movingmouse div.swmp.swmp-controls{opacity:1;position:absolute;transition:none}div.swmp.swmp-container .swmp-player-container{cursor:none}div.swmp.swmp-movingmouse .swmp-player-container{cursor:unset}div.swmp.swmp-controls span.swmp-seek-container{display:flex;width:calc(100% - 6px);height:var(--swmp-seek-height);margin:auto;position:relative}div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);-webkit-appearance:none;background:#0000;padding:0;margin:0;height:var(--swmp-seek-height);position:absolute;z-index:1;cursor:pointer;-webkit-margin-top:-14px}input[type=range].swmp{background:0 0!important;border:0!important;outline:0!important}span.swmp input[type=range]::-webkit-slider-runnable-track{width:100%;height:8px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp input[type=range]::-moz-range-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp progress::-webkit-progress-bar{background:#0000}span.swmp progress::-webkit-progress-value{background:var(--swmp-seek-progress-color)}span.swmp progress::-moz-progress-bar{background:var(--swmp-seek-progress-color)}span.swmp input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:2px;border-radius:0;padding:4px 3px;background:#0000;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;margin-top:-6px;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-moz-range-thumb{appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:6px;border-radius:0;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-webkit-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]::-moz-range-progress{height:6px;background-color:#0000}span.swmp progress.swmp-volume{width:50px;position:absolute;height:6px;right:8px;border:none;bottom:7px;z-index:0;background:var(--swmp-seek-background)}span.swmp input.swmp-volume[type=range]{-webkit-appearance:none;background:#0000;padding:0;margin-left:2px;cursor:pointer;position:relative}span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{padding:4px 2px;width:2px}span.swmp input.swmp-volume[type=range]::-moz-range-thumb{padding:0 1px;width:1px}div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);height:8px;z-index:0;position:relative;background:var(--swmp-seek-background);border:none;margin:auto 0}span.swmp.swmp-row-bottom{display:flex;flex-direction:row;height:20px;margin-bottom:2px}div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom{padding-bottom:5px}span.swmp.swmp-buttons-container{height:100%}select.swmp.swmp-selector{-webkit-appearance:none;appearance:none;background:var(--swmp-button-background);border:1px solid var(--swmp-text-color);outline:0;border-radius:0;width:85px;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;text-indent:0}label.swmp.swmp-settings{display:inline-flex;flex-direction:row-reverse;line-height:1.2}input.swmp.swmp-settings{margin:-2px 0 0 4px;border:1px solid var(--swmp-text-color);appearance:none;-webkit-appearance:none;outline:0;width:14px;height:14px;background:var(--swmp-controls-background)}input.swmp.swmp-settings:checked{outline:5px inset var(--swmp-text-color);outline-offset:-8px}button.swmp.swmp-button{min-width:26px;height:100%;padding:0 4px;display:inline-block;cursor:pointer;margin:0 2px;color:var(--swmp-button-mask-color);background:var(--swmp-button-background);border:1px solid;border-radius:var(--swmp-btn-border-radius);border-bottom-color:var(--swmp-btn-border-bottom);border-right-color:var(--swmp-btn-border-right);border-top-color:var(--swmp-btn-border-top);border-left-color:var(--swmp-btn-border-left);filter:unset}button.swmp.swmp-button span{display:block;width:16px;height:16px;image-rendering:crisp-edges;image-rendering:pixelated;background-repeat:no-repeat;background-color:var(--swmp-button-mask-color);-webkit-mask-image:var(--image);mask-image:var(--image);-webkit-mask-size:16px;mask-size:16px;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}button.swmp.swmp-button:active span{transform:translateX(1px) translateY(1px)}span.swmp.swmp-window button{height:20px;min-width:22px;width:22px}button.swmp.swmp-button.swmp-playlist span{--image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAAAAAAAAAAAAAA16TeWAAAABHRSTlMARP/Eyy24XQAAAHxJREFUeJzN0MENgCAMBVBkHKdgHqdhCGLCBxMODsAIxomkLQca4h0OlBcaaGvMWsvRtvFxN5mCLQJ4ApwgMLwAlZA6bgIeQbtqSB0XoSUw4AixIxNQBImRBTh5hwC/UGkvP3PMT4+fqnLGQiO3EObmVNvjQNSoONgqWGt96g97WXTz3RYAAAAASUVORK5CYII=)}button.swmp.swmp-button.swmp-playlist.swmp-playlist-prev span{transform:rotate(180deg)}button.swmp.swmp-button.swmp-window-minimize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-maximize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANUlEQVQ4T2NkoBAwQvX/J9McRqobADOQkINgLsZwwagBDAyjYUCFMCCUAtHlqZcXSLUZrh4AU/cYEVH9Rd0AAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-close span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-playbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-playbutton.swmp-playing span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-stopbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC')}.swmp.swmp-timer-container,button.swmp.swmp-button.swmp-fullscreen{margin-left:auto}button.swmp.swmp-button.swmp-fullscreen span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC')}button.swmp.swmp-button.swmp-volume span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-min span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-volume.swmp-max span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-mute span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')}span.swmp.swmp-volume-container{display:flex;width:60px;height:100%;position:relative}span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range{width:50px;vertical-align:top;position:relative}button.swmp.swmp-button:active{border-bottom-color:var(--swmp-btn-border-bottom-active);border-right-color:var(--swmp-btn-border-right-active);border-top-color:var(--swmp-btn-border-top-active);border-left-color:var(--swmp-btn-border-left-active)}span.swmp.swmp-timer-container{display:inline-table;margin-right:5px;cursor:default}span.swmp.swmp-timer-container span.swmp.swmp-time{display:table-cell;vertical-align:bottom}#quote-preview{z-index:1}div.swmp.swmp-theme-modernity,div.swmp.swmp-theme-modernity *{--swmp-background:#222;--swmp-container-border:#222;--swmp-text-color:#eee;--swmp-button-mask-color:#eee;--swmp-controls-background:#222;--swmp-btn-border-left:#0000;--swmp-btn-border-top:#0000;--swmp-btn-border-right:#0000;--swmp-btn-border-bottom:#0000;--swmp-btn-border-left-active:#0000;--swmp-btn-border-top-active:#0000;--swmp-btn-border-right-active:#0000;--swmp-btn-border-bottom-active:#0000;--swmp-seek-background:#444;--swmp-seek-progress-color:#bbb;--swmp-seek-border-left:#444;--swmp-seek-border-top:#444;--swmp-seek-border-right:#444;--swmp-seek-border-bottom:#444;--swmp-container-box-shadow:0px 0px 10px #000;font-family:Arial;font-weight:700}div.swmp.swmp-theme-modernity input[type=range]::-moz-range-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:4px}div.swmp.swmp-theme-modernity input[type=range]::-webkit-slider-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:8px}div.swmp.swmp-theme-winxp,div.swmp.swmp-theme-winxp *{--swmp-background:#0253d2;--swmp-container-border:none;--swmp-container-border-radius:3px;--swmp-container-box-shadow:#00000052 0px 0px 1px 0px;--swmp-controls-background:#ece9d8;--swmp-button-background:#fff;--swmp-seek-background:#ddd;--swmp-seek-progress-color:#17b900;--swmp-seek-border-left:#a4a4a4;--swmp-seek-border-top:#a4a4a4;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:#fff;--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#3319e4;--swmp-btn-border-radius:3px;--swmp-btn-border-left:#2202ff;--swmp-btn-border-top:#2202ff;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#000;--swmp-btn-border-bottom-active:#000}div.swmp.swmp-theme-winxp .swmp-window-title{color:#fff;text-shadow:1px 1px #0f1089}div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-container{background:linear-gradient(180deg,#0684df,#0347c6 8%,#0240bb 40%,#0451c6 88%,#0253cc 93%,#0149cc 95%,#0230a4 100%)}div.swmp.swmp-theme-winxp button.swmp.swmp-button:hover{box-shadow:inset 0 0 2px 0 #ce700b}div.swmp.swmp-theme-winxp button.swmp.swmp-button:active{box-shadow:inset 0 0 2px 0 #074faa}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button{background:linear-gradient(#1690e8,#2969e3 8%,#0438bd 100%);box-shadow:none!important;border-color:#fff}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:hover{background:linear-gradient(#2295e8,#3674ec 8%,#0b3fc6 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:active{background:linear-gradient(#0c74bf,#144cb7 8%,#0438bd 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button span{background-color:#fff}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close{background:linear-gradient(#ea4646,#e65a5a 8%,#d22828 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:hover{background:linear-gradient(#ea5050,#e66a6a 8%,#db3434 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:active{background:linear-gradient(#d22b2b,#c33838 8%,#d22828 100%)}div.swmp.swmp-theme-winxp span.swmp input[type=range]::-moz-range-thumb{border:1px solid #000;border-radius:2px 2px 4px 4px!important;height:16px;width:10px;box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #4d85dd;background:linear-gradient(180deg,#a7c8d9 20%,#fff 20%,#fff 80%,#a7c8d9 80%)}div.swmp.swmp-theme-winxp span.swmp input[type=range]::-webkit-slider-thumb{border:1px solid #000;border-radius:2px 2px 4px 4px!important;height:18px;width:12px;box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #4d85dd;background:linear-gradient(180deg,#a7c8d9 20%,#fff 20%,#fff 80%,#a7c8d9 80%)}div.swmp.swmp-theme-winxp span.swmp input.swmp-volume[type=range]::-moz-range-thumb{width:6px}div.swmp.swmp-theme-winxp span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{width:10px}div.swmp.swmp-theme-winxp span.swmp input:hover[type=range]::-moz-range-thumb{background:linear-gradient(180deg,#d9cca7 20%,#fff 20%,#fff 80%,#d9cca7 80%);box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #e9967a}div.swmp.swmp-theme-winxp span.swmp input:hover[type=range]::-webkit-slider-thumb{background:linear-gradient(180deg,#d9cca7 20%,#fff 20%,#fff 80%,#d9cca7 80%);box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #e9967a}div.swmp.swmp-theme-winxp span.swmp input:active[type=range]::-moz-range-thumb{box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 orange;background:linear-gradient(180deg,orange 20%,#fff 20%,#fff 80%,#ff8c00 80%)}div.swmp.swmp-theme-winxp span.swmp input:active[type=range]::-webkit-slider-thumb{box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 orange;background:linear-gradient(180deg,orange 20%,#fff 20%,#fff 80%,#ff8c00 80%)}@media screen and (max-width:480px){div.swmp.swmp-container{top:5px!important;right:5px!important;left:5px!important;margin-bottom:10px}div.swmp.swmp-container.swmp-maximized{margin:0}div.swmp audio,div.swmp iframe,div.swmp video{max-width:100%!important;max-height:100%!important;min-width:unset;min-height:unset;width:100%;height:100%}span.swmp.swmp-volume-container{display:none}}`;
+  swmpStyle.innerHTML = `div.swmp,div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-container-border:#000;--swmp-controls-background:var(--swmp-background);--swmp-button-background:var(--swmp-background);--swmp-seek-height:30px;--swmp-seek-offset:10px;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000}.swmp *,div.swmp.swmp-container{font-family:-apple-system,BlinkMacSystemFont,URW Gothic,MS PGothic,Helvetica,sans-serif;font-size:11pt;text-indent:4px;letter-spacing:1px;line-height:1;outline:0;color:var(--swmp-text-color)}div.swmp iframe,div.swmp video{max-width:500px;max-height:500px;width:auto;height:auto;margin:auto}.swmp *,div.swmp.swmp-container,select.swmp.swmp-selector{color:var(--swmp-text-color)}div.swmp,div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *,div.swmp.swmp-theme-winxp,div.swmp.swmp-theme-winxp *{--swmp-range-thumb-border-right:#000;--swmp-range-thumb-border-bottom:#000}.swmp *{background:0 0;border:0;margin:0;padding:0;height:unset;width:unset;font-weight:400}div.swmp{--swmp-background:#e6e6e6;--swmp-container-border-radius:0;--swmp-container-box-shadow:none;--swmp-player-container-background:#000;--swmp-player-container-border-left:#000;--swmp-player-container-border-top:#000;--swmp-player-container-border-right:#000;--swmp-player-container-border-bottom:#000;--swmp-settings-background:var(--swmp-controls-background);--swmp-text-color:#000;--swmp-button-mask-color:#000;--swmp-seek-background:var(--swmp-controls-background);--swmp-seek-progress-color:lightgrey;--swmp-seek-border-left:darkgray;--swmp-seek-border-top:darkgray;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:var(--swmp-controls-background);--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#fff;--swmp-btn-border-radius:0;--swmp-btn-border-left:#fff;--swmp-btn-border-top:#fff;--swmp-btn-border-right-active:#fff;--swmp-btn-border-bottom-active:#fff}div.swmp.swmp-theme-dark,div.swmp.swmp-theme-dark *{--swmp-background:#333;--swmp-text-color:#888;--swmp-button-mask-color:#888;--swmp-seek-progress-color:#555;--swmp-seek-border-left:#1a1a1a;--swmp-seek-border-top:#1a1a1a;--swmp-seek-border-right:#464646;--swmp-seek-border-bottom:#464646;--swmp-range-thumb-color:var(--swmp-background);--swmp-range-thumb-border-left:#777;--swmp-range-thumb-border-top:#777;--swmp-btn-border-left:#777;--swmp-btn-border-top:#777;--swmp-btn-border-right-active:#777;--swmp-btn-border-bottom-active:#777}div.swmp.swmp-theme-kurisu,div.swmp.swmp-theme-kurisu *{--swmp-background:#a44242;--swmp-text-color:#fff;--swmp-button-mask-color:#fff}div.swmp.swmp-container{position:relative;display:inline-flex;flex-direction:column;padding:2px;background:var(--swmp-background);border:1px solid var(--swmp-container-border);border-radius:var(--swmp-container-border-radius);z-index:100;overflow:hidden;min-width:320px;width:auto;box-shadow:var(--swmp-container-box-shadow)}div.swmp .swmp-player-container,div.swmp audio,div.swmp iframe,div.swmp video{background:var(--swmp-player-container-background)}div.swmp.swmp-window.swmp-window-container{display:flex;justify-content:space-between;padding-bottom:2px}div.swmp.swmp-fullscreen div.swmp-settings.swmp-settings-container,div.swmp.swmp-fullscreen div.swmp-window.swmp-window-container,div.swmp.swmp-minimized div.swmp-player-container{display:none}div.swmp.swmp-fullscreen div.swmp-player-container{display:block;width:100vw;height:100vh}span.swmp.swmp-window.swmp-window-titlebar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:none;user-select:none;position:relative;margin:auto;cursor:move;width:100%;text-align:center;display:block}span.swmp.swmp-window.swmp-window-title{display:block;max-width:260px;text-overflow:ellipsis;overflow:hidden;margin:auto auto -2px;line-height:1.5}span.swmp.swmp-window.swmp-window-buttons-contain{display:flex;flex:0 1 auto;margin-right:-2px}div.swmp .swmp-player-container{display:flex;position:relative;height:100%;border:1px solid;border-left-color:var(--swmp-player-container-border-left);border-top-color:var(--swmp-player-container-border-top);border-right-color:var(--swmp-player-container-border-right);border-bottom-color:var(--swmp-player-container-border-bottom)}div.swmp.swmp-audio div.swmp-player-container,div.swmp.swmp-fullscreen div.swmp-player-container{border:none}div.swmp.swmp-container.swmp-fullscreen{background:#000;position:unset!important;width:100%;height:auto;border-radius:0!important}.swmp.swmp-container.swmp-maximized{position:fixed!important;top:0!important;bottom:0!important;right:0!important;left:0!important;transition:.2s ease-out;border-radius:0!important}div.swmp.swmp-container.swmp-maximized audio,div.swmp.swmp-container.swmp-maximized iframe,div.swmp.swmp-container.swmp-maximized video{position:absolute;max-width:100%;max-height:100%;width:100%;height:100%;top:0;bottom:0;left:0;right:0}div.swmp.swmp-container.swmp-fullscreen audio,div.swmp.swmp-container.swmp-fullscreen iframe,div.swmp.swmp-container.swmp-fullscreen video{position:relative;width:100%;height:100%;max-width:100%;max-height:100%}div.swmp iframe{min-width:420px;min-height:236px;pointer-events:none}div.swmp audio{min-width:320px;min-height:40px}div.swmp.swmp-controls{bottom:0;left:0;background:var(--swmp-controls-background);width:100%;display:flex;flex-direction:column}div.swmp.swmp-settings-container{background:var(--swmp-settings-background);display:flex;flex-direction:column;align-items:flex-start}div.swmp.swmp-fullscreen div.swmp.swmp-controls{position:absolute;opacity:0;transition:opacity .5s ease-out}div.swmp.swmp-fullscreen.swmp-movingmouse div.swmp.swmp-controls{opacity:1;position:absolute;transition:none}div.swmp.swmp-container .swmp-player-container{cursor:none}div.swmp.swmp-movingmouse .swmp-player-container{cursor:unset}div.swmp.swmp-controls span.swmp-seek-container{display:flex;width:calc(100% - 6px);height:var(--swmp-seek-height);margin:auto;position:relative}div.swmp.swmp-controls span.swmp-seek-container input.swmp.swmp-seeker{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);-webkit-appearance:none;background:#0000;padding:0;margin:0;height:var(--swmp-seek-height);position:absolute;z-index:1;cursor:pointer;-webkit-margin-top:-14px}input[type=range].swmp{background:0 0!important;border:0!important;outline:0!important}span.swmp input[type=range]::-webkit-slider-runnable-track{width:100%;height:8px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp input[type=range]::-moz-range-track{width:100%;height:6px;cursor:pointer;background:#0000;border-radius:0;border:1px solid #000;border-left-color:var(--swmp-seek-border-left);border-top-color:var(--swmp-seek-border-top);border-right-color:var(--swmp-seek-border-right);border-bottom-color:var(--swmp-seek-border-bottom)}span.swmp progress::-webkit-progress-bar{background:#0000}span.swmp progress::-webkit-progress-value{background:var(--swmp-seek-progress-color)}span.swmp progress::-moz-progress-bar{background:var(--swmp-seek-progress-color)}span.swmp input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:2px;border-radius:0;padding:4px 3px;background:#0000;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;margin-top:-6px;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-moz-range-thumb{appearance:none;border:4px solid var(--swmp-range-thumb-color);height:8px;width:6px;border-radius:0;background:linear-gradient(180deg,var(--swmp-seek-border-top) 10%,var(--swmp-seek-background) 10%,var(--swmp-seek-background) 90%,var(--swmp-seek-border-bottom) 90%);cursor:pointer;box-shadow:1px 1px 0 0 var(--swmp-range-thumb-border-bottom),-1px -1px 0 0 var(--swmp-range-thumb-border-top)}span.swmp input[type=range]::-webkit-range-progress{height:6px;background-color:#0000}span.swmp input[type=range]::-moz-range-progress{height:6px;background-color:#0000}span.swmp progress.swmp-volume{width:50px;position:absolute;height:6px;right:8px;border:none;bottom:7px;z-index:0;background:var(--swmp-seek-background)}span.swmp input.swmp-volume[type=range]{-webkit-appearance:none;background:#0000;padding:0;margin-left:2px;cursor:pointer;position:relative}span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{padding:4px 2px;width:2px}span.swmp input.swmp-volume[type=range]::-moz-range-thumb{padding:0 1px;width:1px}div.swmp.swmp-controls span.swmp-seek-container progress.swmp-progress{width:calc(100% - var(--swmp-seek-offset));left:calc(var(--swmp-seek-offset)/ 2);height:8px;z-index:0;position:relative;background:var(--swmp-seek-background);border:none;margin:auto 0}span.swmp.swmp-row-bottom{display:flex;flex-direction:row;height:20px;margin-bottom:2px}div.swmp.swmp-fullscreen span.swmp.swmp-row-bottom{padding-bottom:5px}span.swmp.swmp-buttons-container{height:100%}select.swmp.swmp-selector{-webkit-appearance:none;appearance:none;background:var(--swmp-button-background);border:1px solid var(--swmp-text-color);outline:0;border-radius:0;width:85px;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;text-indent:0}label.swmp.swmp-settings{display:inline-flex;flex-direction:row-reverse;line-height:1.2}input.swmp.swmp-settings{margin:-2px 0 0 4px;border:1px solid var(--swmp-text-color);appearance:none;-webkit-appearance:none;outline:0;width:14px;height:14px;background:var(--swmp-controls-background)}input.swmp.swmp-settings:checked{outline:5px inset var(--swmp-text-color);outline-offset:-8px}button.swmp.swmp-button{min-width:26px;height:100%;padding:0 4px;display:inline-block;cursor:pointer;margin:0 2px;color:var(--swmp-button-mask-color);background:var(--swmp-button-background);border:1px solid;border-radius:var(--swmp-btn-border-radius);border-bottom-color:var(--swmp-btn-border-bottom);border-right-color:var(--swmp-btn-border-right);border-top-color:var(--swmp-btn-border-top);border-left-color:var(--swmp-btn-border-left);filter:unset}button.swmp.swmp-button span{display:block;width:16px;height:16px;image-rendering:crisp-edges;image-rendering:pixelated;background-repeat:no-repeat;background-color:var(--swmp-button-mask-color);-webkit-mask-image:var(--image);mask-image:var(--image);-webkit-mask-size:16px;mask-size:16px;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}button.swmp.swmp-button:active span{transform:translateX(1px) translateY(1px)}span.swmp.swmp-window button{height:20px;min-width:22px;width:22px}button.swmp.swmp-button.swmp-playlist span{--image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAAAAAAAAAAAAAA16TeWAAAABHRSTlMARP/Eyy24XQAAAHxJREFUeJzN0MENgCAMBVBkHKdgHqdhCGLCBxMODsAIxomkLQca4h0OlBcaaGvMWsvRtvFxN5mCLQJ4ApwgMLwAlZA6bgIeQbtqSB0XoSUw4AixIxNQBImRBTh5hwC/UGkvP3PMT4+fqnLGQiO3EObmVNvjQNSoONgqWGt96g97WXTz3RYAAAAASUVORK5CYII=)}button.swmp.swmp-button.swmp-playlist.swmp-playlist-prev span{transform:rotate(180deg)}button.swmp.swmp-button.swmp-window-minimize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYR+3V0Q0AMAQFQPYfuv7apAPg4yzguQQZw5XD/UMAAgQIECCwTuA0fcc7+C8gAIFxgaYleG3W3QECBAgQaBcokVQGIRA6KiEAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-maximize span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANUlEQVQ4T2NkoBAwQvX/J9McRqobADOQkINgLsZwwagBDAyjYUCFMCCUAtHlqZcXSLUZrh4AU/cYEVH9Rd0AAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-window-close span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVRoge2Y2woCMRBD5699dB79a7ViQfDWaZNMFybQR5NzVndhNatUKpUjxe/nctT+Vn59HsYItf+1nDFC7f9Ujhyh9v8qR4xQ+0fKV0bY/XYKDERHIvDtnGcEWBIyeIaEHB4pkQaPkEiHnwXxyc9QE/0mtrjyCgkZfA9SQg7fg5BIg+9ZkUiH75mR2Aa+xS0uwHyzC8Vt/ieULuG2fhOnSfgA3LYSDoBOk2DAyySi8O1RyXyzo8P3pEuswKdLIODTJJDwcgkGvFQiMhKBV/UPj0yXC/r/jiyXC/q/jsDKBf1vI/ByQf8jbtz/bdj9lUqlAs4N+1iFrUSwCpcAAAAASUVORK5CYII=');margin-top:2px;-webkit-mask-size:12px;mask-size:12px}button.swmp.swmp-button.swmp-playbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA8klEQVRoQ+3aMQ6DMAyF4XDycjCGVmrPBRmapVLkJLafn1GRMiHB/+EpEVtJfm3J+8vtAO86kb2uI8tkfidwfsM/WSA9QBsAPUQC0ENGAbSQWQAdZBVAA9ECwiFWgDCINQAO8QLAIN4AdwgK4AZBA8whUQAzSDRADWEBLEPYANMQVsAwhB0gQrIAupA/AHR60d2bs09APFRgBYjhbfJsgOFwNsB0OAtgOTwaoA6PApiFowHm4SiAW7g3wD3cCwALtwbAw60AYeFaQHj4KoAmfBZAFz4KoA2XAPThPcCz3njU9QJtFdWvud2vBuovgn5A+glcJSF8MQrukbIAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-playbutton.swmp-playing span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAtUlEQVRoQ+2Y2w6AIAxD5f8/2kuCRgiJbdjDMMfnxUE5o9WyLf6Uxde//W4D+8SJuGKE9OqbhrxUFCGkFxt4qQ1CInpX2SMWCIGQwc1ILBACIRBqFQixd1HUkF4MMUMs8taVESVGupFGDZpACIROBTCy5tOsMhGiijiMIb2IEkQJkTeihCAUUUIQ6S4hShAliBKVAZwYJzbuTn7ufoiFExs04cRpndg4xRyl7uDlWPWE+aTbwAFy3FQxPpmarQAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-stopbutton span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUUlEQVRYR+3Xuw0AIAwD0WQC2H9LJuDXICFqm+KywEWvc4b50tyP7x7oIpE6O221bgEeQAABBBBAAAEEEEAAAQTsAkW0jPYqei0jUf9k7ON0AGFsNSFlb3+JAAAAAElFTkSuQmCC')}.swmp.swmp-timer-container,button.swmp.swmp-button.swmp-fullscreen{margin-left:auto}button.swmp.swmp-button.swmp-fullscreen span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVQ4T2NkoBAwQvX/x2EOQXmCCghZgG4AjE/IYzAXMw4jAwj5Gac8sYFG0AB4qBLplOEYCwOfF4gMfExlADQ3GBE+X9RsAAAAAElFTkSuQmCC')}button.swmp.swmp-button.swmp-volume span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAG1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp4cHsAAAACHRSTlMA1WZ/JZz0Rme5O54AAACGSURBVDjL5ZIxCoAwDEWjVXDs6OjUWXDxRl6hqyL2H9uqKKL5oKtmzIOXNvkiP6qc9LOSAAciAoiIAAcdRNEGmrtoBQb1TbSCFt3eK3CUSAr0KliUlQbEA1YFCTCqID47qMAAwztAVXS4x2RfffC8kusSw7O100Px0/Iw0PjwwPGI0lB/s2bRbW7duVgj2wAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-min span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAd0lEQVR42u2Xuw2AMAwFr41YhKmyVyp2YhZ6pwEJqJDgmRTv3PukV/gDxpjBKDRl+5mV0LWvbIRKUGjEXrJoZIIjGongHI1AcI3mc8E9mpeCeFwWWGCBBTqBfNj9MK4TFk7CykxZ+glnS8LhlXI6Akws/gCMGZAO8wpmVouK9vcAAAAASUVORK5CYII=')}button.swmp.swmp-button.swmp-volume.swmp-max span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEVHcEwAAAAAAAAAAAAAAADTrAj/AAAABXRSTlMA/4hD1KmiQHMAAACwSURBVDjL1ZPBDYMwDEV/nQzAIwwAVQdoNoD9l+qhgAyKW/VGfbHkp/wk9rf0//EI6sZ8Kqx5oj/U07IdgKcHlXfOcNAyVpCA4oU2oAqDF9pB9pcYK7hLAkYnBJKMUZqgc0IgaaJIFYp0Yw/JYJAy9CegBUZZA1SYlWA4gwxdExgUCWiA/mfQlgovj56bog/6loRN/Nz2w6CSG1Q82tgMoX1iw8UWDU0dr8HXxblwvAAGdxy1HX87LAAAAABJRU5ErkJggg==')}button.swmp.swmp-button.swmp-volume.swmp-mute span{--image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMACZko0v9e9AufnFf4OQAAAJdJREFUeJzlkrsNgDAMRCMhL8BO6WluBmZha2LZDvmdRA1uUHi+S/xJ6Uexk/9bJuAEMcIabBmQQNLknFBw2KERFyMFcEEFalROMAlCaUYFWKoLBDU81wUdkCobgGbHDT0Q/06gSOJJA3hqeKmgd7BX0TpY5V2v2ibO3bW2L+YRg5on6KOtRT9AzdIy2PrwheMrmi4GPhk3sCZY/9usUnQAAAAASUVORK5CYII=')}span.swmp.swmp-volume-container{display:flex;width:60px;height:100%;position:relative}span.swmp.swmp-volume-container input.swmp.swmp-volume.swmp-range{width:50px;vertical-align:top;position:relative}button.swmp.swmp-button:active{border-bottom-color:var(--swmp-btn-border-bottom-active);border-right-color:var(--swmp-btn-border-right-active);border-top-color:var(--swmp-btn-border-top-active);border-left-color:var(--swmp-btn-border-left-active)}span.swmp.swmp-timer-container{display:inline-table;margin-right:5px;cursor:default}span.swmp.swmp-timer-container span.swmp.swmp-time{display:table-cell;vertical-align:bottom}#quote-preview{z-index:1}div.swmp.swmp-theme-modernity,div.swmp.swmp-theme-modernity *{--swmp-background:#222;--swmp-container-border:#222;--swmp-text-color:#eee;--swmp-button-mask-color:#eee;--swmp-controls-background:#222;--swmp-btn-border-left:#0000;--swmp-btn-border-top:#0000;--swmp-btn-border-right:#0000;--swmp-btn-border-bottom:#0000;--swmp-btn-border-left-active:#0000;--swmp-btn-border-top-active:#0000;--swmp-btn-border-right-active:#0000;--swmp-btn-border-bottom-active:#0000;--swmp-seek-background:#444;--swmp-seek-progress-color:#bbb;--swmp-seek-border-left:#444;--swmp-seek-border-top:#444;--swmp-seek-border-right:#444;--swmp-seek-border-bottom:#444;--swmp-container-box-shadow:0px 0px 10px #000;font-family:Arial;font-weight:700}div.swmp.swmp-theme-modernity input[type=range]::-moz-range-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:4px}div.swmp.swmp-theme-modernity input[type=range]::-webkit-slider-thumb{border:none;height:8px;width:8px;background:#eee;box-shadow:none;border-radius:100%;padding:8px}div.swmp.swmp-theme-winxp,div.swmp.swmp-theme-winxp *{--swmp-background:#0253d2;--swmp-container-border:none;--swmp-container-border-radius:3px;--swmp-container-box-shadow:#00000052 0px 0px 1px 0px;--swmp-controls-background:#ece9d8;--swmp-button-background:#fff;--swmp-seek-background:#ddd;--swmp-seek-progress-color:#17b900;--swmp-seek-border-left:#a4a4a4;--swmp-seek-border-top:#a4a4a4;--swmp-seek-border-right:#fff;--swmp-seek-border-bottom:#fff;--swmp-range-thumb-color:#fff;--swmp-range-thumb-border-left:#fff;--swmp-range-thumb-border-top:#3319e4;--swmp-btn-border-radius:3px;--swmp-btn-border-left:#2202ff;--swmp-btn-border-top:#2202ff;--swmp-btn-border-right:#000;--swmp-btn-border-bottom:#000;--swmp-btn-border-left-active:#000;--swmp-btn-border-top-active:#000;--swmp-btn-border-right-active:#000;--swmp-btn-border-bottom-active:#000}div.swmp.swmp-theme-winxp .swmp-window-title{color:#fff;text-shadow:1px 1px #0f1089}div.swmp.swmp-theme-winxp .swmp.swmp-window.swmp-window-container{background:linear-gradient(180deg,#0684df,#0347c6 8%,#0240bb 40%,#0451c6 88%,#0253cc 93%,#0149cc 95%,#0230a4 100%)}div.swmp.swmp-theme-winxp button.swmp.swmp-button:hover{box-shadow:inset 0 0 2px 0 #ce700b}div.swmp.swmp-theme-winxp button.swmp.swmp-button:active{box-shadow:inset 0 0 2px 0 #074faa}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button{background:linear-gradient(#1690e8,#2969e3 8%,#0438bd 100%);box-shadow:none!important;border-color:#fff}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:hover{background:linear-gradient(#2295e8,#3674ec 8%,#0b3fc6 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button:active{background:linear-gradient(#0c74bf,#144cb7 8%,#0438bd 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button span{background-color:#fff}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close{background:linear-gradient(#ea4646,#e65a5a 8%,#d22828 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:hover{background:linear-gradient(#ea5050,#e66a6a 8%,#db3434 100%)}div.swmp.swmp-theme-winxp .swmp-window button.swmp-button.swmp-window-close:active{background:linear-gradient(#d22b2b,#c33838 8%,#d22828 100%)}div.swmp.swmp-theme-winxp span.swmp input[type=range]::-moz-range-thumb{border:1px solid #000;border-radius:2px 2px 4px 4px!important;height:16px;width:10px;box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #4d85dd;background:linear-gradient(180deg,#a7c8d9 20%,#fff 20%,#fff 80%,#a7c8d9 80%)}div.swmp.swmp-theme-winxp span.swmp input[type=range]::-webkit-slider-thumb{border:1px solid #000;border-radius:2px 2px 4px 4px!important;height:18px;width:12px;box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #4d85dd;background:linear-gradient(180deg,#a7c8d9 20%,#fff 20%,#fff 80%,#a7c8d9 80%)}div.swmp.swmp-theme-winxp span.swmp input.swmp-volume[type=range]::-moz-range-thumb{width:6px}div.swmp.swmp-theme-winxp span.swmp input.swmp-volume[type=range]::-webkit-slider-thumb{width:10px}div.swmp.swmp-theme-winxp span.swmp input:hover[type=range]::-moz-range-thumb{background:linear-gradient(180deg,#d9cca7 20%,#fff 20%,#fff 80%,#d9cca7 80%);box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #e9967a}div.swmp.swmp-theme-winxp span.swmp input:hover[type=range]::-webkit-slider-thumb{background:linear-gradient(180deg,#d9cca7 20%,#fff 20%,#fff 80%,#d9cca7 80%);box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 #e9967a}div.swmp.swmp-theme-winxp span.swmp input:active[type=range]::-moz-range-thumb{box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 orange;background:linear-gradient(180deg,orange 20%,#fff 20%,#fff 80%,#ff8c00 80%)}div.swmp.swmp-theme-winxp span.swmp input:active[type=range]::-webkit-slider-thumb{box-shadow:inset 1px 1px 0 0 #fff,inset -1px -1px 0 0 orange;background:linear-gradient(180deg,orange 20%,#fff 20%,#fff 80%,#ff8c00 80%)}@media screen and (max-width:480px){div.swmp.swmp-container{top:5px!important;right:5px!important;left:5px!important;margin-bottom:10px}div.swmp.swmp-container.swmp-maximized{margin:0}div.swmp audio,div.swmp iframe,div.swmp video{max-width:100%!important;max-height:100%!important;min-width:unset;min-height:unset;width:100%;height:100%}span.swmp.swmp-volume-container{display:none}}`;
   document.head.appendChild(swmpStyle);
 }
 
@@ -225,7 +227,7 @@ class swmp {
 
   constructor(obj) {
     this.name = 'Simple Web Media Player';
-    
+
     if (obj.id == undefined) {
     this.id = this.uuid();
     } else {
@@ -239,7 +241,7 @@ class swmp {
     this.autoplay = obj.autoplay; // Optional Autoplay
     this.loop = obj.loop; // Optional Loop
     this.windowed = obj.windowed; // Optional set false to disable windowed mode and place inline
-    
+
     this.defaultVolume = parseInt(swmpConfig.volume);
 
     this.playlistLocation = 0;
@@ -277,7 +279,7 @@ class swmp {
     // Prepare the media that's gonna play.
 
     if (this.type == 'video' || this.type == 'audio') {
-      // Check if browser can play formats, create audio or video tag and fill with source. 
+      // Check if browser can play formats, create audio or video tag and fill with source.
       this.preparePlayer();
     } else if (this.type == 'youtube') {
       // Load Youtube iframe.
@@ -341,7 +343,7 @@ class swmp {
     if (this.closeError != undefined) {
       this.closeError.remove();
     }
-    
+
     /*if (timeInterval != undefined) {
       clearInterval(timeInterval); //the yt timer is completely borken
     }*/
@@ -371,7 +373,7 @@ class swmp {
 
     if (this.type == 'youtube') {
       this.prepareYoutube();
-    } 
+    }
 
     if (this.type == 'video' || this.type == 'audio') {
       this.preparePlayer();
@@ -460,7 +462,7 @@ class swmp {
 
 
     // Disable Default Context Menu on Titlebar
-    this.windowTitlebar.addEventListener('contextmenu', function(evt) { 
+    this.windowTitlebar.addEventListener('contextmenu', function(evt) {
       evt.preventDefault();
     }, false);
     // Right Click Event
@@ -469,7 +471,7 @@ class swmp {
       switch (event.which) {
         case 3: //rightclick
         this.openSettings();
-          break;  
+          break;
       }
     });
 
@@ -485,7 +487,7 @@ class swmp {
     this.container.appendChild(this.controls);
 
     // Disable Default Context Menu on Controls
-    this.controls.addEventListener('contextmenu', function(evt) { 
+    this.controls.addEventListener('contextmenu', function(evt) {
       evt.preventDefault();
     }, false);
     // Right Click Event
@@ -493,7 +495,7 @@ class swmp {
       switch (event.which) {
         case 3: //rightclick
         this.openSettings();
-          break;  
+          break;
       }
     });
 
@@ -560,7 +562,7 @@ class swmp {
         console.log('Userscript: Can\'t send stop yet.');
         return;
       }
-      
+
       if (this.type == 'video' || this.type == 'audio') {
         this.player.pause();
         this.seeker.value = 0;
@@ -583,7 +585,7 @@ class swmp {
     if (this.playlist) {
       this.previousButton = document.createElement('button');
       this.previousButton.setAttribute('class', 'swmp swmp-button swmp-playlist swmp-playlist-prev');
-      this.previousButton.innerHTML = "<span></span>"; 
+      this.previousButton.innerHTML = "<span></span>";
       this.previousButton.addEventListener('click', event => {
         event.preventDefault();
         this.previousMedia();
@@ -592,7 +594,7 @@ class swmp {
 
       this.nextButton = document.createElement('button');
       this.nextButton.setAttribute('class', 'swmp swmp-button swmp-playlist');
-      this.nextButton.innerHTML = "<span></span>"; 
+      this.nextButton.innerHTML = "<span></span>";
       this.nextButton.addEventListener('click', event => {
         event.preventDefault();
         this.nextMedia();
@@ -664,7 +666,7 @@ class swmp {
       this.fullscreenbutton.innerHTML = "<span></span>"; // ▣
       this.fullscreenbutton.addEventListener("click", event => {
         event.preventDefault();
-        this.fullscreen(this.container);
+        this.toggleFullscreen();
       });
       this.bottomRow.appendChild(this.fullscreenbutton);
     }
@@ -717,28 +719,28 @@ class swmp {
 
         // Defines true/false checkboxes.
       this.settingsCheckboxContent = {
-        autoplay: { 
+        autoplay: {
           'label': 'Autoplay',
           'desc': 'Enable/Disable Autoplaying of media.'
         },
-        loop: { 
+        loop: {
           'label': 'Loop',
           'desc': 'Enable/Disable Looping of media.'
         },
-        allowMultiple: { 
+        allowMultiple: {
           'label': 'Multi',
           'desc': 'Disabled will remove existing players and open new.'
         },
-        volumeScroll: { 
+        volumeScroll: {
           'label': 'Volume Scrolling',
           'desc': 'Enabled will allow using scroll wheel on player to change volume.'
         },
-        downloadAttribute: { 
+        downloadAttribute: {
           'label': 'Override Download',
           'desc': 'Enable to make [download=""] links launch player instead.'
         },
-        doubleclickMaximize: { 
-          'label': 'Doubleclick Maximize', 
+        doubleclickMaximize: {
+          'label': 'Doubleclick Maximize',
           'desc': 'When enabled replaces the default behavior from doubleclick fullscreen on video to instead maximize the video size.'
         }
       }
@@ -845,7 +847,7 @@ class swmp {
     this.playerContainer = document.createElement('div');
     this.playerContainer.setAttribute('class', 'swmp swmp-player-container');
     this.container.appendChild(this.playerContainer);
-    
+
     // Put Player inside Video Container
     this.playerContainer.appendChild(this.player);
 
@@ -882,14 +884,14 @@ class swmp {
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
-      
+
       gmwindow.onYouTubeIframeAPIReady = (event) => {
         youtubeIsLoaded = true;
         console.log('SWMP: Firing YouTube Ready Event from inside PrepareYouTube()');
         this.makeYoutube();
       }
-      
-      
+
+
     } else {
       // API Already loaded, just make video.
       console.log('SWMP: YT API Already loaded, make vid');
@@ -943,7 +945,7 @@ class swmp {
         if (event.source === self.ytplayer.getIframe().contentWindow) {
             var data = JSON.parse(event.data);
             //console.log(data);
-            
+
               // Dispatch Volume and Mute Event -- These are sent together by iframe.
             if (data.event === "infoDelivery" && data.info && data.info.volume) {
               //console.log(data.info.volume);
@@ -975,7 +977,7 @@ class swmp {
     this.videogenerate.style.display = 'none';
     this.videogenerate.setAttribute('id', `ytplayer-${this.id}`);
     document.body.appendChild(this.videogenerate);
-    
+
     this.youtubeautoplay = (swmpConfig.autoplay=='true')?1:0;
     this.youtubeloop = (swmpConfig.loop=='true')?1:0;
 
@@ -1025,7 +1027,7 @@ class swmp {
       }
       if (this.ytplayer.getPlayerState() == 1) { // Playing
         this.ytplayer.pauseVideo();
-      } else { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
+      } else { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued
         this.ytplayer.playVideo();
         this.updateTime();
       }
@@ -1090,7 +1092,7 @@ class swmp {
           }
         }, 40);
 
-      } else if (this._playerState == 0 || this._playerState == -1 || this._playerState == 2 )  { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued 
+      } else if (this._playerState == 0 || this._playerState == -1 || this._playerState == 2 )  { // -1 unstarted, 0 ended, 1 playing, 2 Pause, 3 buffering, 5 video cued
         this.playbutton.classList.remove('swmp-playing');
       }
 
@@ -1167,11 +1169,11 @@ class swmp {
     }
 
     this.updateVolume = (firstrun = false) => {
-      
+
       if (this.loaded != true) {
         return;
       }
-      
+
       this.volumeButton.classList.remove('swmp-mute');
 
       if (firstrun == true) {
@@ -1208,7 +1210,7 @@ class swmp {
     this.volumeRange.oninput = (event) => {
       this.updateVolume();
     }
-   
+
 
   }
 
@@ -1233,7 +1235,7 @@ class swmp {
             if (vol > 1.0) {
               vol = 1.0;
             }
-            
+
           } else {
             var vol = this.player.volume - 0.04;
             if (vol < 0.0) {
@@ -1241,14 +1243,14 @@ class swmp {
             }
           }
           var newvolume = Math.floor(vol * 100);
-          
+
         } else if (this.type == 'youtube') {
           if (event.wheelDelta > 0) {
             var vol = this.ytplayer.getVolume() + 4;
             if (vol > 100) {
               vol = 100;
             }
-            
+
           } else {
             var vol = this.ytplayer.getVolume() - 4;
             if (vol < 0) {
@@ -1257,12 +1259,12 @@ class swmp {
           }
           var newvolume = vol;
         }
-      
+
         this.volumeProgress.setAttribute('value', newvolume);
         this.volumeProgress.value = newvolume;
         this.volumeRange.setAttribute('value', newvolume);
         this.volumeRange.value = newvolume;
-        this.updateVolume(); // Change icon blah blah      
+        this.updateVolume(); // Change icon blah blah
     }
 
     this.container.addEventListener('wheel', event => {
@@ -1273,12 +1275,12 @@ class swmp {
       event.stopPropagation();
       event.preventDefault();
       if (event.repeat) { return; } // Don't spam
-      switch(event.key) { 
+      switch(event.key) {
         case ' ': //Space
           this.togglePlay();
           break;
         case 'f':
-          this.fullscreen(this.container);
+          this.toggleFullscreen();
           break;
         case 'm':
           this.toggleMute();
@@ -1295,91 +1297,72 @@ class swmp {
         case 'ArrowLeft': //left
           this.seekBack();
           break;
-        case 'ArrowRight': //right 
+        case 'ArrowRight': //right
           this.seekForward();
           break;
         case 'Escape':
+          // assuming i wont need to call exitFullscreen, all browsers default to escape escaping, right?
           this.container.classList.remove('swmp-fullscreen');
           this.container.classList.remove('swmp-maximized');
-          break; 
+          break;
         default:
           return;
       }
     }, true);
 
-    this.container.addEventListener('fullscreenchange', event => {
-      const fullscreenElement =
-      document.fullscreenElement ||
+    this.isFullscreen = () => {
+      var full = document.fullscreenElement ||
       document.mozFullScreenElement ||
       document.webkitFullscreenElement ||
       document.msFullscreenElement;
+      if (full != undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
-      if (!fullscreenElement) {
+    this.container.addEventListener('fullscreenchange', event => {
+      if (this.isFullscreen() == true) {
+        this.container.classList.add('swmp-fullscreen');
+      } else {
         this.container.classList.remove('swmp-fullscreen');
         this.container.classList.remove('swmp-maximized');
-      } else {
-        this.container.classList.add('swmp-fullscreen');
       }
     });
 
-    this.fullscreen = (element) => {
+    this.container.onfullscreenerror = (event) => {
+      console.log('SWMP: Fullscreen error.');
+      this.toggleMaximize(); // maximize to cope.
+      this.container.classList.remove('swmp-fullscreen');
+      return;
+    };
 
-      const fullscreenElement =
-      document.fullscreenElement ||
-      document.mozFullScreenElement ||
-      document.webkitFullscreenElement ||
-      document.msFullscreenElement;
-
-      if (fullscreenElement) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          window.scrollTo({
-            top: this._scroll['y'],
-            left: this._scroll['x'],
-            behavior: 'auto'
-          });
-          document.webkitExitFullscreen(); //Safari sucks
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
+    this.requestFullscreen = (element) => {
+        try {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) {
+            this._scroll = {'x' : window.scrollX, 'y' : window.scrollY}
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          } else {
+            throw new Error('SWMP: Could not request fullscreen.');
+          }
+        } catch(e) { // This doesn't seem to work on firefox, not tested others. Requests can't be caught.
+                     // Also tried try on each individual scope, no luck.
+                     // onfullscreenerror is fine, but still means uncaught error in console log.
+            console.log('SWMP: Fullscreen request denied by browser.');
+            console.log(e);
+            this.toggleMaximize();
+            return;
         }
-        this.container.classList.remove('swmp-fullscreen');
-        this.container.classList.remove('swmp-maximized');
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullscreen) {
-          this._scroll = {'x' : window.scrollX, 'y' : window.scrollY}
-          element.webkitRequestFullscreen();
-        } else if (element.msRequestFullscreen) {
-          element.msRequestFullscreen();
-        } else {
-          // If no fullscreen on div is supported:
-          this.toggleMaximize();
-          return;
-        }
-        this.container.classList.add('swmp-fullscreen');
-      }
     }
 
-  }
-
-  toggleMaximize = (event) => {
-    if (event) {
-      event.preventDefault();
-    }
-
-    // Remove fullscreen if toggle off maximize in fullscreen
-    const fullscreenElement =
-    document.fullscreenElement ||
-    document.mozFullScreenElement ||
-    document.webkitFullscreenElement ||
-    document.msFullscreenElement;
-    if (fullscreenElement) {
+    this.exitFullscreen = () => {
       if (document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.mozCancelFullScreen) {
@@ -1396,6 +1379,26 @@ class swmp {
       }
       this.container.classList.remove('swmp-fullscreen');
       this.container.classList.remove('swmp-maximized');
+    }
+
+    this.toggleFullscreen = () => {
+      if (this.isFullscreen() == true) {
+        this.exitFullscreen();
+      } else {
+        this.requestFullscreen(this.container);
+      }
+    }
+
+  }
+
+  toggleMaximize = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    // Remove fullscreen if toggle off maximize in fullscreen
+    if (this.isFullscreen() == true) {
+      this.exitFullscreen();
       return;
     }
 
@@ -1413,13 +1416,13 @@ class swmp {
     });
 
     this.playerContainer.addEventListener('dblclick', (event) => {
-      
+
       if (swmpConfig.doubleclickMaximize == 'true') {
         this.toggleMaximize();
         return;
       }
 
-      this.fullscreen(this.container);
+      this.toggleFullscreen();
     });
 
   }
@@ -1444,7 +1447,7 @@ class swmp {
     this.player.addEventListener('loadedmetadata', (event) => {
       this.totalTimer.textContent = this.formatSeconds(this.player.duration);
     });
-    
+
     this.player.addEventListener('loadeddata', (event) => {
       // Video is loaded and can be played
       this.loaded = true;
@@ -1513,7 +1516,7 @@ class swmp {
       }
       this.player.currentTime = time;
       this.updateTimer();
-      
+
       this.seeker.value = Math.floor(time / max * this.seeker.max);
       this.seeker.setAttribute('value', this.seeker.value);
       this.progress.value = this.seeker.value;
@@ -1648,7 +1651,7 @@ class swmp {
           var r = (dt + Math.random()*16)%16 | 0;
           dt = Math.floor(dt/16);
           return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-      });   
+      });
       return uuid;
   }
 
@@ -1675,8 +1678,8 @@ class swmp {
     // Check filename in URL for Type / MIME.
     this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
     this.fileExt = url.split(/[#?&]/).slice(-2)[0].split('.').pop().trim();
-    
-    
+
+
     console.log(this.fileExt);
     this.fileExt = this.fileExt.toLowerCase();
 
@@ -1748,7 +1751,7 @@ class swmp {
 
        element.style.position = 'fixed';
        element.style.top = swmpConfig.positionTop + 'px';
-       
+
        if (swmpConfig.positionSide == 'right') {
          element.style.right = swmpConfig.positionOffset + 'px';
        } else {
@@ -1789,18 +1792,18 @@ class swmp {
 
     function mouseUp() {
       isMouseDown = false;
-      
-      
+
+
       if (swmpConfig.positionSide == 'right') {
         var currentleft = parseInt(element.style.left, 10);
         element.style.left = "unset";
         element.style.right = document.documentElement.clientWidth - currentleft - element.offsetWidth + "px";
       }
-      
+
     }
 
     function mouseMove(e) {
-      
+
 
       if (!isMouseDown) return;
 
@@ -1810,7 +1813,7 @@ class swmp {
 
       if (element.classList.contains('swmp-maximized') ) return;
       //element.classList.remove('swmp-maximized');
-      
+
       var newMouseX = e.clientX;
       var newMouseY = e.clientY;
 
@@ -1833,10 +1836,10 @@ class swmp {
         if ( newElmLeft > rightBarrier  ) {
           newElmLeft = rightBarrier;
 
-        } 
+        }
         if (newElmTop > bottomBarrier) {
           newElmTop = bottomBarrier;
-        } 
+        }
       }
 
       element.style.top = newElmTop + "px";
@@ -1844,8 +1847,8 @@ class swmp {
 
       if (element.offsetTop < 0) {
         element.style.top = "0px";
-      } 
-      
+      }
+
       if (swmpConfig.positionSide == 'right') {
         element.style.left = newElmLeft + "px";
         element.style.right = "unset";
@@ -1873,7 +1876,7 @@ document.addEventListener('click', (event) => {
 
     // If there are no links in sight, do nothing.
   if (event.target.tagName != 'A' && event.target.parentNode.tagName != 'A') {
-    return; 
+    return;
   }
     // Lets figure out which one is the link. Wont normally chain As inside As so... Sometimes image may be inside span inside A so lets do 3x.
   var clicked = false;
@@ -1889,13 +1892,13 @@ document.addEventListener('click', (event) => {
   if (swmpConfig.downloadAttribute == 'false' && clicked.hasAttribute('download')) {
     return;
   }
-  
+
   function getVideo() {
     if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
       return clicked.getAttribute('href');
     } else if (backendScript == 'vichan') {
       //console.log("Userscript - "+clicked.parentNode.querySelectorAll('p.fileinfo a') );
-      
+
       var allthelinks = clicked.parentNode.querySelectorAll('p.fileinfo a'); // Prevent capturing the (Hide) link on some installs
       var matchinglink = '';
       for (var i = 0; i < allthelinks.length ; i++) {
@@ -1903,31 +1906,31 @@ document.addEventListener('click', (event) => {
           matchinglink = allthelinks[i];
         }
       }
-      
+
       if (matchinglink == '') { // Kissu New UI (no thanks, but here it is anyways) <- This should also return normal href if not video?
         matchinglink = clicked;
       }
-      
+
       //console.log("Userscript - "+matchinglink);
       return matchinglink.getAttribute('href');
-      
+
     } else {
       return clicked.getAttribute('href');
     }
-    
+
   }
- 
-  function getFileNameFromUrl(link) { 
+
+  function getFileNameFromUrl(link) {
     if (backendScript == '' || backendScript == null || backendScript == undefined || backendScript == 'fourchan') {
       return link;
     } else if (backendScript == 'vichan') {
       return link;
     } else {
-      return link; 
+      return link;
     }
- 
+
   }
-  
+
   function getTitle(link) {
       if (backendScript == 'fourchan') {
         if (link.parentNode.querySelector('div.fileText a') != null) {
@@ -1940,7 +1943,7 @@ document.addEventListener('click', (event) => {
           return link.getAttribute('href');
         }
       }
-    
+
       if (backendScript == 'vichan') { // https://regex101.com/r/HivDYB/3
         let regex = new RegExp(`((?:[^\.|^\/|^\=|^\n|^\&])+(?:\.)(?:${swmpConfig.files}))(?:[^(\w)]|$)`, 'gmi'); // Tests for www.webmaster.com/test.webm domain too.
         var newlink = [...link.matchAll(regex)]; // Remove query behind *final filename* &title for old filename on vichan will stay.
@@ -2004,7 +2007,7 @@ document.addEventListener('click', (event) => {
     } else {
       clickedTitle = decodeURI(clickedFileName); //Change with other scripts later if it doesn't already contain the title.
     }
-   
+
     console.log("Userscript - URL: " + clicked.getAttribute('href') );
     console.log("Userscript - Filename: " + clickedFileName );
     console.log("Userscript - Title: " + clickedTitle);
@@ -2017,15 +2020,15 @@ document.addEventListener('click', (event) => {
     event.preventDefault();
     event.stopPropagation();
   }
-  
+
     // todo:
-    // toggleable check if has download attribute? 
+    // toggleable check if has download attribute?
     // add Q/E shortcut for prev/next <- yt bugs on fast move
 
-    // Check if ctrl-shift-click and scan all links for yt/media, get titles, 
+    // Check if ctrl-shift-click and scan all links for yt/media, get titles,
     // remove player.php + & tag from vichan to not get different url from link and thumb
     // strip duplicates, feed to playlist WITH title
-    // Guess I'll need the ability to push urls+title to the player, 
+    // Guess I'll need the ability to push urls+title to the player,
     // lets send ["url", "title"] also adapt title get on playlist to grab from playlist
 
 
@@ -2043,17 +2046,17 @@ document.addEventListener('click', (event) => {
       return false; //already exists, lets do nothing.
     } else {
       document.getElementById(playerid).remove();
-      //already exists, lets get rid of it. 
+      //already exists, lets get rid of it.
     }
   }
-  
+
   //console.log(playerid+clickedHref+clickedTitle);
   let newembed = new swmp({
     id: playerid,
     url: clickedHref,
     title: clickedTitle
   });
-  
+
   //console.log(backendScript);
   if (backendScript == 'jschan') { // Might be useful for inline.
     clicked.parentNode.parentNode.appendChild(newembed.container);
