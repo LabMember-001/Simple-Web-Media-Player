@@ -9,6 +9,7 @@
     width: unset;
     font-family: -apple-system,BlinkMacSystemFont,URW Gothic, MS PGothic, Helvetica, sans-serif;
     font-size: 11pt;
+    font-weight: normal;
     text-indent: 4px;
     letter-spacing: 1px;
     color: var(--swmp-text-color);
@@ -253,6 +254,11 @@ div.swmp iframe {
     height: auto;
     margin: auto;
     pointer-events: none;
+}
+
+div.swmp-youtube div.swmp-player-container {
+    min-width: 420px;
+    min-height: 236px;
 }
 
 div.swmp audio {
