@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.4.11
+// @version       1.4.12
 
 // @grant         none
 // @run-at        document-end
@@ -15,6 +15,7 @@
 // @match https://*.smugloli.net/*
 // @match https://*.kissu.moe/*
 // @match https://*.4taba.net/*
+// @match https://*.kind.moe/*
 // @match https://*.2kind.moe/*
 // @match https://*.1chan.net/*
 // @match https://*.otterchat.net/*

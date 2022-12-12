@@ -4,7 +4,7 @@
 // @namespace     LabMember-001
 // @author        Hououin Kyōma
 // @license       GPLv3
-// @version       1.4.11
+// @version       1.4.12
 
 // @grant         none
 // @run-at        document-end
@@ -15,6 +15,7 @@
 // @match https://*.smugloli.net/*
 // @match https://*.kissu.moe/*
 // @match https://*.4taba.net/*
+// @match https://*.kind.moe/*
 // @match https://*.2kind.moe/*
 // @match https://*.1chan.net/*
 // @match https://*.otterchat.net/*
@@ -37,16 +38,21 @@
 
 // Most of the sites above are to test scripts.
 
+'use Strict';
+
 console.log('Loading SimpleWebMediaPlayer.');
 
-/*    == REPOSITORY == 
+/*    == REPOSITORY ==
+
 // https://github.com/LabMember-001/Simple-Web-Media-Player
 // https://labmember-001.github.io/Simple-Web-Media-Player/
-// https://greasyfork.org/en/scripts/446388-4chan-ib-simple-web-media-player 
+// https://greasyfork.org/en/scripts/446388-4chan-ib-simple-web-media-player
+
 */
 
 /*   == YouTube API ==
-// If YouTube API is not loading on some sites it's probably your adblocker.         
+// If YouTube API is not loading on some sites it's probably your adblocker.
+
 // uBlock Origin filter to allow YouTube API anywhere even with exception:
 // Remove quotes around "*" after copying:
 // ! Allow YouTube API everywhere
@@ -102,7 +108,7 @@ var swmpBoards = {
       ['https:\/\/*..*(4chan|4channel).org\/*'],
   vichan:  // For Title and thumbnail click support. Not great without due to thumbnails.
       ['https:\/\/*..*(smuglo.li|smugloli.net)\/*',
-       'https:\/\/*..*2kind.moe\/*',
+       'https:\/\/*..*2?kind.moe\/*',
        'https:\/\/*..*kissu.moe\/*',
        'https:\/\/*..*sushigirl.us\/*',
        'https:\/\/*..*uboachan.net\/*'],
@@ -129,7 +135,6 @@ Object.keys(swmpBoards).forEach(script => {
 if (backendScript.length != 0) {
   console.log(backendScript);
 }
-
 
   // This configuration variable can be overwritten wherever you want later
   // on as you wish or add your own site variables for user configuration.
@@ -192,7 +197,6 @@ function initStorage(item) {
 storageValues.forEach( (item) => {
   initStorage(item);
 });
-
 
 // Add style to head when DOM is loaded.
 
@@ -356,7 +360,6 @@ class swmp {
     this.player.innerHTML = null;
     this.player.remove();
 
-
   }
 
   refreshPlayer() {
@@ -452,7 +455,6 @@ class swmp {
     } else {
       this.windowTitlebar.style.cursor = 'default';
     }
-
 
     // Disable Default Context Menu on Titlebar
     this.windowTitlebar.addEventListener('contextmenu', function(evt) {
@@ -679,7 +681,6 @@ class swmp {
       this.settingsContainer.setAttribute('class', 'swmp swmp-settings swmp-settings-container');
       this.settingsContainer.innerHTML = 'Settings:';
 
-
       this.br = document.createElement('br');
       this.settingsContainer.appendChild(this.br);
 
@@ -888,7 +889,6 @@ class swmp {
         this.makeYoutube();
       }
 
-
     } else {
       // API Already loaded, just make video.
       console.log('SWMP: YT API Already loaded, make vid');
@@ -934,7 +934,6 @@ class swmp {
           this.ytplayer.playVideo();
           this.playbutton.classList.add('swmp-playing');
         }
-
 
       }
 
@@ -1014,7 +1013,6 @@ class swmp {
 
   }
 
-
   prepareYoutubeEvents() {
 
     this.togglePlay = function() {
@@ -1071,7 +1069,6 @@ class swmp {
       if (this._playerState == 1) { // Playing
         this.playbutton.classList.add('swmp-playing');
         this.updateTime();
-
 
         var self = this;
         var timeInterval = window.setInterval((event) => {
@@ -1134,7 +1131,6 @@ class swmp {
       this.progress.value = this.seeker.value;
       this.progress.setAttribute('value', this.seeker.value);
     }
-
 
     this.toggleMute = () => {
 
@@ -1207,7 +1203,6 @@ class swmp {
     this.volumeRange.oninput = (event) => {
       this.updateVolume();
     }
-
 
   }
 
@@ -1426,7 +1421,6 @@ class swmp {
 
   preparePlayerEvents() {
 
-
     this.player.onended = (event) => {
       this.player.classList.remove('swmp-playing');
       this.playbutton.classList.remove('swmp-playing');
@@ -1449,7 +1443,6 @@ class swmp {
       // Video is loaded and can be played
       this.loaded = true;
     });
-
 
     this.player.onplay = (event) => {
       this.loaded = true;
@@ -1676,7 +1669,6 @@ class swmp {
     this.fileExt = url.split(/[#?&]/)[0].split('.').pop().trim();
     this.fileExt = url.split(/[#?&]/).slice(-2)[0].split('.').pop().trim();
 
-
     console.log(this.fileExt);
     this.fileExt = this.fileExt.toLowerCase();
 
@@ -1794,7 +1786,6 @@ class swmp {
     function mouseUp() {
       isMouseDown = false;
 
-
       if (swmpConfig.positionSide == 'right') {
         var currentleft = parseInt(element.style.left, 10);
         element.style.left = "unset";
@@ -1804,7 +1795,6 @@ class swmp {
     }
 
     function mouseMove(e) {
-
 
       if (!isMouseDown) return;
 
@@ -1867,7 +1857,6 @@ class swmp {
 }
 
   // Above this is SWMP class.
-
 
   // Below this is the event listener that checks if what you are clicking on is a video or audio that should be put into SWMP.
   // If you want to make site specific changes, either expand on it or just make a completely separate event listener below it.
@@ -2027,7 +2016,6 @@ document.addEventListener('click', (event) => {
   // Guess I'll need the ability to push urls+title to the player,
   // lets send ["url", "title"] also adapt title get on playlist to grab from playlist
 
-
   // Okay, time to load the player.
   var playerid = false;
 
@@ -2063,6 +2051,5 @@ document.addEventListener('click', (event) => {
 
   // Give focus to player for keybinds.
   newembed.container.focus();
-
 
 }, true); // Fuck other scripts.
